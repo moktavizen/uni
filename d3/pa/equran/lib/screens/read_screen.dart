@@ -71,7 +71,7 @@ class NavBarContent extends StatelessWidget {
       backgroundColor: surface,
       selectedItemColor: primary,
       unselectedItemColor: onSurfaceVar,
-      items: [
+      items: const [
         BottomNavigationBarItem(
           icon: favoriteIcon,
           activeIcon: favoriteIconSolid,
