@@ -1,5 +1,4 @@
 import 'package:equran/screens/read_screen.dart';
-import 'package:equran/screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

@@ -10,7 +10,8 @@ class ReadScreen extends StatelessWidget {
     return const Scaffold(
       backgroundColor: surface,
       appBar: AppBarContent(),
-      bottomNavigationBar: BottomNavBar(),
+      body: Placeholder(),
+      bottomNavigationBar: NavBarContent(),
     );
   }
 }
@@ -61,8 +62,8 @@ class AppBarContent extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-class BottomNavBar extends StatelessWidget {
-  const BottomNavBar({super.key});
+class NavBarContent extends StatelessWidget {
+  const NavBarContent({super.key});
 
   @override
   Widget build(BuildContext context) {
