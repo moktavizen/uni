@@ -12,6 +12,7 @@ class ReadScreen extends StatelessWidget {
       appBar: AppBarContent(),
       bottomNavigationBar: BottomNavBar(),
     );
+  }
 }
 
 class AppBarContent extends StatelessWidget implements PreferredSizeWidget {
