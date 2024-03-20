@@ -12,33 +12,6 @@ class ReadScreen extends StatelessWidget {
       appBar: AppBarContent(),
       bottomNavigationBar: BottomNavBar(),
     );
-  }
-
-  // AppBar _appBar() {
-  //   return AppBar(
-  //     backgroundColor: surface,
-  //     leading: IconButton(
-  //       onPressed: () {},
-  //       icon: SvgPicture.asset('assets/svg/menu-icon.svg'),
-  //     ),
-  //     title: Text(
-  //       'EQuran',
-  //       style: GoogleFonts.poppins(
-  //         fontSize: 20,
-  //         fontWeight: FontWeight.bold,
-  //         color: primary,
-  //       ),
-  //     ),
-  //     actions: [
-  //       IconButton(
-  //         onPressed: () {},
-  //         icon: SvgPicture.asset(
-  //           'assets/svg/search-icon.svg',
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
 }
 
 class AppBarContent extends StatelessWidget implements PreferredSizeWidget {
