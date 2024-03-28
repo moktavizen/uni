@@ -100,7 +100,7 @@ class TabBarContent extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(kMinInteractiveDimension + 1);
+  Size get preferredSize => const Size.fromHeight(kTextTabBarHeight + 1);
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +120,7 @@ class TabBarContent extends StatelessWidget implements PreferredSizeWidget {
         fontWeight: FontWeight.w500,
       ),
       tabs: const [
-        Tab(text: 'Surat'),
+        Tab(text: 'Surah'),
         Tab(text: 'Juz'),
       ],
     );
