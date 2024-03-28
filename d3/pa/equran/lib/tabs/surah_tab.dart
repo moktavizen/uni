@@ -20,22 +20,20 @@ class SurahTab extends StatelessWidget {
       future: _getSurahList(),
       builder: ((context, snapshot) {
         if (snapshot.hasData) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: ListView.separated(
-              itemBuilder: (context, index) {
-                Surah surah = snapshot.data!.elementAt(index);
+          return ListView.separated(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            itemBuilder: (context, index) {
+              Surah surah = snapshot.data!.elementAt(index);
 
-                return ListTileContent(surah: surah);
-              },
-              separatorBuilder: (context, index) {
-                return Divider(
-                  thickness: 1,
-                  color: listDecor.withOpacity(0.35),
-                );
-              },
-              itemCount: snapshot.data!.length,
-            ),
+              return ListTileContent(surah: surah);
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                thickness: 1,
+                color: listDecor.withOpacity(0.35),
+              );
+            },
+            itemCount: snapshot.data!.length,
           );
         }
 

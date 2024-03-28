@@ -207,7 +207,7 @@ class LastRead extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 25),
               Text(
                 'Al-Fatihah',
                 style: GoogleFonts.poppins(
