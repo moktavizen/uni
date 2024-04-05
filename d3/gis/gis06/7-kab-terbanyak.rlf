@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report Version="2.0" Name="7 Kabupaten dengan Populasi terbanyak di Jawa Timur" Layer="True" TOCField="" DatasetMode="0" StartingPageNumber="1">
+	<DataSource Name="Kabupaten" BrowseName="Kabupaten" Type="5" FullName="">
+		<Workspace WorkspaceType="0" PathName="C:\Users\avisa\Documents\gis\gis05\layers">
+			<Property Name="DATABASE" Value="C:\Users\avisa\Documents\gis\gis05\layers" />
+		</Workspace>
+	</DataSource>
+	<SourceFields>
+		<Field Name="FID" SafeName="FID" Type="6" SortAsc="True" />
+		<Field Name="KABUPATEN" SafeName="KABUPATEN" Type="4" SortAsc="True" />
+		<Field Name="AREA" SafeName="AREA" Type="3" SortAsc="True" />
+		<Field Name="PERIMETER" SafeName="PERIMETER" Type="3" SortAsc="True" />
+		<Field Name="PROPINSI" SafeName="PROPINSI" Type="4" SortAsc="True" />
+		<Field Name="POPULASI" SafeName="POPULASI" Type="1" SortAsc="False" />
+	</SourceFields>
+	<ReportFields>
+		<Field Name="KABUPATEN" />
+		<Field Name="POPULASI" />
+	</ReportFields>
+	<SortFields>
+		<Field Name="POPULASI" />
+	</SortFields>
+	<ReportStyle Name="Simple" UserStyle="False">
+		<SectionStyle Type="0">
+			<Font Size="20" Style="Regular" Color="#000000">Calibri</Font>
+		</SectionStyle>
+		<SectionStyle Type="1">
+			<Font Size="11" Style="Regular" Color="#000000">Calibri</Font>
+		</SectionStyle>
+		<SectionStyle Type="2">
+			<Font Size="11" Style="Bold" Color="#000000">Calibri</Font>
+		</SectionStyle>
+		<DetailSectionStyle Type="3">
+			<Font Size="11" Style="Regular" Color="#000000">Calibri</Font>
+		</DetailSectionStyle>
+		<SectionStyle Type="4">
+			<Font Size="11" Style="Regular" Color="#000000">Calibri</Font>
+		</SectionStyle>
+		<SectionStyle Type="5">
+			<Font Size="11" Style="Regular" Color="#000000">Calibri</Font>
+		</SectionStyle>
+		<SectionStyle Type="6">
+			<Font Size="11" Style="Regular" Color="#000000">Calibri</Font>
+		</SectionStyle>
+	</ReportStyle>
+	<ActiveReportsLayout Version="3.1" PrintWidth="9360" DocumentName="ARNet Document" ScriptLang="C#" MasterReport="0">
+		<StyleSheet>
+			<Style Name="Normal" Value="font-family: Arial; font-style: normal; text-decoration: none; font-weight: normal; font-size: 10pt; color: Black; " />
+			<Style Name="Heading1" Value="font-size: 16pt; font-weight: bold; " />
+			<Style Name="Heading2" Value="font-family: Times New Roman; font-size: 14pt; font-weight: bold; font-style: italic; " />
+			<Style Name="Heading3" Value="font-size: 13pt; font-weight: bold; " />
+		</StyleSheet>
+		<Sections>
+			<Section Type="ReportHeader" Name="ReportHeader" Height="804" BackColor="16777215">
+				<Control Type="AR.Label" Name="lblReportTitle" Left="0" Top="72" Width="12120" Height="660" Caption="7 Kabupaten dengan Populasi terbanyak di Jawa Timur" Style="color: #000000; font-size: 20pt; font-family: Calibri; vertical-align: middle; " />
+			</Section>
+			<Section Type="PageHeader" Name="pageHeader" Height="360" BackColor="16777215">
+				<Control Type="AR.Label" Name="lblKABUPATEN" Left="0" Top="0" Width="2080" Height="360" Caption="KABUPATEN" Style="color: #000000; font-size: 11pt; font-family: Calibri; white-space: nowrap; " />
+				<Control Type="AR.Label" Name="lblPOPULASI" Left="2081.44" Top="0" Width="1440" Height="360" Caption="POPULASI" Style="color: #000000; font-size: 11pt; font-family: Calibri; white-space: nowrap; " />
+			</Section>
+			<Section Type="Detail" Name="detail" Height="360" BackColor="16777215">
+				<Control Type="AR.Field" Name="txtKABUPATEN" DataField="KABUPATEN" Left="0" Top="0" Width="2080" Height="360" Text="KABUPATEN" Style="color: #000000; font-size: 11pt; font-family: Calibri; " />
+				<Control Type="AR.Field" Name="txtPOPULASI" DataField="POPULASI" Left="2081.44" Top="0" Width="1440" Height="360" Text="POPULASI" Style="color: #000000; text-align: right; font-size: 11pt; font-family: Calibri; " />
+			</Section>
+			<Section Type="PageFooter" Name="pageFooter" Height="299" BackColor="16777215">
+				<Control Type="AR.ReportInfo" Name="rptInfoPgNo" Left="1980" Top="0" Width="5400" Height="288" FormatString="Page {PageNumber} of {PageCount}" Style="color: #000000; text-align: center; font-size: 11pt; font-family: Calibri; " />
+			</Section>
+			<Section Type="ReportFooter" Name="ReportFooter" Height="0" BackColor="16777215" />
+		</Sections>
+		<PageSettings TopMargin="720" Orientation="1" />
+		<Parameters />
+	</ActiveReportsLayout>
+</Report>
