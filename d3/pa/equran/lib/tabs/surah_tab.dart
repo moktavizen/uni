@@ -1,5 +1,7 @@
-import 'package:equran/models/surah.dart';
+import 'package:equran/models/surah_list.dart';
+import 'package:equran/screens/detail_surah_screen.dart';
 import 'package:equran/styles.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,7 +13,7 @@ class SurahTab extends StatelessWidget {
     String jsonString =
         await rootBundle.loadString('assets/data/surah-list.json');
 
-    return surahFromJson(jsonString);
+    return compute(surahFromJson, jsonString);
   }
 
   @override
@@ -53,51 +55,63 @@ class ListTileContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: const EdgeInsets.all(0),
-      horizontalTitleGap: 16,
-      minVerticalPadding: 16,
-      leading: Stack(
-        children: [
-          surahNumber,
-          SizedBox(
-            width: 36,
-            height: 36,
-            child: Center(
-              child: Text(
-                '${surah.nomor}',
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
-                  color: onSurface,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailSurahScreen(
+              surahNum: surah.nomor,
+            ),
+          ),
+        );
+      },
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(0),
+        horizontalTitleGap: 16,
+        minVerticalPadding: 16,
+        leading: Stack(
+          children: [
+            surahNumber,
+            SizedBox(
+              width: 36,
+              height: 36,
+              child: Center(
+                child: Text(
+                  '${surah.nomor}',
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                    color: onSurface,
+                  ),
                 ),
               ),
             ),
+          ],
+        ),
+        title: Text(
+          surah.namaLatin,
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            color: onSurface,
           ),
-        ],
-      ),
-      title: Text(
-        surah.namaLatin,
-        style: GoogleFonts.poppins(
-          fontWeight: FontWeight.w500,
-          fontSize: 16,
-          color: onSurface,
         ),
-      ),
-      subtitle: Text(
-        '${surah.tempatTurun.name} • ${surah.jumlahAyat} AYAT',
-        style: GoogleFonts.poppins(
-          fontWeight: FontWeight.w500,
-          fontSize: 12,
-          color: onSurfaceVar,
+        subtitle: Text(
+          '${surah.tempatTurun.name} • ${surah.jumlahAyat} AYAT',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w500,
+            fontSize: 12,
+            color: onSurfaceVar,
+          ),
         ),
-      ),
-      trailing: Text(
-        surah.nama,
-        style: GoogleFonts.amiri(
-          fontWeight: FontWeight.w700,
-          fontSize: 20,
-          color: primary,
+        trailing: Text(
+          surah.nama,
+          style: GoogleFonts.amiri(
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            color: primary,
+          ),
         ),
       ),
     );

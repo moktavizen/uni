@@ -244,7 +244,7 @@ class NavBarContent extends StatelessWidget {
         color: primary,
       ),
       unselectedLabelStyle: GoogleFonts.poppins(
-        fontSize: 11,
+        fontSize: 13,
         color: onSurfaceVar,
       ),
       items: const [
