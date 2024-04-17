@@ -108,6 +108,7 @@ class TabBarContent extends StatelessWidget implements PreferredSizeWidget {
       labelColor: primary,
       unselectedLabelColor: onSurfaceVar,
       splashBorderRadius: BorderRadius.circular(10),
+      indicatorColor: primary,
       indicatorSize: TabBarIndicatorSize.tab,
       indicatorWeight: 3,
       dividerHeight: 3,
@@ -186,7 +187,7 @@ class LastRead extends StatelessWidget {
         const Positioned(
           bottom: 0,
           right: 0,
-          child: quranBg,
+          child: quranBgHome,
         ),
         Padding(
           padding: const EdgeInsets.all(20),
@@ -207,7 +208,7 @@ class LastRead extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 20),
               Text(
                 'Al-Fatihah',
                 style: GoogleFonts.poppins(
@@ -216,6 +217,7 @@ class LastRead extends StatelessWidget {
                   color: surface,
                 ),
               ),
+              const SizedBox(height: 4),
               Text(
                 'Ayat No: 1',
                 style: GoogleFonts.poppins(

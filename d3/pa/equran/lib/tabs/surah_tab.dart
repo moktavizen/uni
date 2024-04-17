@@ -65,7 +65,11 @@ class ListTileContent extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => DetailSurahScreen(
-              surahNum: surah.id,
+              surahName: surah.transliteration,
+              surahTranslation: surah.translation,
+              surahLocation: surah.location.name,
+              surahNumAyah: surah.numAyah,
+              surahAyahs: surah.ayahs,
             ),
           ),
         );
