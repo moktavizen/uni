@@ -1,4 +1,4 @@
-import 'package:equran/models/surah_list.dart';
+import 'package:equran/models/surah.dart';
 import 'package:equran/screens/detail_surah_screen.dart';
 import 'package:equran/styles.dart';
 import 'package:flutter/foundation.dart';
@@ -9,7 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 class SurahTab extends StatelessWidget {
   const SurahTab({super.key});
 
-  Future<List<Surah>> _getSurahList() async {
+  Future<List<Surah>> _getSurah() async {
     String jsonString =
         await rootBundle.loadString('assets/data/surah-list.json');
 
@@ -19,7 +19,7 @@ class SurahTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _getSurahList(),
+      future: _getSurah(),
       builder: ((context, snapshot) {
         if (snapshot.hasData) {
           return ListView.separated(
@@ -39,7 +39,11 @@ class SurahTab extends StatelessWidget {
           );
         }
 
-        return const CircularProgressIndicator();
+        return const Center(
+          child: SizedBox(
+            child: CircularProgressIndicator(),
+          ),
+        );
       }),
     );
   }
@@ -61,7 +65,7 @@ class ListTileContent extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => DetailSurahScreen(
-              surahNum: surah.nomor,
+              surahNum: surah.id,
             ),
           ),
         );
@@ -78,7 +82,7 @@ class ListTileContent extends StatelessWidget {
               height: 36,
               child: Center(
                 child: Text(
-                  '${surah.nomor}',
+                  '${surah.id}',
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w500,
                     fontSize: 12,
@@ -90,7 +94,7 @@ class ListTileContent extends StatelessWidget {
           ],
         ),
         title: Text(
-          surah.namaLatin,
+          surah.transliteration,
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w500,
             fontSize: 16,
@@ -98,7 +102,7 @@ class ListTileContent extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          '${surah.tempatTurun.name} • ${surah.jumlahAyat} AYAT',
+          '${surah.location.name} • ${surah.numAyah} AYAT',
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w500,
             fontSize: 12,
@@ -106,7 +110,7 @@ class ListTileContent extends StatelessWidget {
           ),
         ),
         trailing: Text(
-          surah.nama,
+          surah.arabic,
           style: GoogleFonts.amiri(
             fontWeight: FontWeight.w700,
             fontSize: 20,
