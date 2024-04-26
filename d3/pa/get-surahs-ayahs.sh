@@ -38,4 +38,4 @@ echo "$json_data" | jq '
     }
   }) |
   map(.surah)
-' >surah-list.json
+' >surah-ayah-list.json

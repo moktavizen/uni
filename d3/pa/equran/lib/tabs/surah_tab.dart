@@ -1,51 +1,75 @@
 import 'package:equran/models/surah.dart';
-import 'package:equran/screens/detail_surah_screen.dart';
+import 'package:equran/providers/surahs_provider.dart';
+import 'package:equran/screens/surah_detail_screen.dart';
 import 'package:equran/styles.dart';
-import 'package:flutter/foundation.dart';
+import 'package:equran/widgets/list_tile_title.dart';
+import 'package:equran/widgets/star_num_badge.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SurahTab extends StatelessWidget {
+class SurahTab extends ConsumerWidget {
   const SurahTab({super.key});
 
-  Future<List<Surah>> _getSurah() async {
-    String jsonString =
-        await rootBundle.loadString('assets/data/surah-list.json');
-
-    return compute(surahFromJson, jsonString);
-  }
-
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _getSurah(),
-      builder: ((context, snapshot) {
-        if (snapshot.hasData) {
-          return ListView.separated(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            itemBuilder: (context, index) {
-              Surah surah = snapshot.data!.elementAt(index);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final surahList = ref.watch(surahsProvider);
 
-              return ListTileContent(surah: surah);
-            },
-            separatorBuilder: (context, index) {
-              return Divider(
-                thickness: 1,
-                color: listDecor.withOpacity(0.35),
-              );
-            },
-            itemCount: snapshot.data!.length,
-          );
-        }
+    return switch (surahList) {
+      AsyncData(:final value) => ListView.separated(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          itemBuilder: (context, index) {
+            Surah surah = value.elementAt(index);
 
-        return const Center(
+            return ListTileContent(surah: surah);
+          },
+          separatorBuilder: (context, index) {
+            return Divider(
+              thickness: 1,
+              color: listDecor,
+            );
+          },
+          itemCount: value.length,
+        ),
+      AsyncError() => const Center(
+          child: SizedBox(
+            child: Text('Oops! Terdapat kesalahan saat mengambil data Surah!'),
+          ),
+        ),
+      _ => const Center(
           child: SizedBox(
             child: CircularProgressIndicator(),
           ),
-        );
-      }),
-    );
+        ),
+    };
+    // return FutureBuilder(
+    //   future: surahList,
+    //   builder: ((context, snapshot) {
+    //     if (snapshot.hasData) {
+    //       return ListView.separated(
+    //         padding: const EdgeInsets.symmetric(vertical: 16),
+    //         itemBuilder: (context, index) {
+    //           Surah surah = snapshot.data!.elementAt(index);
+    //
+    //           return ListTileContent(surah: surah);
+    //         },
+    //         separatorBuilder: (context, index) {
+    //           return Divider(
+    //             thickness: 1,
+    //             color: listDecor.withOpacity(0.35),
+    //           );
+    //         },
+    //         itemCount: snapshot.data!.length,
+    //       );
+    //     }
+    //
+    //     return const Center(
+    //       child: SizedBox(
+    //         child: CircularProgressIndicator(),
+    //       ),
+    //     );
+    //   }),
+    // );
   }
 }
 
@@ -59,17 +83,17 @@ class ListTileContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailSurahScreen(
+            builder: (context) => SurahDetailScreen(
               surahName: surah.transliteration,
               surahTranslation: surah.translation,
-              surahLocation: surah.location.name,
+              surahLocation: surah.location,
               surahNumAyah: surah.numAyah,
-              surahAyahs: surah.ayahs,
+              surahAyahs: surah.ayahList,
             ),
           ),
         );
@@ -78,35 +102,10 @@ class ListTileContent extends StatelessWidget {
         contentPadding: const EdgeInsets.all(0),
         horizontalTitleGap: 16,
         minVerticalPadding: 16,
-        leading: Stack(
-          children: [
-            surahNumber,
-            SizedBox(
-              width: 36,
-              height: 36,
-              child: Center(
-                child: Text(
-                  '${surah.id}',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                    color: onSurface,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        title: Text(
-          surah.transliteration,
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
-            color: onSurface,
-          ),
-        ),
+        leading: StarNumBadge(num: surah.id),
+        title: ListTileTitle(title: surah.transliteration),
         subtitle: Text(
-          '${surah.location.name} • ${surah.numAyah} AYAT',
+          '${surah.location.toUpperCase()} • ${surah.numAyah} AYAT',
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w500,
             fontSize: 12,
