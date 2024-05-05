@@ -2,7 +2,7 @@ import 'package:equran/screens/favorites_screen.dart';
 import 'package:equran/screens/read_screen.dart';
 import 'package:equran/screens/setting_screen.dart';
 import 'package:equran/styles.dart';
-import 'package:equran/widgets/app_bar_content.dart';
+import 'package:equran/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -29,19 +29,19 @@ class _MainNavigationState extends State<MainNavigation> {
 
     switch (selectedScreenIndex) {
       case 0:
-        currentScreen = const FavoritesScreen();
         currentTitle = 'Favorit';
+        currentScreen = const FavoritesScreen();
       case 2:
-        currentScreen = const SettingScreen();
         currentTitle = 'Pengaturan';
+        currentScreen = const SettingScreen();
     }
 
     return Scaffold(
-      appBar: AppBarContent(
+      appBar: CustomAppBar(
         titleText: currentTitle,
       ),
       body: currentScreen,
-      bottomNavigationBar: _NavBarContent(
+      bottomNavigationBar: _CustomNavBar(
         onSelectScreen: _selectScreen,
         selectedScreenIndex: selectedScreenIndex,
       ),
@@ -49,8 +49,8 @@ class _MainNavigationState extends State<MainNavigation> {
   }
 }
 
-class _NavBarContent extends StatelessWidget {
-  const _NavBarContent({
+class _CustomNavBar extends StatelessWidget {
+  const _CustomNavBar({
     required this.onSelectScreen,
     required this.selectedScreenIndex,
   });
@@ -64,6 +64,7 @@ class _NavBarContent extends StatelessWidget {
       onTap: onSelectScreen,
       currentIndex: selectedScreenIndex,
       backgroundColor: surface,
+      elevation: 16,
       selectedLabelStyle: GoogleFonts.poppins(
         fontSize: 13,
         color: primary,

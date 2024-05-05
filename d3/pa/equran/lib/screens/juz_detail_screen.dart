@@ -1,8 +1,8 @@
 import 'package:equran/models/ayah.dart';
 import 'package:equran/styles.dart';
-import 'package:equran/widgets/app_bar_content.dart';
 import 'package:equran/widgets/ayah_list_tile.dart';
 import 'package:equran/widgets/bismillah_card.dart';
+import 'package:equran/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class JuzDetailScreen extends StatelessWidget {
@@ -29,7 +29,7 @@ class JuzDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: surface,
-      appBar: AppBarContent(
+      appBar: CustomAppBar(
         titleText: "Juz $juzId",
         leadingIcon: backIcon,
         onPressLeading: () {
