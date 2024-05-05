@@ -1,13 +1,17 @@
 import 'package:equran/models/surah.dart';
-import 'package:equran/providers/surahs_provider.dart';
 import 'package:equran/screens/surah_detail_screen.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/surah_juz_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SurahTab extends ConsumerWidget {
-  const SurahTab({super.key});
+class SurahTab extends StatelessWidget {
+  const SurahTab({
+    super.key,
+    required this.surahList,
+  });
+
+  final AsyncValue<List<Surah>> surahList;
 
   void _goToSurahDetail(BuildContext context, Surah surah) {
     Navigator.push(
@@ -25,9 +29,7 @@ class SurahTab extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final surahList = ref.watch(surahsProvider);
-
+  Widget build(BuildContext context) {
     return switch (surahList) {
       AsyncData(:final value) => ListView.separated(
           padding: const EdgeInsets.symmetric(vertical: 16),

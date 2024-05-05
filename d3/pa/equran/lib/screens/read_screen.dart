@@ -1,14 +1,20 @@
+import 'package:equran/providers/juzs_provider.dart';
+import 'package:equran/providers/surahs_provider.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/tabs/juz_tab.dart';
 import 'package:equran/tabs/surah_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ReadScreen extends StatelessWidget {
+class ReadScreen extends ConsumerWidget {
   const ReadScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final surahList = ref.watch(surahsProvider);
+    final juzList = ref.watch(juzsProvider);
+
     return Container(
       color: surface,
       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -28,10 +34,10 @@ class ReadScreen extends StatelessWidget {
               bottom: TabBarContent(),
             ),
           ],
-          body: const TabBarView(
+          body: TabBarView(
             children: [
-              SurahTab(),
-              JuzTab(),
+              SurahTab(surahList: surahList),
+              JuzTab(juzList: juzList),
             ],
           ),
         ),
