@@ -42,10 +42,10 @@ diatas biasa disebut sebagai metadata.
 
 #### 5.1.1 Ketidak-cocokan antar peta!
 
-   Dengan menggunakan aplikasi ArcMap, buka dokumen peta Bab05-01.mxd.
-   Dokumen peta ini berisi dua layer peta.
+Dengan menggunakan aplikasi ArcMap, buka dokumen peta Bab05-01.mxd.
+Dokumen peta ini berisi dua layer peta.
 
-   ![answer 1](./screenshots/ss-1.png)
+![answer 1](./screenshots/ss-1.png)
 
 #### 5.1.2 Membuka file metadata
 
