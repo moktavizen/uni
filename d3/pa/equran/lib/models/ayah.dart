@@ -15,39 +15,43 @@ String ayahToJson(List<Ayah> data) =>
 class Ayah {
   final int id;
   final int surahId;
-  final int juz;
-  final int ayah;
+  final String surahName;
+  final int juzId;
+  final int ayahNum;
   final String arabic;
-  final String latin;
   final String translation;
+  final String tafsir;
 
   Ayah({
     required this.id,
     required this.surahId,
-    required this.juz,
-    required this.ayah,
+    required this.surahName,
+    required this.juzId,
+    required this.ayahNum,
     required this.arabic,
-    required this.latin,
     required this.translation,
+    required this.tafsir,
   });
 
   factory Ayah.fromJson(Map<String, dynamic> json) => Ayah(
         id: json["id"],
         surahId: json["surah_id"],
-        juz: json["juz"],
-        ayah: json["ayah"],
+        surahName: json["surah_name"],
+        juzId: json["juz_id"],
+        ayahNum: json["ayah_num"],
         arabic: json["arabic"],
-        latin: json["latin"],
         translation: json["translation"],
+        tafsir: json["tafsir"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "surah_id": surahId,
-        "juz": juz,
-        "ayah": ayah,
+        "surah_name": surahName,
+        "juz_id": juzId,
+        "ayah_num": ayahNum,
         "arabic": arabic,
-        "latin": latin,
         "translation": translation,
+        "tafsir": tafsir,
       };
 }

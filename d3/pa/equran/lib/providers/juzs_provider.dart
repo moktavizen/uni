@@ -19,7 +19,7 @@ class Juzs extends _$Juzs {
     final ayahList = await compute(ayahFromJson, jsonStrings[1]);
 
     for (var juz in juzList) {
-      juz.ayahList = ayahList.where((ayah) => ayah.juz == juz.id).toList();
+      juz.ayahList = ayahList.where((ayah) => ayah.juzId == juz.id).toList();
     }
 
     return juzList;

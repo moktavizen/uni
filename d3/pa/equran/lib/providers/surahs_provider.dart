@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'surahs_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class Surahs extends _$Surahs {
   @override
   Future<List<Surah>> build() async {
