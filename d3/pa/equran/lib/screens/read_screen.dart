@@ -65,11 +65,11 @@ class TabBarContent extends StatelessWidget implements PreferredSizeWidget {
       indicatorWeight: 3,
       dividerHeight: 3,
       dividerColor: onSurfaceVar.withOpacity(0.1),
-      labelStyle: GoogleFonts.poppins(
+      labelStyle: GoogleFonts.inter(
         fontWeight: FontWeight.w600,
         fontSize: 16,
       ),
-      unselectedLabelStyle: GoogleFonts.poppins(
+      unselectedLabelStyle: GoogleFonts.inter(
         fontWeight: FontWeight.w500,
       ),
       tabs: const [
@@ -93,7 +93,7 @@ class Greeter extends StatelessWidget {
         const SizedBox(height: 12),
         Text(
           'Assalamualaikum',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontWeight: FontWeight.w500,
             fontSize: 18,
             color: onSurfaceVar,
@@ -102,7 +102,7 @@ class Greeter extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           'Welcome to EQuran!',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontWeight: FontWeight.w600,
             fontSize: 24,
             color: onSurface,
@@ -154,7 +154,7 @@ class LastRead extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       'Last Read',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
                         color: surface,
@@ -165,7 +165,7 @@ class LastRead extends StatelessWidget {
                 const SizedBox(height: 20),
                 Text(
                   'Al-Fatihah',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
                     color: surface,
@@ -174,7 +174,7 @@ class LastRead extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   'Ayat No: 1',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
                     color: surface,

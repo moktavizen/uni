@@ -69,7 +69,7 @@ class _AppVer extends StatelessWidget {
           const SizedBox(height: 64),
           Text(
             'Final Project for University',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontWeight: FontWeight.w500,
               fontSize: 12,
               color: onSurfaceVar,
@@ -77,7 +77,7 @@ class _AppVer extends StatelessWidget {
           ),
           Text(
             'EQuran - v0.0.1',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontWeight: FontWeight.w500,
               fontSize: 12,
               color: onSurfaceVar,
@@ -102,7 +102,7 @@ class _SettingsGroupTitle extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Text(
         titleText,
-        style: GoogleFonts.poppins(
+        style: GoogleFonts.inter(
           fontWeight: FontWeight.w500,
           fontSize: 18,
           color: primary,
@@ -143,7 +143,7 @@ class _SettingsListTile extends StatelessWidget {
               children: [
                 Text(
                   titleText,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
                     color: onSurface,
@@ -152,7 +152,7 @@ class _SettingsListTile extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitleText,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.w500,
                     fontSize: 12,
                     color: onSurfaceVar,

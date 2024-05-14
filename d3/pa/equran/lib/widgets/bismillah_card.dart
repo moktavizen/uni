@@ -49,7 +49,7 @@ class BismillahCard extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontWeight: FontWeight.w500,
                           fontSize: 26,
                           color: surface,
@@ -58,11 +58,12 @@ class BismillahCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         subtitle,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
                           color: surface,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                       Divider(
                         indent: 64,
@@ -73,7 +74,7 @@ class BismillahCard extends StatelessWidget {
                       ),
                       Text(
                         caption,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
                           color: surface,

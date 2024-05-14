@@ -65,11 +65,11 @@ class _CustomNavBar extends StatelessWidget {
       currentIndex: selectedScreenIndex,
       backgroundColor: surface,
       elevation: 16,
-      selectedLabelStyle: GoogleFonts.poppins(
+      selectedLabelStyle: GoogleFonts.inter(
         fontSize: 13,
         color: primary,
       ),
-      unselectedLabelStyle: GoogleFonts.poppins(
+      unselectedLabelStyle: GoogleFonts.inter(
         fontSize: 13,
         color: onSurfaceVar,
       ),

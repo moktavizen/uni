@@ -35,7 +35,7 @@ class SurahJuzListTile extends StatelessWidget {
               child: Center(
                 child: Text(
                   '$leadingNum',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.w500,
                     fontSize: 12,
                     color: onSurface,
@@ -47,7 +47,7 @@ class SurahJuzListTile extends StatelessWidget {
         ),
         title: Text(
           titleText,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontWeight: FontWeight.w500,
             fontSize: 16,
             color: onSurface,
@@ -55,7 +55,7 @@ class SurahJuzListTile extends StatelessWidget {
         ),
         subtitle: Text(
           subtitleText,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontWeight: FontWeight.w500,
             fontSize: 12,
             color: onSurfaceVar,

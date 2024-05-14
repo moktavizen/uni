@@ -18,9 +18,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'EQuran',
-      debugShowCheckedModeBanner: false,
       home: MainNavigation(),
-      // home: SettingScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

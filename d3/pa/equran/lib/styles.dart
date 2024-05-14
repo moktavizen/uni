@@ -13,6 +13,7 @@ final Color surahBar = const Color(0xFF121931).withOpacity(0.05);
 
 const SvgAsset menuIcon = SvgAsset(name: 'menu-icon');
 const SvgAsset backIcon = SvgAsset(name: 'back-icon');
+const SvgAsset closeIcon = SvgAsset(name: 'close-icon');
 const SvgAsset searchIcon = SvgAsset(name: 'search-icon');
 const SvgAsset favoriteIcon = SvgAsset(name: 'favorite-icon');
 const SvgAsset favoriteIconSolid = SvgAsset(name: 'favorite-icon-solid');

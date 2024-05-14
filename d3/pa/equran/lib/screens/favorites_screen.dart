@@ -59,7 +59,7 @@ class _FavoriteListTile extends StatelessWidget {
               children: [
                 Text(
                   titleText,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
                     color: onSurface,
@@ -68,7 +68,7 @@ class _FavoriteListTile extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitleText,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.w500,
                     fontSize: 12,
                     color: onSurfaceVar,
@@ -96,7 +96,7 @@ class _AddCollection extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           'Tambah Koleksi',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontWeight: FontWeight.w500,
             fontSize: 16,
             color: primary,
