@@ -37,11 +37,12 @@ class SurahDetailScreen extends StatelessWidget {
         },
       ),
       body: BodyContent(
-          surahName: surahName,
-          surahTranslation: surahTranslation,
-          surahLocation: surahLocation,
-          surahNumAyah: surahNumAyah,
-          surahAyahs: surahAyahs),
+        surahName: surahName,
+        surahTranslation: surahTranslation,
+        surahLocation: surahLocation,
+        surahNumAyah: surahNumAyah,
+        surahAyahs: surahAyahs,
+      ),
     );
   }
 }
