@@ -1,7 +1,9 @@
 import 'package:equran/models/ayah.dart';
 import 'package:equran/styles.dart';
+import 'package:equran/widgets/tafsir_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 
 class AyahListTile extends StatelessWidget {
   const AyahListTile({
@@ -53,7 +55,7 @@ class AyahBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.only(left: 12, right: 4),
       decoration: BoxDecoration(
         color: surahBar,
         borderRadius: BorderRadius.circular(10),
@@ -63,7 +65,14 @@ class AyahBar extends StatelessWidget {
           _AyahNum(ayah: ayah),
           const Spacer(),
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              await Share.share(
+                '${ayah.arabic}\n'
+                '\n'
+                '${ayah.translation}\n'
+                '[${ayah.surahId}:${ayah.ayahNum}]',
+              );
+            },
             icon: shareIcon,
           ),
           IconButton(
@@ -76,7 +85,7 @@ class AyahBar extends StatelessWidget {
                 isScrollControlled: true,
                 context: context,
                 builder: (BuildContext context) {
-                  return _BottomSheetContent(ayah: ayah);
+                  return TafsirBottomSheet(ayah: ayah);
                 },
               );
             },
@@ -116,68 +125,6 @@ class _AyahNum extends StatelessWidget {
             fontSize: 12,
             color: surface,
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _BottomSheetContent extends StatelessWidget {
-  const _BottomSheetContent({
-    required this.ayah,
-  });
-
-  final Ayah ayah;
-
-  @override
-  Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height - 84,
-      ),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: surface,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  'Tafsir ${ayah.surahName} Ayat ${ayah.ayahNum}',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 17,
-                    color: primary,
-                  ),
-                ),
-                const Spacer(),
-                IconButton.filledTonal(
-                  onPressed: () => Navigator.pop(context),
-                  icon: closeIcon,
-                  padding: const EdgeInsets.all(0),
-                  visualDensity: VisualDensity.compact,
-                )
-              ],
-            ),
-            const SizedBox(height: 16),
-            Flexible(
-              child: SingleChildScrollView(
-                child: Text(
-                  ayah.tafsir,
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: onSurface,
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );
