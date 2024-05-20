@@ -3,7 +3,10 @@ import 'package:equran/styles.dart';
 import 'package:equran/widgets/tafsir_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:share_plus/share_plus.dart';
+
+final player = AudioPlayer();
 
 class AyahListTile extends StatelessWidget {
   const AyahListTile({
@@ -52,6 +55,29 @@ class AyahBar extends StatelessWidget {
 
   final Ayah ayah;
 
+  void _playAudio({
+    required int surahId,
+    required int ayahNum,
+    String errorMessage = '',
+  }) async {
+    try {
+      String paddedSurahId = surahId.toString().padLeft(3, '0');
+      String paddedAyahNum = ayahNum.toString().padLeft(3, '0');
+      String murattalId = paddedSurahId + paddedAyahNum;
+
+      await player.setUrl(
+        "https://media.qurankemenag.net/audio/Abu_Bakr_Ash-Shaatree_aac64/$murattalId.m4a",
+      );
+      await player.play();
+    } on PlayerException catch (e) {
+      errorMessage = '${e.message}';
+    } on PlayerInterruptedException catch (e) {
+      errorMessage = '${e.message}';
+    } catch (e) {
+      errorMessage = '$e';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -76,7 +102,9 @@ class AyahBar extends StatelessWidget {
             icon: shareIcon,
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              _playAudio(surahId: ayah.surahId, ayahNum: ayah.ayahNum);
+            },
             icon: playIcon,
           ),
           IconButton(
