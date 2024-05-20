@@ -1,6 +1,6 @@
 `Moh Oktavi Aziz Nugraha` `3 D3 IT-A LA` `3121521017`
 
-# Latihan GIS12 - Geocoding 🌏
+# Latihan GIS12 - Geoprocessing 🌏
 
 ### Daftar Isi
 
