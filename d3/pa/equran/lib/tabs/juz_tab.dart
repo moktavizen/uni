@@ -1,9 +1,10 @@
 import 'package:equran/models/juz.dart';
-import 'package:equran/screens/juz_detail_screen.dart';
+import 'package:equran/screens/ayah_list_screen.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/surah_juz_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class JuzTab extends StatelessWidget {
   const JuzTab({
@@ -13,16 +14,15 @@ class JuzTab extends StatelessWidget {
 
   final AsyncValue<List<Juz>> juzList;
 
-  void _goToJuzDetail(BuildContext context, Juz juz) {
+  void _goToAyahListScreen(BuildContext context, Juz juz) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => JuzDetailScreen(
-          juzId: juz.id,
-          juzNumAyah: juz.numAyah,
-          juzStartSurah: juz.startSurah,
-          juzStartAyah: juz.startAyah,
-          juzAyahs: juz.ayahList,
+        builder: (context) => AyahListScreen(
+          title: 'Juz ${juz.id} • ${juz.numAyah} Ayat',
+          subtitle: 'Mulai Surah',
+          caption: '${juz.startSurah.toUpperCase()} AYAT ${juz.startAyah}',
+          ayahList: juz.ayahList,
         ),
       ),
     );
@@ -42,7 +42,7 @@ class JuzTab extends StatelessWidget {
               subtitleText:
                   'MULAI • ${juz.startSurah.toUpperCase()} AYAT ${juz.startAyah}',
               onTap: () {
-                _goToJuzDetail(context, juz);
+                _goToAyahListScreen(context, juz);
               },
             );
           },
@@ -54,14 +54,18 @@ class JuzTab extends StatelessWidget {
           },
           itemCount: value.length,
         ),
-      AsyncError() => const Center(
+      AsyncError() => Center(
           child: SizedBox(
-            child: Text('Oops! Terdapat kesalahan saat mengambil data Juz!'),
+            child: Text(
+              textAlign: TextAlign.center,
+              'Oops!\nTerdapat kesalahan\nsaat memproses data Juz!',
+              style: GoogleFonts.inter(color: onSurface),
+            ),
           ),
         ),
       _ => const Center(
           child: SizedBox(
-            child: CircularProgressIndicator(),
+            child: RepaintBoundary(child: CircularProgressIndicator()),
           ),
         ),
     };

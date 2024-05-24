@@ -1,9 +1,10 @@
 import 'package:equran/models/surah.dart';
-import 'package:equran/screens/surah_detail_screen.dart';
+import 'package:equran/screens/ayah_list_screen.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/surah_juz_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SurahTab extends StatelessWidget {
   const SurahTab({
@@ -13,16 +14,15 @@ class SurahTab extends StatelessWidget {
 
   final AsyncValue<List<Surah>> surahList;
 
-  void _goToSurahDetail(BuildContext context, Surah surah) {
+  void _goToAyahListScreen(BuildContext context, Surah surah) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SurahDetailScreen(
-          surahName: surah.transliteration,
-          surahTranslation: surah.translation,
-          surahLocation: surah.location,
-          surahNumAyah: surah.numAyah,
-          surahAyahs: surah.ayahList,
+        builder: (context) => AyahListScreen(
+          title: surah.transliteration,
+          subtitle: surah.translation,
+          caption: '${surah.location.toUpperCase()} • ${surah.numAyah} AYAT',
+          ayahList: surah.ayahList,
         ),
       ),
     );
@@ -43,7 +43,7 @@ class SurahTab extends StatelessWidget {
                   '${surah.location.toUpperCase()} • ${surah.numAyah} AYAT',
               trailingText: surah.arabic,
               onTap: () {
-                _goToSurahDetail(context, surah);
+                _goToAyahListScreen(context, surah);
               },
             );
           },
@@ -55,14 +55,18 @@ class SurahTab extends StatelessWidget {
           },
           itemCount: value.length,
         ),
-      AsyncError() => const Center(
+      AsyncError() => Center(
           child: SizedBox(
-            child: Text('Oops! Terdapat kesalahan saat mengambil data Surah!'),
+            child: Text(
+              textAlign: TextAlign.center,
+              'Oops!\nTerdapat kesalahan\nsaat memproses data Surah!',
+              style: GoogleFonts.inter(color: onSurface),
+            ),
           ),
         ),
       _ => const Center(
           child: SizedBox(
-            child: CircularProgressIndicator(),
+            child: RepaintBoundary(child: CircularProgressIndicator()),
           ),
         ),
     };
