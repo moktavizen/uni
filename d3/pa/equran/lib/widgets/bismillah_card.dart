@@ -18,7 +18,6 @@ class BismillahCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 12),
         Stack(
           children: [
             Container(
@@ -89,7 +88,6 @@ class BismillahCard extends StatelessWidget {
             )
           ],
         ),
-        const SizedBox(height: 40),
       ],
     );
   }
