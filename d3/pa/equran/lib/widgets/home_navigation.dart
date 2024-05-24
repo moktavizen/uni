@@ -6,14 +6,14 @@ import 'package:equran/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MainNavigation extends StatefulWidget {
-  const MainNavigation({super.key});
+class HomeNavigation extends StatefulWidget {
+  const HomeNavigation({super.key});
 
   @override
-  State<MainNavigation> createState() => _MainNavigationState();
+  State<HomeNavigation> createState() => _HomeNavigationState();
 }
 
-class _MainNavigationState extends State<MainNavigation> {
+class _HomeNavigationState extends State<HomeNavigation> {
   int selectedScreenIndex = 1;
 
   void _selectScreen(int index) {

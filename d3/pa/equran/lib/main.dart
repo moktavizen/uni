@@ -1,4 +1,4 @@
-import 'package:equran/widgets/main_navigation.dart';
+import 'package:equran/widgets/home_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'EQuran',
-      home: MainNavigation(),
+      home: HomeNavigation(),
       debugShowCheckedModeBanner: false,
     );
   }
