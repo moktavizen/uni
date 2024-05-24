@@ -65,9 +65,10 @@ class SurahJuzListTile extends StatelessWidget {
             ? null
             : Text(
                 trailingText!,
-                style: GoogleFonts.amiri(
+                style: const TextStyle(
+                  fontFamily: 'IsepMisbah',
                   fontWeight: FontWeight.w700,
-                  fontSize: 20,
+                  fontSize: 16,
                   color: primary,
                 ),
               ),
