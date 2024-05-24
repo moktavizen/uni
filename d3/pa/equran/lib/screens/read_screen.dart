@@ -1,4 +1,4 @@
-import 'package:equran/providers/juzs_provider.dart';
+import 'package:equran/providers/juzes_provider.dart';
 import 'package:equran/providers/surahs_provider.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/tabs/juz_tab.dart';
@@ -13,7 +13,7 @@ class ReadScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final surahList = ref.watch(surahsProvider);
-    final juzList = ref.watch(juzsProvider);
+    final juzList = ref.watch(juzesProvider);
 
     return Container(
       color: surface,
