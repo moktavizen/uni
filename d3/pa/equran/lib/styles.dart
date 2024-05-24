@@ -24,6 +24,7 @@ const SvgAsset settingIconSolid = SvgAsset(name: 'setting-icon-solid');
 const SvgAsset lastRead = SvgAsset(name: 'last-read-icon');
 const SvgAsset shareIcon = SvgAsset(name: 'share-icon');
 const SvgAsset playIcon = SvgAsset(name: 'play-icon');
+const SvgAsset pauseIcon = SvgAsset(name: 'pause-icon');
 const SvgAsset tafsirIcon = SvgAsset(name: 'tafsir-icon');
 const SvgAsset bookmarkIcon = SvgAsset(name: 'bookmark-icon');
 const SvgAsset themeIcon = SvgAsset(name: 'theme-icon');
