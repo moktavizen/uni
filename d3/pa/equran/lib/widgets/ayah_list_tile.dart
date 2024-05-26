@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:equran/models/ayah.dart';
 import 'package:equran/providers/murattal_button_provider.dart';
 import 'package:equran/providers/selected_button_provider.dart';
-import 'package:equran/screens/ayah_list_screen.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/tafsir_bottom_sheet.dart';
 import 'package:flutter/material.dart';

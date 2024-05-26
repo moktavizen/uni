@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:just_audio/just_audio.dart';
 
-const Color surface = Color(0xFFFFFFFF);
-const Color onSurface = Color(0xFF240F4F);
-const Color onSurfaceVar = Color(0xFF8789A3);
-const Color primary = Color(0xFF672CBC);
-const Color secondary = Color(0xFF863ED5);
-const Color lastReadGrad1 = Color(0xFFDF98FA);
-const Color lastReadGrad2 = Color(0xFF9055FF);
-final Color listDecor = const Color(0xFFBBC4CE).withOpacity(0.35);
-final Color surahBar = const Color(0xFF121931).withOpacity(0.05);
+final AudioPlayer player = AudioPlayer();
+
+const Color surface = Color(0xffffffff);
+const Color onSurface = Color(0xff240f4f);
+const Color onSurfaceVar = Color(0xff8789a3);
+const Color primary = Color(0xff672cbc);
+const Color secondary = Color(0xff863ed5);
+const Color lastReadGrad1 = Color(0xffdf98fa);
+const Color lastReadGrad2 = Color(0xff9055ff);
+final Color listDecor = const Color(0xffbbc4ce).withOpacity(0.35);
+final Color surahBar = const Color(0xff121931).withOpacity(0.05);
+const Color systemUiDivider = Color(0xffe0e0e0);
+const Color systemUiBackground = Colors.transparent;
 
 const SvgAsset menuIcon = SvgAsset(name: 'menu-icon');
 const SvgAsset backIcon = SvgAsset(name: 'back-icon');

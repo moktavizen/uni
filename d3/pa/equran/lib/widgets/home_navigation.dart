@@ -1,95 +1,80 @@
-import 'package:equran/screens/favorites_screen.dart';
-import 'package:equran/screens/read_screen.dart';
-import 'package:equran/screens/setting_screen.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HomeNavigation extends StatefulWidget {
-  const HomeNavigation({super.key});
-
-  @override
-  State<HomeNavigation> createState() => _HomeNavigationState();
-}
-
-class _HomeNavigationState extends State<HomeNavigation> {
-  int selectedScreenIndex = 1;
-
-  void _selectScreen(int index) {
-    setState(() {
-      selectedScreenIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    String currentTitle = 'Baca';
-    Widget currentScreen = const ReadScreen();
-
-    switch (selectedScreenIndex) {
-      case 0:
-        currentTitle = 'Favorit';
-        currentScreen = const FavoritesScreen();
-      case 2:
-        currentTitle = 'Pengaturan';
-        currentScreen = const SettingScreen();
-    }
-
-    return Scaffold(
-      appBar: CustomAppBar(
-        titleText: currentTitle,
-      ),
-      body: currentScreen,
-      bottomNavigationBar: _CustomNavBar(
-        onSelectScreen: _selectScreen,
-        selectedScreenIndex: selectedScreenIndex,
-      ),
-    );
-  }
-}
-
-class _CustomNavBar extends StatelessWidget {
-  const _CustomNavBar({
-    required this.onSelectScreen,
-    required this.selectedScreenIndex,
+class HomeNavigation extends StatelessWidget {
+  const HomeNavigation({
+    super.key,
+    required this.child,
   });
 
-  final void Function(int index) onSelectScreen;
-  final int selectedScreenIndex;
+  final Widget child;
+
+  static int _calculateSelectedIndex(BuildContext context) {
+    final String location = GoRouterState.of(context).uri.path;
+    if (location.startsWith('/favorite')) {
+      return 0;
+    }
+    if (location.startsWith('/read')) {
+      return 1;
+    }
+    if (location.startsWith('/setting')) {
+      return 2;
+    }
+    return 0;
+  }
+
+  void _onItemTapped(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        GoRouter.of(context).go('/favorite');
+      case 1:
+        GoRouter.of(context).go('/read');
+      case 2:
+        GoRouter.of(context).go('/setting');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      onTap: onSelectScreen,
-      currentIndex: selectedScreenIndex,
-      backgroundColor: surface,
-      elevation: 16,
-      selectedLabelStyle: GoogleFonts.inter(
-        fontSize: 13,
-        color: primary,
+    return Scaffold(
+      appBar: const CustomAppBar(
+        titleText: 'EQuran',
       ),
-      unselectedLabelStyle: GoogleFonts.inter(
-        fontSize: 13,
-        color: onSurfaceVar,
+      body: child,
+      bottomNavigationBar: Theme(
+        data: ThemeData(
+          splashColor: systemUiBackground,
+          highlightColor: systemUiBackground,
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _calculateSelectedIndex(context),
+          onTap: (int idx) => _onItemTapped(idx, context),
+          backgroundColor: surface,
+          elevation: 16,
+          selectedLabelStyle: GoogleFonts.inter(fontSize: 14),
+          unselectedLabelStyle: GoogleFonts.inter(fontSize: 14),
+          items: const [
+            BottomNavigationBarItem(
+              icon: favoriteIcon,
+              activeIcon: favoriteIconSolid,
+              label: 'Favorit',
+            ),
+            BottomNavigationBarItem(
+              icon: readIcon,
+              activeIcon: readIconSolid,
+              label: 'Baca',
+            ),
+            BottomNavigationBarItem(
+              icon: settingIcon,
+              activeIcon: settingIconSolid,
+              label: 'Pengaturan',
+            ),
+          ],
+        ),
       ),
-      items: const [
-        BottomNavigationBarItem(
-          icon: favoriteIcon,
-          activeIcon: favoriteIconSolid,
-          label: 'Favorit',
-        ),
-        BottomNavigationBarItem(
-          icon: readIcon,
-          activeIcon: readIconSolid,
-          label: 'Baca',
-        ),
-        BottomNavigationBarItem(
-          icon: settingIcon,
-          activeIcon: settingIconSolid,
-          label: 'Pengaturan',
-        ),
-      ],
     );
   }
 }

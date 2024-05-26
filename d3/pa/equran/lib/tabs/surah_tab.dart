@@ -1,9 +1,9 @@
 import 'package:equran/models/surah.dart';
-import 'package:equran/screens/ayah_list_screen.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/surah_juz_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SurahTab extends StatelessWidget {
@@ -13,20 +13,6 @@ class SurahTab extends StatelessWidget {
   });
 
   final AsyncValue<List<Surah>> surahList;
-
-  void _goToAyahListScreen(BuildContext context, Surah surah) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AyahListScreen(
-          title: surah.transliteration,
-          subtitle: surah.translation,
-          caption: '${surah.location.toUpperCase()} • ${surah.numAyah} AYAT',
-          ayahList: surah.ayahList,
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +26,9 @@ class SurahTab extends StatelessWidget {
               leadingNum: surah.id,
               titleText: surah.transliteration,
               subtitleText:
-                  '${surah.location.toUpperCase()} • ${surah.numAyah} AYAT',
+                  '${surah.location.toUpperCase()} • ${surah.ayahList.length} AYAT',
               trailingText: surah.arabic,
-              onTap: () {
-                _goToAyahListScreen(context, surah);
-              },
+              onTap: () => context.go('/read/surah', extra: surah),
             );
           },
           separatorBuilder: (context, index) {

@@ -1,9 +1,9 @@
 import 'package:equran/models/juz.dart';
-import 'package:equran/screens/ayah_list_screen.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/surah_juz_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class JuzTab extends StatelessWidget {
@@ -13,20 +13,6 @@ class JuzTab extends StatelessWidget {
   });
 
   final AsyncValue<List<Juz>> juzList;
-
-  void _goToAyahListScreen(BuildContext context, Juz juz) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AyahListScreen(
-          title: 'Juz ${juz.id} • ${juz.numAyah} Ayat',
-          subtitle: 'Mulai Surah',
-          caption: '${juz.startSurah.toUpperCase()} AYAT ${juz.startAyah}',
-          ayahList: juz.ayahList,
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +24,10 @@ class JuzTab extends StatelessWidget {
 
             return SurahJuzListTile(
               leadingNum: juz.id,
-              titleText: 'Juz ${juz.id} - ${juz.numAyah} Ayat',
+              titleText: 'Juz ${juz.id} - ${juz.ayahList.length} Ayat',
               subtitleText:
                   'MULAI • ${juz.startSurah.toUpperCase()} AYAT ${juz.startAyah}',
-              onTap: () {
-                _goToAyahListScreen(context, juz);
-              },
+              onTap: () => context.go('/read/juz', extra: juz),
             );
           },
           separatorBuilder: (context, index) {
