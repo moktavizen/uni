@@ -10,8 +10,8 @@ import 'package:just_audio/just_audio.dart';
 
 final AudioPlayer player = AudioPlayer();
 
-class AyahListScreen extends ConsumerWidget {
-  const AyahListScreen({
+class AyahsScreen extends ConsumerWidget {
+  const AyahsScreen({
     super.key,
     required this.title,
     required this.subtitle,
