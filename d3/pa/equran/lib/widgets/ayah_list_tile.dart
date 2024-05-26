@@ -26,49 +26,41 @@ class AyahListTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 12),
-        RepaintBoundary(
-          child: Text(
-            ayah.arabic,
-            textAlign: TextAlign.right,
-            // style: GoogleFonts.amiri(
-            //   fontWeight: FontWeight.w700,
-            //   fontSize: 20,
-            //   color: onSurface,
-            //   height: 2.5,
-            // style: GoogleFonts.notoNaskhArabic(
-            //   fontWeight: FontWeight.w700,
-            //   fontSize: 20,
-            //   color: onSurface,
-            //   height: 2,
-            style: const TextStyle(
-              fontFamily: 'IsepMisbah',
-              fontWeight: FontWeight.w700,
-              fontSize: 20,
-              color: onSurface,
-              height: 2.5,
-            ),
+        Text(
+          ayah.arabic,
+          textAlign: TextAlign.right,
+          // style: GoogleFonts.amiri(
+          //   fontWeight: FontWeight.w700,
+          //   fontSize: 20,
+          //   color: onSurface,
+          //   height: 2.5,
+          // style: GoogleFonts.notoNaskhArabic(
+          //   fontWeight: FontWeight.w700,
+          //   fontSize: 20,
+          //   color: onSurface,
+          //   height: 2,
+          style: const TextStyle(
+            fontFamily: 'IsepMisbah',
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            color: onSurface,
+            height: 2.5,
           ),
         ),
         const SizedBox(height: 16),
-        RepaintBoundary(
-          child: Text(
-            ayah.translation,
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w400,
-              fontSize: 14,
-              color: onSurface,
-            ),
+        Text(
+          ayah.translation,
+          style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
+            color: onSurface,
           ),
         ),
         const SizedBox(height: 16),
-        RepaintBoundary(
-          child: AyahBar(
-            ayah: ayah,
-            selectedButtonState: selectedButtonState,
-          ),
+        AyahBar(
+          ayah: ayah,
+          selectedButtonState: selectedButtonState,
         ),
-        const SizedBox(height: 12),
       ],
     );
   }
@@ -127,7 +119,8 @@ class AyahBar extends StatelessWidget {
                   icon: tafsirIcon,
                 ),
               ),
-              RepaintBoundary(
+              SizedBox(
+                width: 40,
                 child: _MurattalPlayButton(
                   ayah: ayah,
                   selectedButtonState: selectedButtonState,
@@ -170,61 +163,57 @@ class _MurattalPlayButton extends ConsumerWidget {
     final MurattalButton murattalButtonNotifier =
         ref.read(murattalButtonProvider(buttonId: buttonId).notifier);
 
-    return SizedBox(
-      width: 40,
-      child: IconButton(
-        onPressed: () async {
-          ref
-              .read(selectedButtonProvider.notifier)
-              .selectButton(buttonId: buttonId);
-          try {
-            final conn = await InternetAddress.lookup('example.com');
-            final bool isConn =
-                conn.isNotEmpty && conn[0].rawAddress.isNotEmpty;
-            if (isConn == true && context.mounted) {
-              ScaffoldMessenger.of(context).clearSnackBars();
+    return IconButton(
+      onPressed: () async {
+        ref
+            .read(selectedButtonProvider.notifier)
+            .selectButton(buttonId: buttonId);
+        try {
+          final conn = await InternetAddress.lookup('example.com');
+          final bool isConn = conn.isNotEmpty && conn[0].rawAddress.isNotEmpty;
+          if (isConn == true && context.mounted) {
+            ScaffoldMessenger.of(context).clearSnackBars();
 
-              if (murattalButtonState == '$buttonId playing') {
-                await player.pause();
-                murattalButtonNotifier.pauseButton();
-              } else if (murattalButtonState == '$buttonId stopped') {
+            if (murattalButtonState == '$buttonId playing') {
+              await player.pause();
+              murattalButtonNotifier.pauseButton();
+            } else if (murattalButtonState == '$buttonId stopped') {
+              await player.stop();
+              await player.setUrl(
+                "https://media.qurankemenag.net/audio/Abu_Bakr_Ash-Shaatree_aac64/$murattalId.m4a",
+              );
+              murattalButtonNotifier.playButton();
+              await player.play();
+              murattalButtonNotifier.stopButton();
+            } else if (murattalButtonState == '$buttonId paused') {
+              if (selectedButtonState != '$buttonId selected') {
                 await player.stop();
                 await player.setUrl(
                   "https://media.qurankemenag.net/audio/Abu_Bakr_Ash-Shaatree_aac64/$murattalId.m4a",
                 );
-                murattalButtonNotifier.playButton();
-                await player.play();
-                murattalButtonNotifier.stopButton();
-              } else if (murattalButtonState == '$buttonId paused') {
-                if (selectedButtonState != '$buttonId selected') {
-                  await player.stop();
-                  await player.setUrl(
-                    "https://media.qurankemenag.net/audio/Abu_Bakr_Ash-Shaatree_aac64/$murattalId.m4a",
-                  );
-                }
-                murattalButtonNotifier.playButton();
-                await player.play();
-                murattalButtonNotifier.stopButton();
               }
-            }
-          } on SocketException catch (_) {
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).clearSnackBars();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: primary,
-                  content: Text(
-                    textAlign: TextAlign.center,
-                    'Fitur ini membutuhkan koneksi internet!',
-                    style: GoogleFonts.inter(color: surface),
-                  ),
-                ),
-              );
+              murattalButtonNotifier.playButton();
+              await player.play();
+              murattalButtonNotifier.stopButton();
             }
           }
-        },
-        icon: murattalButtonState == '$buttonId playing' ? pauseIcon : playIcon,
-      ),
+        } on SocketException catch (_) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: primary,
+                content: Text(
+                  textAlign: TextAlign.center,
+                  'Fitur ini membutuhkan koneksi internet!',
+                  style: GoogleFonts.inter(color: surface),
+                ),
+              ),
+            );
+          }
+        }
+      },
+      icon: murattalButtonState == '$buttonId playing' ? pauseIcon : playIcon,
     );
   }
 }
