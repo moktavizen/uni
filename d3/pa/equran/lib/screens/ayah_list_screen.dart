@@ -51,13 +51,13 @@ class AyahListScreen extends ConsumerWidget {
                     subtitle: subtitle,
                     caption: caption,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 36),
                 ],
               ),
             )
           ],
-          body: ListView.builder(
-            padding: const EdgeInsets.only(bottom: 12),
+          body: ListView.separated(
+            padding: const EdgeInsets.only(bottom: 24),
             itemBuilder: (context, index) {
               Ayah ayah = ayahList.elementAt(index);
 
@@ -66,6 +66,7 @@ class AyahListScreen extends ConsumerWidget {
                 selectedButtonState: selectedButtonState,
               );
             },
+            separatorBuilder: (context, index) => const SizedBox(height: 24),
             itemCount: ayahList.length,
           ),
         ),

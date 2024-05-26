@@ -63,27 +63,25 @@ class _AppVer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          const SizedBox(height: 64),
-          Text(
-            'Final Project for University',
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w500,
-              fontSize: 12,
-              color: onSurfaceVar,
+    return SizedBox(
+      height: 156,
+      width: double.infinity,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Final Project for University\n'
+              'EQuran - v0.0.1',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w500,
+                fontSize: 12,
+                color: onSurfaceVar,
+              ),
             ),
-          ),
-          Text(
-            'EQuran - v0.0.1',
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w500,
-              fontSize: 12,
-              color: onSurfaceVar,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -131,13 +129,14 @@ class _SettingsListTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
           children: [
-            Column(
-              children: [
-                leadingIcon,
-                const SizedBox(height: 16),
-              ],
+            SizedBox(
+              width: 40,
+              height: 46,
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: leadingIcon,
+              ),
             ),
-            const SizedBox(width: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
