@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:just_audio/just_audio.dart';
-
-final AudioPlayer player = AudioPlayer();
 
 const Color surface = Color(0xffffffff);
 const Color onSurface = Color(0xff240f4f);

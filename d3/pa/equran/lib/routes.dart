@@ -1,10 +1,8 @@
-import 'package:equran/models/juz.dart';
-import 'package:equran/models/surah.dart';
+import 'package:equran/models/ayah.dart';
+import 'package:equran/screens/ayahs_detail_screen.dart';
 import 'package:equran/screens/favorites_screen.dart';
-import 'package:equran/screens/juz_detail_screen.dart';
 import 'package:equran/screens/read_screen.dart';
 import 'package:equran/screens/setting_screen.dart';
-import 'package:equran/screens/surah_detail_screen.dart';
 import 'package:equran/widgets/home_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -25,36 +23,37 @@ final GoRouter router = GoRouter(
       routes: [
         GoRoute(
           path: '/favorite',
+          name: 'favorite',
           pageBuilder: (context, state) => const NoTransitionPage(
             child: FavoritesScreen(),
           ),
         ),
         GoRoute(
           path: '/read',
+          name: 'read',
           pageBuilder: (context, state) => const NoTransitionPage(
             child: ReadScreen(),
           ),
           routes: [
             GoRoute(
-              path: 'surah',
+              path: 'ayahs/:title/:subtitle/:caption',
+              name: 'ayahs',
               parentNavigatorKey: _rootNavigatorKey,
               builder: (context, state) {
-                Surah surah = state.extra as Surah;
-                return SurahDetailScreen(surah: surah);
-              },
-            ),
-            GoRoute(
-              path: 'juz',
-              parentNavigatorKey: _rootNavigatorKey,
-              builder: (context, state) {
-                Juz juz = state.extra as Juz;
-                return JuzDetailScreen(juz: juz);
+                List<Ayah> ayahList = state.extra as List<Ayah>;
+                return AyahsDetailScreen(
+                  title: state.pathParameters['title'],
+                  subtitle: state.pathParameters['subtitle'],
+                  caption: state.pathParameters['caption'],
+                  ayahList: ayahList,
+                );
               },
             ),
           ],
         ),
         GoRoute(
           path: '/setting',
+          name: 'setting',
           pageBuilder: (context, state) => const NoTransitionPage(
             child: SettingScreen(),
           ),

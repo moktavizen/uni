@@ -29,11 +29,11 @@ class HomeNavigation extends StatelessWidget {
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
-        GoRouter.of(context).go('/favorite');
+        context.goNamed('favorite');
       case 1:
-        GoRouter.of(context).go('/read');
+        context.goNamed('read');
       case 2:
-        GoRouter.of(context).go('/setting');
+        context.goNamed('setting');
     }
   }
 

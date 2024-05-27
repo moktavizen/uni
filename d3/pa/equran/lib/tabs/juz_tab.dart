@@ -27,7 +27,16 @@ class JuzTab extends StatelessWidget {
               titleText: 'Juz ${juz.id} - ${juz.ayahList.length} Ayat',
               subtitleText:
                   'MULAI • ${juz.startSurah.toUpperCase()} AYAT ${juz.startAyah}',
-              onTap: () => context.go('/read/juz', extra: juz),
+              onTap: () => context.goNamed(
+                'ayahs',
+                pathParameters: {
+                  'title': 'Juz ${juz.id} • ${juz.ayahList.length} Ayat',
+                  'subtitle': 'Mulai Surah',
+                  'caption':
+                      '${juz.startSurah.toUpperCase()} AYAT ${juz.startAyah}',
+                },
+                extra: juz.ayahList,
+              ),
             );
           },
           separatorBuilder: (context, index) {

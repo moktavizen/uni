@@ -1,5 +1,4 @@
 import 'package:equran/models/ayah.dart';
-import 'package:equran/models/juz.dart';
 import 'package:equran/providers/selected_button_provider.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/ayah_list_tile.dart';
@@ -8,14 +7,23 @@ import 'package:equran/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:just_audio/just_audio.dart';
 
-class JuzDetailScreen extends ConsumerWidget {
-  const JuzDetailScreen({
+final AudioPlayer player = AudioPlayer();
+
+class AyahsDetailScreen extends ConsumerWidget {
+  const AyahsDetailScreen({
     super.key,
-    required this.juz,
+    required this.title,
+    required this.subtitle,
+    required this.caption,
+    required this.ayahList,
   });
 
-  final Juz juz;
+  final String? title;
+  final String? subtitle;
+  final String? caption;
+  final List<Ayah> ayahList;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,7 +32,7 @@ class JuzDetailScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: surface,
       appBar: CustomAppBar(
-        titleText: 'Juz ${juz.id} • ${juz.ayahList.length} Ayat',
+        titleText: title!,
         leadingIcon: backIcon,
         onPressLeading: () {
           player.stop();
@@ -40,10 +48,9 @@ class JuzDetailScreen extends ConsumerWidget {
                 children: [
                   const SizedBox(height: 12),
                   BismillahCard(
-                    title: 'Juz ${juz.id} • ${juz.ayahList.length} Ayat',
-                    subtitle: 'Mulai Surah',
-                    caption:
-                        '${juz.startSurah.toUpperCase()} AYAT ${juz.startAyah}',
+                    title: title!,
+                    subtitle: subtitle!,
+                    caption: caption!,
                   ),
                   const SizedBox(height: 36),
                 ],
@@ -53,7 +60,7 @@ class JuzDetailScreen extends ConsumerWidget {
           body: ListView.separated(
             padding: const EdgeInsets.only(bottom: 24),
             itemBuilder: (context, index) {
-              Ayah ayah = juz.ayahList.elementAt(index);
+              Ayah ayah = ayahList.elementAt(index);
 
               return AyahListTile(
                 ayah: ayah,
@@ -61,7 +68,7 @@ class JuzDetailScreen extends ConsumerWidget {
               );
             },
             separatorBuilder: (context, index) => const SizedBox(height: 24),
-            itemCount: juz.ayahList.length,
+            itemCount: ayahList.length,
           ),
         ),
       ),

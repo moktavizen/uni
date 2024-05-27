@@ -28,7 +28,16 @@ class SurahTab extends StatelessWidget {
               subtitleText:
                   '${surah.location.toUpperCase()} • ${surah.ayahList.length} AYAT',
               trailingText: surah.arabic,
-              onTap: () => context.go('/read/surah', extra: surah),
+              onTap: () => context.goNamed(
+                'ayahs',
+                pathParameters: {
+                  'title': surah.transliteration,
+                  'subtitle': surah.translation,
+                  'caption':
+                      '${surah.location.toUpperCase()} • ${surah.ayahList.length} AYAT',
+                },
+                extra: surah.ayahList,
+              ),
             );
           },
           separatorBuilder: (context, index) {
