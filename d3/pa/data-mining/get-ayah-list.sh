@@ -11,6 +11,7 @@ curl -s "https://web-api.qurankemenag.net/quran-tafsir?" \
       juz_id: .juz,
       ayah_num: .ayah,
       arabic,
+      latin,
       translation,
       tafsir: .tafsir.wajiz
     }]' \

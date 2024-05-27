@@ -19,6 +19,7 @@ class Ayah {
   final int juzId;
   final int ayahNum;
   final String arabic;
+  final String latin;
   final String translation;
   final String tafsir;
 
@@ -29,6 +30,7 @@ class Ayah {
     required this.juzId,
     required this.ayahNum,
     required this.arabic,
+    required this.latin,
     required this.translation,
     required this.tafsir,
   });
@@ -40,6 +42,7 @@ class Ayah {
         juzId: json["juz_id"],
         ayahNum: json["ayah_num"],
         arabic: json["arabic"],
+        latin: json["latin"],
         translation: json["translation"],
         tafsir: json["tafsir"],
       );
@@ -51,6 +54,7 @@ class Ayah {
         "juz_id": juzId,
         "ayah_num": ayahNum,
         "arabic": arabic,
+        "latin": latin,
         "translation": translation,
         "tafsir": tafsir,
       };
