@@ -1,25 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'juzes_provider.dart';
+part of 'juzs_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$juzesHash() => r'43326cd7ff52f328d1772d8993438b58ddf125fa';
+String _$juzsHash() => r'abcbd75536ef6a20e67c0fb2ccfd81f5e1272244';
 
-/// See also [Juzes].
-@ProviderFor(Juzes)
-final juzesProvider =
-    AutoDisposeAsyncNotifierProvider<Juzes, List<Juz>>.internal(
-  Juzes.new,
-  name: r'juzesProvider',
+/// See also [Juzs].
+@ProviderFor(Juzs)
+final juzsProvider = AutoDisposeAsyncNotifierProvider<Juzs, List<Juz>>.internal(
+  Juzs.new,
+  name: r'juzsProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$juzesHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$juzsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$Juzes = AutoDisposeAsyncNotifier<List<Juz>>;
+typedef _$Juzs = AutoDisposeAsyncNotifier<List<Juz>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

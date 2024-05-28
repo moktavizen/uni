@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'juzes_provider.g.dart';
+part 'juzs_provider.g.dart';
 
 @riverpod
-class Juzes extends _$Juzes {
+class Juzs extends _$Juzs {
   @override
   Future<List<Juz>> build() async {
     // Load JSON strings for Juz and Ayah data from asset files
