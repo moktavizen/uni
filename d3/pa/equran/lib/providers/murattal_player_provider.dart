@@ -11,4 +11,3 @@ class MurattalPlayer extends _$MurattalPlayer {
     return AudioPlayer();
   }
 }
-
