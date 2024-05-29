@@ -1,16 +1,29 @@
-# equran
+# EQuran
 
-A new Flutter project.
+Quran App  with Voice Typing to improving accessibilty for those who have 
+diffuculties in typing. The Quran data is retrieved from 
+[Quran Web App](https://quran.kemenag.go.id/) public API, made by 
+Mnistry of Religious Affairs of Indonesia.
 
-## Getting Started
+This App is built using Flutter with the following packages:
 
-This project is a starting point for a Flutter application.
+ - `riverpod` - State Management
+ - `drift` - Database
+ - `flutter_svg` - SVG Rendering
+ - `just_audio` - Audio Player
+ - `share_plus` - Content Sharing
 
-A few resources to get you started if this is your first Flutter project:
+## Features Progress
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+| Planned Features    | User Interface | Functionality |
+|:--------------------|:--------------:|:-------------:|
+| Read Quran          |        ✅       |       ✅       |
+| Voice Typing        |        ✅       |       🛠️       |
+| Last Read           |        ✅       |       🛠️       |
+| Translation         |        ✅       |       ✅       |
+| Share/Copy          |        ✅       |       ✅       |
+| Murottal Audio      |        ✅       |       ✅       |
+| Tafsir              |        ✅       |       ✅       |
+| Favorites           |        ✅       |       🛠️       |
+| Customization       |        ✅       |       🛠️       |
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

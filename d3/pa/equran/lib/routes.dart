@@ -1,8 +1,9 @@
-import 'package:equran/models/ayah.dart';
-import 'package:equran/screens/ayahs_detail_screen.dart';
+import 'package:equran/databases/database.dart';
 import 'package:equran/screens/favorites_screen.dart';
+import 'package:equran/screens/juz_detail_screen.dart';
 import 'package:equran/screens/read_screen.dart';
 import 'package:equran/screens/setting_screen.dart';
+import 'package:equran/screens/surah_detail_screen.dart';
 import 'package:equran/widgets/home_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +16,6 @@ final GlobalKey<NavigatorState> _shellNavigatorKey =
 final GoRouter router = GoRouter(
   initialLocation: '/read',
   navigatorKey: _rootNavigatorKey,
-  debugLogDiagnostics: true,
   routes: [
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
@@ -36,16 +36,26 @@ final GoRouter router = GoRouter(
           ),
           routes: [
             GoRoute(
-              path: 'ayahs/:title/:subtitle/:caption',
-              name: 'ayahs',
+              path: 'surah/:surahId',
+              name: 'surah',
               parentNavigatorKey: _rootNavigatorKey,
               builder: (context, state) {
-                List<Ayah> ayahList = state.extra as List<Ayah>;
-                return AyahsDetailScreen(
-                  title: state.pathParameters['title'],
-                  subtitle: state.pathParameters['subtitle'],
-                  caption: state.pathParameters['caption'],
-                  ayahList: ayahList,
+                Surah surah = state.extra as Surah;
+                return SurahDetailScreen(
+                  surah: surah,
+                  surahId: state.pathParameters['surahId'],
+                );
+              },
+            ),
+            GoRoute(
+              path: 'juz/:juzId',
+              name: 'juz',
+              parentNavigatorKey: _rootNavigatorKey,
+              builder: (context, state) {
+                Juz juz = state.extra as Juz;
+                return JuzDetailScreen(
+                  juz: juz,
+                  juzId: state.pathParameters['juzId'],
                 );
               },
             ),

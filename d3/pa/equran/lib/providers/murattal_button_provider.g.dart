@@ -6,7 +6,7 @@ part of 'murattal_button_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$murattalButtonHash() => r'006e12a1a60711613575b4c8ee3d028f4287cb1e';
+String _$murattalButtonHash() => r'dfee079073e5e74bc65e65a0b61cfff293575408';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,9 +32,9 @@ class _SystemHash {
 abstract class _$MurattalButton extends BuildlessAutoDisposeNotifier<String> {
   late final int buttonId;
 
-  String build({
-    required int buttonId,
-  });
+  String build(
+    int buttonId,
+  );
 }
 
 /// See also [MurattalButton].
@@ -47,11 +47,11 @@ class MurattalButtonFamily extends Family<String> {
   const MurattalButtonFamily();
 
   /// See also [MurattalButton].
-  MurattalButtonProvider call({
-    required int buttonId,
-  }) {
+  MurattalButtonProvider call(
+    int buttonId,
+  ) {
     return MurattalButtonProvider(
-      buttonId: buttonId,
+      buttonId,
     );
   }
 
@@ -60,7 +60,7 @@ class MurattalButtonFamily extends Family<String> {
     covariant MurattalButtonProvider provider,
   ) {
     return call(
-      buttonId: provider.buttonId,
+      provider.buttonId,
     );
   }
 
@@ -83,9 +83,9 @@ class MurattalButtonFamily extends Family<String> {
 class MurattalButtonProvider
     extends AutoDisposeNotifierProviderImpl<MurattalButton, String> {
   /// See also [MurattalButton].
-  MurattalButtonProvider({
-    required int buttonId,
-  }) : this._internal(
+  MurattalButtonProvider(
+    int buttonId,
+  ) : this._internal(
           () => MurattalButton()..buttonId = buttonId,
           from: murattalButtonProvider,
           name: r'murattalButtonProvider',
@@ -116,7 +116,7 @@ class MurattalButtonProvider
     covariant MurattalButton notifier,
   ) {
     return notifier.build(
-      buttonId: buttonId,
+      buttonId,
     );
   }
 

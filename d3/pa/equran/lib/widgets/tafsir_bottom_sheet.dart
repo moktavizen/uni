@@ -1,4 +1,4 @@
-import 'package:equran/models/ayah.dart';
+import 'package:equran/databases/database.dart';
 import 'package:equran/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

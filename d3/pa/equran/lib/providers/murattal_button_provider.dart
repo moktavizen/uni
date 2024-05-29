@@ -5,8 +5,7 @@ part 'murattal_button_provider.g.dart';
 @riverpod
 class MurattalButton extends _$MurattalButton {
   @override
-  String build({required int buttonId}) {
-    ref.keepAlive();
+  String build(int buttonId) {
     return '$buttonId stopped';
   }
 

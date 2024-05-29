@@ -1,4 +1,4 @@
-import 'package:equran/models/surah.dart';
+import 'package:equran/databases/database.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/surah_juz_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -24,20 +24,19 @@ class SurahTab extends StatelessWidget {
 
             return SurahJuzListTile(
               leadingNum: surah.id,
-              titleText: surah.transliteration,
+              titleText: surah.latin,
               subtitleText:
-                  '${surah.location.toUpperCase()} • ${surah.ayahList.length} AYAT',
+                  '${surah.location.toUpperCase()} • ${surah.ayahCount} AYAT',
               trailingText: surah.arabic,
-              onTap: () => context.goNamed(
-                'ayahs',
-                pathParameters: {
-                  'title': surah.transliteration,
-                  'subtitle': surah.translation,
-                  'caption':
-                      '${surah.location.toUpperCase()} • ${surah.ayahList.length} AYAT',
-                },
-                extra: surah.ayahList,
-              ),
+              onTap: () {
+                return context.goNamed(
+                  'surah',
+                  pathParameters: {
+                    'surahId': (surah.id).toString(),
+                  },
+                  extra: surah,
+                );
+              },
             );
           },
           separatorBuilder: (context, index) {

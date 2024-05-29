@@ -1,17 +1,18 @@
 import 'dart:io';
 
-import 'package:equran/models/ayah.dart';
+import 'package:equran/databases/database.dart';
 import 'package:equran/providers/murattal_button_provider.dart';
+import 'package:equran/providers/player_provider.dart';
 import 'package:equran/providers/selected_button_provider.dart';
-import 'package:equran/screens/ayahs_detail_screen.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/tafsir_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:share_plus/share_plus.dart';
 
-class AyahListTile extends StatelessWidget {
+class AyahListTile extends StatefulWidget {
   const AyahListTile({
     super.key,
     required this.ayah,
@@ -22,12 +23,22 @@ class AyahListTile extends StatelessWidget {
   final String selectedButtonState;
 
   @override
+  State<AyahListTile> createState() => _AyahListTileState();
+}
+
+class _AyahListTileState extends State<AyahListTile>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          ayah.arabic,
+          widget.ayah.arabic,
           textAlign: TextAlign.right,
           // style: GoogleFonts.amiri(
           //   fontWeight: FontWeight.w700,
@@ -49,7 +60,7 @@ class AyahListTile extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          ayah.translation,
+          widget.ayah.translation,
           style: GoogleFonts.inter(
             fontWeight: FontWeight.w400,
             fontSize: 14,
@@ -58,8 +69,8 @@ class AyahListTile extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         AyahBar(
-          ayah: ayah,
-          selectedButtonState: selectedButtonState,
+          ayah: widget.ayah,
+          selectedButtonState: widget.selectedButtonState,
         ),
       ],
     );
@@ -150,18 +161,46 @@ class _MurattalPlayButton extends ConsumerWidget {
   final Ayah ayah;
   final String selectedButtonState;
 
+  Future<void> playAudio(AudioPlayer player, WidgetRef ref, int buttonId,
+      String baseUrl, String murattalId) async {
+    await player.stop();
+    await player.setUrl("$baseUrl$murattalId.m4a");
+    ref.read(murattalButtonProvider(buttonId).notifier).playButton();
+    await player.play();
+    ref.read(murattalButtonProvider(buttonId).notifier).stopButton();
+  }
+
+  Future<void> resumeAudio(AudioPlayer player, WidgetRef ref, int buttonId,
+      String baseUrl, String murattalId, String selectedButtonState) async {
+    if (selectedButtonState != '$buttonId selected') {
+      await player.stop();
+      await player.setUrl("$baseUrl$murattalId.m4a");
+    }
+    ref.read(murattalButtonProvider(buttonId).notifier).playButton();
+    await player.play();
+    ref.read(murattalButtonProvider(buttonId).notifier).stopButton();
+  }
+
+  Future<void> pauseAudio(
+      AudioPlayer player, WidgetRef ref, int buttonId) async {
+    await player.pause();
+    ref.read(murattalButtonProvider(buttonId).notifier).pauseButton();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     int buttonId = ayah.ayahNum;
+    String baseUrl =
+        'https://media.qurankemenag.net/audio/Abu_Bakr_Ash-Shaatree_aac64/';
 
     String paddedSurahId = ayah.surahId.toString().padLeft(3, '0');
     String paddedAyahNum = ayah.ayahNum.toString().padLeft(3, '0');
     String murattalId = paddedSurahId + paddedAyahNum;
 
+    final AudioPlayer player = ref.watch(playerProvider);
+
     final String murattalButtonState =
-        ref.watch(murattalButtonProvider(buttonId: buttonId));
-    final MurattalButton murattalButtonNotifier =
-        ref.read(murattalButtonProvider(buttonId: buttonId).notifier);
+        ref.watch(murattalButtonProvider(buttonId));
 
     return IconButton(
       onPressed: () async {
@@ -175,26 +214,12 @@ class _MurattalPlayButton extends ConsumerWidget {
             ScaffoldMessenger.of(context).clearSnackBars();
 
             if (murattalButtonState == '$buttonId playing') {
-              await player.pause();
-              murattalButtonNotifier.pauseButton();
+              pauseAudio(player, ref, buttonId);
             } else if (murattalButtonState == '$buttonId stopped') {
-              await player.stop();
-              await player.setUrl(
-                "https://media.qurankemenag.net/audio/Abu_Bakr_Ash-Shaatree_aac64/$murattalId.m4a",
-              );
-              murattalButtonNotifier.playButton();
-              await player.play();
-              murattalButtonNotifier.stopButton();
+              playAudio(player, ref, buttonId, baseUrl, murattalId);
             } else if (murattalButtonState == '$buttonId paused') {
-              if (selectedButtonState != '$buttonId selected') {
-                await player.stop();
-                await player.setUrl(
-                  "https://media.qurankemenag.net/audio/Abu_Bakr_Ash-Shaatree_aac64/$murattalId.m4a",
-                );
-              }
-              murattalButtonNotifier.playButton();
-              await player.play();
-              murattalButtonNotifier.stopButton();
+              resumeAudio(player, ref, buttonId, baseUrl, murattalId,
+                  selectedButtonState);
             }
           }
         } on SocketException catch (_) {
