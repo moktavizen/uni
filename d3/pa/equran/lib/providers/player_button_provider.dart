@@ -1,9 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'murattal_button_provider.g.dart';
+part 'player_button_provider.g.dart';
 
 @riverpod
-class MurattalButton extends _$MurattalButton {
+class PlayerButton extends _$PlayerButton {
   @override
   String build(int buttonId) {
     return '$buttonId stopped';

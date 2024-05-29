@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:equran/databases/database.dart';
-import 'package:equran/providers/murattal_button_provider.dart';
-import 'package:equran/providers/player_provider.dart';
-import 'package:equran/providers/selected_button_provider.dart';
+import 'package:equran/providers/murattal_player_provider.dart';
+import 'package:equran/providers/player_button_provider.dart';
+import 'package:equran/providers/selected_player_provider.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/tafsir_bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -165,9 +165,9 @@ class _MurattalPlayButton extends ConsumerWidget {
       String baseUrl, String murattalId) async {
     await player.stop();
     await player.setUrl("$baseUrl$murattalId.m4a");
-    ref.read(murattalButtonProvider(buttonId).notifier).playButton();
+    ref.read(playerButtonProvider(buttonId).notifier).playButton();
     await player.play();
-    ref.read(murattalButtonProvider(buttonId).notifier).stopButton();
+    ref.read(playerButtonProvider(buttonId).notifier).stopButton();
   }
 
   Future<void> resumeAudio(AudioPlayer player, WidgetRef ref, int buttonId,
@@ -176,15 +176,15 @@ class _MurattalPlayButton extends ConsumerWidget {
       await player.stop();
       await player.setUrl("$baseUrl$murattalId.m4a");
     }
-    ref.read(murattalButtonProvider(buttonId).notifier).playButton();
+    ref.read(playerButtonProvider(buttonId).notifier).playButton();
     await player.play();
-    ref.read(murattalButtonProvider(buttonId).notifier).stopButton();
+    ref.read(playerButtonProvider(buttonId).notifier).stopButton();
   }
 
   Future<void> pauseAudio(
       AudioPlayer player, WidgetRef ref, int buttonId) async {
     await player.pause();
-    ref.read(murattalButtonProvider(buttonId).notifier).pauseButton();
+    ref.read(playerButtonProvider(buttonId).notifier).pauseButton();
   }
 
   @override
@@ -197,15 +197,14 @@ class _MurattalPlayButton extends ConsumerWidget {
     String paddedAyahNum = ayah.ayahNum.toString().padLeft(3, '0');
     String murattalId = paddedSurahId + paddedAyahNum;
 
-    final AudioPlayer player = ref.watch(playerProvider);
+    final AudioPlayer player = ref.watch(murattalPlayerProvider);
 
-    final String murattalButtonState =
-        ref.watch(murattalButtonProvider(buttonId));
+    final String playerButtonState = ref.watch(playerButtonProvider(buttonId));
 
     return IconButton(
       onPressed: () async {
         ref
-            .read(selectedButtonProvider.notifier)
+            .read(selectedPlayerProvider.notifier)
             .selectButton(buttonId: buttonId);
         try {
           final conn = await InternetAddress.lookup('example.com');
@@ -213,11 +212,11 @@ class _MurattalPlayButton extends ConsumerWidget {
           if (isConn == true && context.mounted) {
             ScaffoldMessenger.of(context).clearSnackBars();
 
-            if (murattalButtonState == '$buttonId playing') {
+            if (playerButtonState == '$buttonId playing') {
               pauseAudio(player, ref, buttonId);
-            } else if (murattalButtonState == '$buttonId stopped') {
+            } else if (playerButtonState == '$buttonId stopped') {
               playAudio(player, ref, buttonId, baseUrl, murattalId);
-            } else if (murattalButtonState == '$buttonId paused') {
+            } else if (playerButtonState == '$buttonId paused') {
               resumeAudio(player, ref, buttonId, baseUrl, murattalId,
                   selectedButtonState);
             }
@@ -238,7 +237,7 @@ class _MurattalPlayButton extends ConsumerWidget {
           }
         }
       },
-      icon: murattalButtonState == '$buttonId playing' ? pauseIcon : playIcon,
+      icon: playerButtonState == '$buttonId playing' ? pauseIcon : playIcon,
     );
   }
 }

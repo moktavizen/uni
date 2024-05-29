@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'murattal_button_provider.dart';
+part of 'player_button_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$murattalButtonHash() => r'dfee079073e5e74bc65e65a0b61cfff293575408';
+String _$playerButtonHash() => r'1b79521daabc1d01ccea1968e948fbffe9ce1544';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,7 +29,7 @@ class _SystemHash {
   }
 }
 
-abstract class _$MurattalButton extends BuildlessAutoDisposeNotifier<String> {
+abstract class _$PlayerButton extends BuildlessAutoDisposeNotifier<String> {
   late final int buttonId;
 
   String build(
@@ -37,27 +37,27 @@ abstract class _$MurattalButton extends BuildlessAutoDisposeNotifier<String> {
   );
 }
 
-/// See also [MurattalButton].
-@ProviderFor(MurattalButton)
-const murattalButtonProvider = MurattalButtonFamily();
+/// See also [PlayerButton].
+@ProviderFor(PlayerButton)
+const playerButtonProvider = PlayerButtonFamily();
 
-/// See also [MurattalButton].
-class MurattalButtonFamily extends Family<String> {
-  /// See also [MurattalButton].
-  const MurattalButtonFamily();
+/// See also [PlayerButton].
+class PlayerButtonFamily extends Family<String> {
+  /// See also [PlayerButton].
+  const PlayerButtonFamily();
 
-  /// See also [MurattalButton].
-  MurattalButtonProvider call(
+  /// See also [PlayerButton].
+  PlayerButtonProvider call(
     int buttonId,
   ) {
-    return MurattalButtonProvider(
+    return PlayerButtonProvider(
       buttonId,
     );
   }
 
   @override
-  MurattalButtonProvider getProviderOverride(
-    covariant MurattalButtonProvider provider,
+  PlayerButtonProvider getProviderOverride(
+    covariant PlayerButtonProvider provider,
   ) {
     return call(
       provider.buttonId,
@@ -76,30 +76,30 @@ class MurattalButtonFamily extends Family<String> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'murattalButtonProvider';
+  String? get name => r'playerButtonProvider';
 }
 
-/// See also [MurattalButton].
-class MurattalButtonProvider
-    extends AutoDisposeNotifierProviderImpl<MurattalButton, String> {
-  /// See also [MurattalButton].
-  MurattalButtonProvider(
+/// See also [PlayerButton].
+class PlayerButtonProvider
+    extends AutoDisposeNotifierProviderImpl<PlayerButton, String> {
+  /// See also [PlayerButton].
+  PlayerButtonProvider(
     int buttonId,
   ) : this._internal(
-          () => MurattalButton()..buttonId = buttonId,
-          from: murattalButtonProvider,
-          name: r'murattalButtonProvider',
+          () => PlayerButton()..buttonId = buttonId,
+          from: playerButtonProvider,
+          name: r'playerButtonProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$murattalButtonHash,
-          dependencies: MurattalButtonFamily._dependencies,
+                  : _$playerButtonHash,
+          dependencies: PlayerButtonFamily._dependencies,
           allTransitiveDependencies:
-              MurattalButtonFamily._allTransitiveDependencies,
+              PlayerButtonFamily._allTransitiveDependencies,
           buttonId: buttonId,
         );
 
-  MurattalButtonProvider._internal(
+  PlayerButtonProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -113,7 +113,7 @@ class MurattalButtonProvider
 
   @override
   String runNotifierBuild(
-    covariant MurattalButton notifier,
+    covariant PlayerButton notifier,
   ) {
     return notifier.build(
       buttonId,
@@ -121,10 +121,10 @@ class MurattalButtonProvider
   }
 
   @override
-  Override overrideWith(MurattalButton Function() create) {
+  Override overrideWith(PlayerButton Function() create) {
     return ProviderOverride(
       origin: this,
-      override: MurattalButtonProvider._internal(
+      override: PlayerButtonProvider._internal(
         () => create()..buttonId = buttonId,
         from: from,
         name: null,
@@ -137,13 +137,13 @@ class MurattalButtonProvider
   }
 
   @override
-  AutoDisposeNotifierProviderElement<MurattalButton, String> createElement() {
-    return _MurattalButtonProviderElement(this);
+  AutoDisposeNotifierProviderElement<PlayerButton, String> createElement() {
+    return _PlayerButtonProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is MurattalButtonProvider && other.buttonId == buttonId;
+    return other is PlayerButtonProvider && other.buttonId == buttonId;
   }
 
   @override
@@ -155,18 +155,18 @@ class MurattalButtonProvider
   }
 }
 
-mixin MurattalButtonRef on AutoDisposeNotifierProviderRef<String> {
+mixin PlayerButtonRef on AutoDisposeNotifierProviderRef<String> {
   /// The parameter `buttonId` of this provider.
   int get buttonId;
 }
 
-class _MurattalButtonProviderElement
-    extends AutoDisposeNotifierProviderElement<MurattalButton, String>
-    with MurattalButtonRef {
-  _MurattalButtonProviderElement(super.provider);
+class _PlayerButtonProviderElement
+    extends AutoDisposeNotifierProviderElement<PlayerButton, String>
+    with PlayerButtonRef {
+  _PlayerButtonProviderElement(super.provider);
 
   @override
-  int get buttonId => (origin as MurattalButtonProvider).buttonId;
+  int get buttonId => (origin as PlayerButtonProvider).buttonId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

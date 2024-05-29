@@ -1,9 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'selected_button_provider.g.dart';
+part 'selected_player_provider.g.dart';
 
 @riverpod
-class SelectedButton extends _$SelectedButton {
+class SelectedPlayer extends _$SelectedPlayer {
   @override
   String build() {
     return '';

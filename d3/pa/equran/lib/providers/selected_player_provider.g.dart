@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'selected_button_provider.dart';
+part of 'selected_player_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$selectedButtonHash() => r'f6614cfad8c42603474b25c55872908a38576bcf';
+String _$selectedPlayerHash() => r'c42c50b3b28538e3c88de5d8f1df3aeaff0a2f40';
 
-/// See also [SelectedButton].
-@ProviderFor(SelectedButton)
-final selectedButtonProvider =
-    AutoDisposeNotifierProvider<SelectedButton, String>.internal(
-  SelectedButton.new,
-  name: r'selectedButtonProvider',
+/// See also [SelectedPlayer].
+@ProviderFor(SelectedPlayer)
+final selectedPlayerProvider =
+    AutoDisposeNotifierProvider<SelectedPlayer, String>.internal(
+  SelectedPlayer.new,
+  name: r'selectedPlayerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$selectedButtonHash,
+      : _$selectedPlayerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SelectedButton = AutoDisposeNotifier<String>;
+typedef _$SelectedPlayer = AutoDisposeNotifier<String>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -1,7 +1,7 @@
 import 'package:equran/databases/database.dart';
 import 'package:equran/providers/ayahs_in_surah_provider.dart';
-import 'package:equran/providers/player_provider.dart';
-import 'package:equran/providers/selected_button_provider.dart';
+import 'package:equran/providers/murattal_player_provider.dart';
+import 'package:equran/providers/selected_player_provider.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/ayah_list_tile.dart';
 import 'package:equran/widgets/bismillah_card.dart';
@@ -25,8 +25,8 @@ class SurahDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ayahList = ref.watch(ayahsInSurahProvider(int.parse(surahId!)));
-    final AudioPlayer player = ref.watch(playerProvider);
-    final String selectedButtonState = ref.watch(selectedButtonProvider);
+    final AudioPlayer player = ref.watch(murattalPlayerProvider);
+    final String selectedButtonState = ref.watch(selectedPlayerProvider);
 
     return Scaffold(
       backgroundColor: surface,
