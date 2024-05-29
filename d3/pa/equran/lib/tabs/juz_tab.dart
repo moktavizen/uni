@@ -31,7 +31,7 @@ class JuzTab extends StatelessWidget {
                 return context.goNamed(
                   'juz',
                   pathParameters: {
-                    'juz-id': (juz.id).toString(),
+                    'juzId': (juz.id).toString(),
                   },
                   extra: juz,
                 );
