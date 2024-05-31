@@ -9,46 +9,46 @@ class SettingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: surface,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 24),
+      child: const Padding(
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 24),
         child: Column(
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Divider(height: 24, color: listDecor),
-                const _SettingsGroupTitle(titleText: 'Tampilan'),
-                const _SettingsListTile(
+                _SettingsGroupTitle(titleText: 'Tampilan'),
+                _SettingsListTile(
                   leadingIcon: themeIcon,
                   titleText: 'Tema',
                   subtitleText: 'Terang',
                 ),
-                const _SettingsListTile(
+                _SettingsListTile(
                   leadingIcon: langIcon,
                   titleText: 'Bahasa',
                   subtitleText: 'Indonesia',
                 ),
                 Divider(height: 24, color: listDecor),
-                const _SettingsGroupTitle(titleText: 'Font'),
-                const _SettingsListTile(
+                _SettingsGroupTitle(titleText: 'Font'),
+                _SettingsListTile(
                   leadingIcon: arabicIcon,
                   titleText: 'Ukuran Arabic',
                   subtitleText: '18 px',
                 ),
-                const _SettingsListTile(
+                _SettingsListTile(
                   leadingIcon: latinIcon,
                   titleText: 'Ukuran Latin',
                   subtitleText: '16 px',
                 ),
                 Divider(height: 24, color: listDecor),
-                const _SettingsGroupTitle(titleText: 'Tafsir'),
-                const _SettingsListTile(
+                _SettingsGroupTitle(titleText: 'Tafsir'),
+                _SettingsListTile(
                   leadingIcon: sourceIcon,
                   titleText: 'Sumber Tafsir',
                   subtitleText: 'KEMENAG',
                 ),
                 Divider(height: 24, color: listDecor),
-                const _AppVer()
+                _AppVer()
               ],
             )
           ],

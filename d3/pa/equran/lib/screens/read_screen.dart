@@ -1,43 +1,68 @@
-import 'package:equran/providers/juzs_provider.dart';
-import 'package:equran/providers/surahs_provider.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/tabs/juz_tab.dart';
 import 'package:equran/tabs/surah_tab.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ReadScreen extends ConsumerWidget {
+class ReadScreen extends StatelessWidget {
   const ReadScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final surahList = ref.watch(surahsProvider);
-    final juzList = ref.watch(juzsProvider);
-
+  Widget build(BuildContext context) {
     return Container(
       color: surface,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: DefaultTabController(
         length: 2,
         child: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
             const SliverToBoxAdapter(
-              child: Greeter(),
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: 12,
+                  right: 24,
+                  bottom: 20,
+                  left: 24,
+                ),
+                child: _Greeter(),
+              ),
             ),
-            const SliverAppBar(
-              backgroundColor: surface,
-              pinned: true,
-              elevation: 0,
-              scrolledUnderElevation: 0,
-              toolbarHeight: 0,
-              bottom: TabBarContent(),
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: SliverAppBar(
+                backgroundColor: surface,
+                pinned: true,
+                elevation: 0,
+                scrolledUnderElevation: 0,
+                toolbarHeight: 0,
+                bottom: TabBar(
+                  labelColor: primary,
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  unselectedLabelColor: onSurfaceVar,
+                  splashBorderRadius: BorderRadius.circular(10),
+                  indicatorColor: primary,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicatorWeight: 3,
+                  dividerHeight: 3,
+                  dividerColor: onSurfaceVar.withOpacity(0.1),
+                  labelStyle: GoogleFonts.inter(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                  unselectedLabelStyle: GoogleFonts.inter(
+                    fontWeight: FontWeight.w500,
+                  ),
+                  tabs: const [
+                    Tab(text: 'Surah'),
+                    Tab(text: 'Juz'),
+                  ],
+                ),
+              ),
             ),
           ],
-          body: TabBarView(
+          body: const TabBarView(
             children: [
-              SurahTab(surahList: surahList),
-              JuzTab(juzList: juzList),
+              SurahTab(),
+              JuzTab(),
             ],
           ),
         ),
@@ -46,51 +71,14 @@ class ReadScreen extends ConsumerWidget {
   }
 }
 
-class TabBarContent extends StatelessWidget implements PreferredSizeWidget {
-  const TabBarContent({
-    super.key,
-  });
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kTextTabBarHeight + 1);
-
-  @override
-  Widget build(BuildContext context) {
-    return TabBar(
-      labelColor: primary,
-      unselectedLabelColor: onSurfaceVar,
-      splashBorderRadius: BorderRadius.circular(10),
-      indicatorColor: primary,
-      indicatorSize: TabBarIndicatorSize.tab,
-      indicatorWeight: 3,
-      dividerHeight: 3,
-      dividerColor: onSurfaceVar.withOpacity(0.1),
-      labelStyle: GoogleFonts.inter(
-        fontWeight: FontWeight.w600,
-        fontSize: 16,
-      ),
-      unselectedLabelStyle: GoogleFonts.inter(
-        fontWeight: FontWeight.w500,
-      ),
-      tabs: const [
-        Tab(text: 'Surah'),
-        Tab(text: 'Juz'),
-      ],
-    );
-  }
-}
-
-class Greeter extends StatelessWidget {
-  const Greeter({
-    super.key,
-  });
+class _Greeter extends StatelessWidget {
+  const _Greeter();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 12),
         Text(
           'Assalamualaikum',
           style: GoogleFonts.inter(
@@ -109,17 +97,14 @@ class Greeter extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        const LastRead(),
-        const SizedBox(height: 20),
+        const _LastRead(),
       ],
     );
   }
 }
 
-class LastRead extends StatelessWidget {
-  const LastRead({
-    super.key,
-  });
+class _LastRead extends StatelessWidget {
+  const _LastRead();
 
   @override
   Widget build(BuildContext context) {

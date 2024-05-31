@@ -8,8 +8,8 @@ const Color primary = Color(0xff672cbc);
 const Color secondary = Color(0xff863ed5);
 const Color lastReadGrad1 = Color(0xffdf98fa);
 const Color lastReadGrad2 = Color(0xff9055ff);
-final Color listDecor = const Color(0xffbbc4ce).withOpacity(0.35);
-final Color surahBar = const Color(0xff121931).withOpacity(0.05);
+const Color listDecor = Color(0xffe7eaee);
+const Color surahBar = Color(0xfff3f3f5);
 const Color systemUiDivider = Color(0xffe0e0e0);
 const Color systemUiBackground = Colors.transparent;
 
