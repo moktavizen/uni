@@ -40,8 +40,20 @@ class HomeNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-        titleText: 'EQuran',
+      backgroundColor: surface,
+      appBar: CustomAppBar(
+        leading: IconButton(
+          onPressed: () {},
+          icon: menuIcon,
+        ),
+        title: Text(
+          'EQuran',
+          style: GoogleFonts.inter(
+            color: primary,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
       body: child,
       bottomNavigationBar: Theme(

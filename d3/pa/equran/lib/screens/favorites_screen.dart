@@ -7,24 +7,21 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: surface,
-      child: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-        child: Column(
-          children: [
-            _AddCollection(),
-            SizedBox(height: 32),
-            _FavoriteListTile(
-              titleText: 'My Favorite',
-              subtitleText: '8 Ayah',
-            ),
-            _FavoriteListTile(
-              titleText: 'Daily',
-              subtitleText: '5 Ayah',
-            ),
-          ],
-        ),
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 24),
+      child: Column(
+        children: [
+          _AddCollection(),
+          SizedBox(height: 32),
+          _FavoriteListTile(
+            titleText: 'My Favorite',
+            subtitleText: '8 Ayah',
+          ),
+          _FavoriteListTile(
+            titleText: 'Daily',
+            subtitleText: '5 Ayah',
+          ),
+        ],
       ),
     );
   }

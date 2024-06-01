@@ -9,6 +9,7 @@ import 'package:equran/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
 
 class SurahDetailScreen extends ConsumerWidget {
@@ -30,12 +31,21 @@ class SurahDetailScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: surface,
       appBar: CustomAppBar(
-        titleText: surah.latin,
-        leadingIcon: backIcon,
-        onPressLeading: () {
-          player.dispose();
-          context.pop();
-        },
+        leading: IconButton(
+          onPressed: () {
+            player.dispose();
+            context.pop();
+          },
+          icon: backIcon,
+        ),
+        title: Text(
+          surah.latin,
+          style: GoogleFonts.inter(
+            color: primary,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
       body: CustomScrollView(
         slivers: [

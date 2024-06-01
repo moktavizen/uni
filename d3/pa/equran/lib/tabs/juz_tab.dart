@@ -3,6 +3,7 @@ import 'package:equran/providers/juzs_provider.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/hizb_border.dart';
 import 'package:equran/widgets/list_tile_skeleton.dart';
+import 'package:equran/widgets/tab_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -24,13 +25,14 @@ class JuzTab extends ConsumerWidget {
             handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
           ),
           SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 24),
             sliver: switch (juzList) {
               AsyncData(:final value) => SliverList.separated(
                   itemBuilder: (context, index) {
                     Juz juz = value.elementAt(index);
 
                     return InkWell(
+                      splashColor: systemUiBackground,
                       onTap: () {
                         return context.goNamed(
                           'juz',
@@ -40,10 +42,7 @@ class JuzTab extends ConsumerWidget {
                           extra: juz,
                         );
                       },
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(0),
-                        horizontalTitleGap: 16,
-                        minVerticalPadding: 16,
+                      child: TabListTile(
                         leading: HizbBorder(
                           child: Text(
                             '${juz.id}',
@@ -74,7 +73,11 @@ class JuzTab extends ConsumerWidget {
                     );
                   },
                   separatorBuilder: (context, index) {
-                    return const Divider(thickness: 1, color: listDecor);
+                    return const Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: listDecor,
+                    );
                   },
                   itemCount: value.length,
                 ),

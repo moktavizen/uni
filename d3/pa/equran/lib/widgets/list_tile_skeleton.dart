@@ -1,3 +1,5 @@
+import 'package:equran/styles.dart';
+import 'package:equran/widgets/tab_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -11,23 +13,19 @@ class ListTileSkeleton extends StatelessWidget {
     return SliverList.separated(
       itemBuilder: (context, index) {
         return const Skeletonizer.zone(
-          child: ListTile(
-            contentPadding: EdgeInsets.all(0),
-            horizontalTitleGap: 16,
-            minVerticalPadding: 16,
+          child: TabListTile(
             leading: Bone.icon(size: 36),
             title: Bone.text(width: 92, fontSize: 16),
             subtitle: Bone.text(width: 136, fontSize: 12),
-            trailing: Bone.text(
-              width: 64,
-              fontSize: 20,
-            ),
+            trailing: Bone.text(width: 64, fontSize: 20),
           ),
         );
       },
-      separatorBuilder: (context, index) {
-        return const SizedBox(height: 16);
-      },
+      separatorBuilder: (context, index) => const Divider(
+        height: 1,
+        thickness: 1,
+        color: listDecor,
+      ),
       itemCount: 7,
     );
   }

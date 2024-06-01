@@ -9,62 +9,51 @@ class ReadScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: surface,
-      child: DefaultTabController(
-        length: 2,
-        child: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
-            const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: 12,
-                  right: 24,
-                  bottom: 20,
-                  left: 24,
-                ),
-                child: _Greeter(),
-              ),
-            ),
-            SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              sliver: SliverAppBar(
-                backgroundColor: surface,
-                pinned: true,
-                elevation: 0,
-                scrolledUnderElevation: 0,
-                toolbarHeight: 0,
-                bottom: TabBar(
-                  labelColor: primary,
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  unselectedLabelColor: onSurfaceVar,
-                  splashBorderRadius: BorderRadius.circular(10),
-                  indicatorColor: primary,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  indicatorWeight: 3,
-                  dividerHeight: 3,
-                  dividerColor: onSurfaceVar.withOpacity(0.1),
-                  labelStyle: GoogleFonts.inter(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                  unselectedLabelStyle: GoogleFonts.inter(
-                    fontWeight: FontWeight.w500,
-                  ),
-                  tabs: const [
-                    Tab(text: 'Surah'),
-                    Tab(text: 'Juz'),
-                  ],
-                ),
-              ),
-            ),
-          ],
-          body: const TabBarView(
-            children: [
-              SurahTab(),
-              JuzTab(),
-            ],
+    return DefaultTabController(
+      length: 2,
+      child: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          const SliverToBoxAdapter(
+            child: _Greeter(),
           ),
+          SliverOverlapAbsorber(
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            sliver: SliverAppBar(
+              backgroundColor: surface,
+              pinned: true,
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              toolbarHeight: 0,
+              bottom: TabBar(
+                labelColor: primary,
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                unselectedLabelColor: onSurfaceVar,
+                splashBorderRadius: BorderRadius.circular(10),
+                indicatorColor: primary,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorWeight: 3,
+                dividerHeight: 3,
+                dividerColor: surahBar,
+                labelStyle: GoogleFonts.inter(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+                unselectedLabelStyle: GoogleFonts.inter(
+                  fontWeight: FontWeight.w500,
+                ),
+                tabs: const [
+                  Tab(text: 'Surah'),
+                  Tab(text: 'Juz'),
+                ],
+              ),
+            ),
+          ),
+        ],
+        body: const TabBarView(
+          children: [
+            SurahTab(),
+            JuzTab(),
+          ],
         ),
       ),
     );
@@ -76,29 +65,34 @@ class _Greeter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Assalamualaikum',
-          style: GoogleFonts.inter(
-            fontWeight: FontWeight.w500,
-            fontSize: 18,
-            color: onSurfaceVar,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 10),
+          Text(
+            'Assalamualaikum',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w500,
+              fontSize: 18,
+              color: onSurfaceVar,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'Welcome to EQuran!',
-          style: GoogleFonts.inter(
-            fontWeight: FontWeight.w600,
-            fontSize: 24,
-            color: onSurface,
+          const SizedBox(height: 4),
+          Text(
+            'Welcome to EQuran!',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              fontSize: 24,
+              color: onSurface,
+            ),
           ),
-        ),
-        const SizedBox(height: 24),
-        const _LastRead(),
-      ],
+          const SizedBox(height: 24),
+          const _LastRead(),
+          const SizedBox(height: 24),
+        ],
+      ),
     );
   }
 }

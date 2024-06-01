@@ -60,7 +60,7 @@ class AyahListView extends StatelessWidget {
                 ),
               );
             },
-            separatorBuilder: (context, index) => const SizedBox(height: 24),
+            separatorBuilder: (context, index) => const SizedBox(height: 28),
             itemCount: value.length,
           ),
         ),

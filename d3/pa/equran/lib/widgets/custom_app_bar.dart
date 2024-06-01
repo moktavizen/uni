@@ -1,18 +1,15 @@
 import 'package:equran/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
-    required this.titleText,
-    this.leadingIcon = menuIcon,
-    this.onPressLeading,
+    required this.title,
+    required this.leading,
   });
 
-  final String titleText;
-  final Widget leadingIcon;
-  final void Function()? onPressLeading;
+  final Widget? title;
+  final Widget? leading;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -25,20 +22,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor: surface,
         elevation: 0,
         scrolledUnderElevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            onPressLeading!();
-          },
-          icon: leadingIcon,
-        ),
-        title: Text(
-          titleText,
-          style: GoogleFonts.inter(
-            color: primary,
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
+        leading: leading,
+        title: title,
         actions: [
           IconButton(
             onPressed: () {
