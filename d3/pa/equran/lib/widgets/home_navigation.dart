@@ -36,19 +36,13 @@ class _HomeNavigationState extends State<HomeNavigation> {
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
-        setState(() {
-          currentTitle = 'Favorite';
-        });
+        setState(() => currentTitle = 'Favorit');
         context.goNamed('favorite');
       case 1:
-        setState(() {
-          currentTitle = 'EQuran';
-        });
+        setState(() => currentTitle = 'EQuran');
         context.goNamed('read');
       case 2:
-        setState(() {
-          currentTitle = 'Setting';
-        });
+        setState(() => currentTitle = 'Setting');
         context.goNamed('setting');
     }
   }
