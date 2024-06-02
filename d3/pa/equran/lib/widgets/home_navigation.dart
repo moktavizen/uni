@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HomeNavigation extends StatelessWidget {
+class HomeNavigation extends StatefulWidget {
   const HomeNavigation({
     super.key,
     required this.child,
@@ -26,13 +26,29 @@ class HomeNavigation extends StatelessWidget {
     return 0;
   }
 
+  @override
+  State<HomeNavigation> createState() => _HomeNavigationState();
+}
+
+class _HomeNavigationState extends State<HomeNavigation> {
+  String currentTitle = '';
+
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
+        setState(() {
+          currentTitle = 'Favorite';
+        });
         context.goNamed('favorite');
       case 1:
+        setState(() {
+          currentTitle = 'EQuran';
+        });
         context.goNamed('read');
       case 2:
+        setState(() {
+          currentTitle = 'Setting';
+        });
         context.goNamed('setting');
     }
   }
@@ -47,7 +63,7 @@ class HomeNavigation extends StatelessWidget {
           icon: menuIcon,
         ),
         title: Text(
-          'EQuran',
+          currentTitle,
           style: GoogleFonts.inter(
             color: primary,
             fontSize: 20,
@@ -55,14 +71,14 @@ class HomeNavigation extends StatelessWidget {
           ),
         ),
       ),
-      body: child,
+      body: widget.child,
       bottomNavigationBar: Theme(
         data: ThemeData(
           splashColor: systemUiBackground,
           highlightColor: systemUiBackground,
         ),
         child: BottomNavigationBar(
-          currentIndex: _calculateSelectedIndex(context),
+          currentIndex: HomeNavigation._calculateSelectedIndex(context),
           onTap: (int idx) => _onItemTapped(idx, context),
           backgroundColor: surface,
           elevation: 16,
