@@ -31,7 +31,7 @@ class HomeNavigation extends StatefulWidget {
 }
 
 class _HomeNavigationState extends State<HomeNavigation> {
-  String currentTitle = '';
+  String currentTitle = 'EQuran';
 
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
