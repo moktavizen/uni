@@ -8,7 +8,7 @@ part 'surahs_provider.g.dart';
 class Surahs extends _$Surahs {
   @override
   Future<List<Surah>> build() async {
-    print('Fetching All Surah');
+    // print('Fetching All Surah');
     final database = ref.watch(databaseProvider);
 
     List<Surah> surahList = await database.allSurah().get();

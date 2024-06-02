@@ -6,7 +6,7 @@ part of 'juzs_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$juzsHash() => r'3b6d29610bd5a59a52532b5ed21ab3bb221b989c';
+String _$juzsHash() => r'fa9e0b1a436f6564547c47131f64b99959bbe3cd';
 
 /// See also [Juzs].
 @ProviderFor(Juzs)

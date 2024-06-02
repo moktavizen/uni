@@ -6,7 +6,7 @@ part of 'ayahs_in_surah_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ayahsInSurahHash() => r'247dc11565660d5eadf5d647679ad17bad5490ab';
+String _$ayahsInSurahHash() => r'9a0e39014fb58792c202588f8c01250e9dd391e8';
 
 /// Copied from Dart SDK
 class _SystemHash {

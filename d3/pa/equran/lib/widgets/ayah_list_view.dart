@@ -1,9 +1,6 @@
 import 'dart:io';
 
 import 'package:equran/databases/database.dart';
-import 'package:equran/providers/murattal_player_provider.dart';
-import 'package:equran/providers/player_button_provider.dart';
-import 'package:equran/providers/selected_player_provider.dart';
 import 'package:equran/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,23 +9,36 @@ import 'package:just_audio/just_audio.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class AyahListView extends StatelessWidget {
+class AyahListView extends StatefulWidget {
   const AyahListView({
     super.key,
     required this.ayahList,
-    required this.selectedButtonState,
+    required this.player,
   });
 
   final AsyncValue<List<Ayah>> ayahList;
-  final String selectedButtonState;
+  final AudioPlayer player;
+
+  @override
+  State<AyahListView> createState() => _AyahListViewState();
+}
+
+class _AyahListViewState extends State<AyahListView> {
+  late String _selectedPlayerState = '';
+
+  void _selectPlayer(int playerId) {
+    setState(() {
+      _selectedPlayerState = '$playerId selected';
+      // print(_selectedPlayerState);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return switch (ayahList) {
+    return switch (widget.ayahList) {
       AsyncData(:final value) => SliverPadding(
           padding: const EdgeInsets.all(24),
           sliver: SliverList.separated(
-            addAutomaticKeepAlives: true,
             itemBuilder: (context, index) {
               Ayah ayah = value.elementAt(index);
 
@@ -53,7 +63,9 @@ class AyahListView extends StatelessWidget {
                     _MurattalPlayButton(
                       ayahNum: ayah.ayahNum,
                       surahId: ayah.surahId,
-                      selectedButtonState: selectedButtonState,
+                      player: widget.player,
+                      selectedPlayerState: _selectedPlayerState,
+                      selectPlayer: _selectPlayer,
                     ),
                     const _FavAyahButton(),
                   ],
@@ -113,7 +125,7 @@ class _ListTileSkeleton extends StatelessWidget {
   }
 }
 
-class _AyahListTile extends StatefulWidget {
+class _AyahListTile extends StatelessWidget {
   const _AyahListTile({
     required this.arabicText,
     required this.tlText,
@@ -124,25 +136,15 @@ class _AyahListTile extends StatefulWidget {
   final Widget actionBar;
 
   @override
-  State<_AyahListTile> createState() => _AyahListTileState();
-}
-
-class _AyahListTileState extends State<_AyahListTile>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        widget.arabicText,
+        arabicText,
         const SizedBox(height: 16),
-        widget.tlText,
+        tlText,
         const SizedBox(height: 16),
-        widget.actionBar,
+        actionBar,
       ],
     );
   }
@@ -412,75 +414,98 @@ class _ShowTafsirButton extends StatelessWidget {
   }
 }
 
-class _MurattalPlayButton extends ConsumerWidget {
+class _MurattalPlayButton extends StatefulWidget {
   const _MurattalPlayButton({
     required this.ayahNum,
     required this.surahId,
-    required this.selectedButtonState,
+    required this.player,
+    required this.selectedPlayerState,
+    required this.selectPlayer,
   });
 
   final int ayahNum;
   final int surahId;
-  final String selectedButtonState;
+  final AudioPlayer player;
+  final String selectedPlayerState;
+  final void Function(int) selectPlayer;
 
-  Future<void> playAudio(AudioPlayer player, WidgetRef ref, int buttonId,
-      String baseUrl, String murattalId) async {
-    await player.stop();
-    await player.setUrl("$baseUrl$murattalId.m4a");
-    ref.read(playerButtonProvider(buttonId).notifier).playButton();
-    await player.play();
-    ref.read(playerButtonProvider(buttonId).notifier).stopButton();
+  @override
+  State<_MurattalPlayButton> createState() => _MurattalPlayButtonState();
+}
+
+class _MurattalPlayButtonState extends State<_MurattalPlayButton> {
+  late final int _playerId = widget.ayahNum;
+  late String _playerButtonState = '$_playerId stopped';
+
+  late final _player = widget.player;
+  static const String _baseUrl =
+      'https://media.qurankemenag.net/audio/Abu_Bakr_Ash-Shaatree_aac64/';
+  late final String _paddedSurahId = widget.surahId.toString().padLeft(3, '0');
+  late final String _paddedAyahNum = widget.ayahNum.toString().padLeft(3, '0');
+  late final String _murattalId = _paddedSurahId + _paddedAyahNum;
+
+  void _playButton(playerId) {
+    setState(() {
+      _playerButtonState = '$playerId playing';
+    });
   }
 
-  Future<void> resumeAudio(AudioPlayer player, WidgetRef ref, int buttonId,
-      String baseUrl, String murattalId, String selectedButtonState) async {
-    if (selectedButtonState != '$buttonId selected') {
-      await player.stop();
-      await player.setUrl("$baseUrl$murattalId.m4a");
+  void _pauseButton(playerId) {
+    setState(() {
+      _playerButtonState = '$playerId paused';
+    });
+  }
+
+  void _stopButton(playerId) {
+    setState(() {
+      _playerButtonState = '$playerId stopped';
+    });
+  }
+
+  Future<void> playAudio() async {
+    await _player.stop();
+    await _player.setUrl("$_baseUrl$_murattalId.m4a");
+    _playButton(_playerId);
+    await _player.play();
+    _stopButton(_playerId);
+  }
+
+  Future<void> pauseAudio() async {
+    await _player.pause();
+    _pauseButton(_playerId);
+  }
+
+  Future<void> resumeAudio(String selectedPlayerState) async {
+    // print('$selectedPlayerState = $_playerId selected');
+    if (selectedPlayerState != '$_playerId selected') {
+      await _player.stop();
+      await _player.setUrl("$_baseUrl$_murattalId.m4a");
     }
-    ref.read(playerButtonProvider(buttonId).notifier).playButton();
-    await player.play();
-    ref.read(playerButtonProvider(buttonId).notifier).stopButton();
-  }
-
-  Future<void> pauseAudio(
-      AudioPlayer player, WidgetRef ref, int buttonId) async {
-    await player.pause();
-    ref.read(playerButtonProvider(buttonId).notifier).pauseButton();
+    _playButton(_playerId);
+    await _player.play();
+    _stopButton(_playerId);
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    int buttonId = ayahNum;
-    String baseUrl =
-        'https://media.qurankemenag.net/audio/Abu_Bakr_Ash-Shaatree_aac64/';
-
-    String paddedSurahId = surahId.toString().padLeft(3, '0');
-    String paddedAyahNum = ayahNum.toString().padLeft(3, '0');
-    String murattalId = paddedSurahId + paddedAyahNum;
-
-    final AudioPlayer player = ref.watch(murattalPlayerProvider);
-
-    final String playerButtonState = ref.watch(playerButtonProvider(buttonId));
+  Widget build(BuildContext context) {
+    final selectedPlayerState = widget.selectedPlayerState;
+    final selectPlayer = widget.selectPlayer;
 
     return IconButton(
       onPressed: () async {
-        ref
-            .read(selectedPlayerProvider.notifier)
-            .selectButton(buttonId: buttonId);
         try {
           final conn = await InternetAddress.lookup('example.com');
           final bool isConn = conn.isNotEmpty && conn[0].rawAddress.isNotEmpty;
+
           if (isConn == true && context.mounted) {
             ScaffoldMessenger.of(context).clearSnackBars();
 
-            if (playerButtonState == '$buttonId playing') {
-              pauseAudio(player, ref, buttonId);
-            } else if (playerButtonState == '$buttonId stopped') {
-              playAudio(player, ref, buttonId, baseUrl, murattalId);
-            } else if (playerButtonState == '$buttonId paused') {
-              resumeAudio(player, ref, buttonId, baseUrl, murattalId,
-                  selectedButtonState);
+            if (_playerButtonState == '$_playerId playing') {
+              pauseAudio();
+            } else if (_playerButtonState == '$_playerId stopped') {
+              playAudio();
+            } else if (_playerButtonState == '$_playerId paused') {
+              resumeAudio(selectedPlayerState);
             }
           }
         } on SocketException catch (_) {
@@ -498,8 +523,9 @@ class _MurattalPlayButton extends ConsumerWidget {
             );
           }
         }
+        selectPlayer(_playerId);
       },
-      icon: playerButtonState == '$buttonId playing' ? pauseIcon : playIcon,
+      icon: _playerButtonState == '$_playerId playing' ? pauseIcon : playIcon,
     );
   }
 }

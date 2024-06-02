@@ -6,7 +6,7 @@ part of 'ayahs_in_juz_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ayahsInJuzHash() => r'f2c2602d83d64b6d1c04878cb3b345e5949f3501';
+String _$ayahsInJuzHash() => r'0014dcd619be4a37d77e04e3b6d3c58417899e02';
 
 /// Copied from Dart SDK
 class _SystemHash {

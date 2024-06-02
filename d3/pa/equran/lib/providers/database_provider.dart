@@ -7,7 +7,7 @@ part 'database_provider.g.dart';
 class Database extends _$Database {
   @override
   AppDatabase build() {
-    print('Open Database');
+    // print('Open Database');
     final database = AppDatabase();
 
     ref.keepAlive();

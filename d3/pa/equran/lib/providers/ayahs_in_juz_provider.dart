@@ -8,7 +8,7 @@ part 'ayahs_in_juz_provider.g.dart';
 class AyahsInJuz extends _$AyahsInJuz {
   @override
   Future<List<Ayah>> build(int juzId) async {
-    print('Fetching Ayahs for Juz $juzId');
+    // print('Fetching Ayahs for Juz $juzId');
     final database = ref.watch(databaseProvider);
 
     List<Ayah> ayahList = await database.ayahsInJuz(juzId).get();
