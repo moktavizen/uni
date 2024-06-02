@@ -12,6 +12,7 @@ const Color listDecor = Color(0xffe7eaee);
 const Color surahBar = Color(0xfff3f3f5);
 const Color systemUiDivider = Color(0xffe0e0e0);
 const Color systemUiBackground = Colors.transparent;
+const Color error = Color(0xFFBA1A1A);
 
 const SvgAsset menuIcon = SvgAsset(name: 'menu-icon');
 const SvgAsset backIcon = SvgAsset(name: 'back-icon');

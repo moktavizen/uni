@@ -513,7 +513,7 @@ class _MurattalPlayButtonState extends State<_MurattalPlayButton> {
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                backgroundColor: primary,
+                backgroundColor: error,
                 content: Text(
                   textAlign: TextAlign.center,
                   'Fitur ini membutuhkan koneksi internet!',
