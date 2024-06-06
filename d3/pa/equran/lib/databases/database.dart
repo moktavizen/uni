@@ -45,7 +45,7 @@ LazyDatabase _openConnection() {
 }
 
 // Call open database.
-@DriftDatabase(include: {'tables.drift'})
+@DriftDatabase(include: {'sql.drift'})
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 

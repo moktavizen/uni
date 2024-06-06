@@ -12,6 +12,8 @@ class Database extends _$Database {
 
     ref.keepAlive();
 
+    ref.onDispose(database.close);
+
     return database;
   }
 }
