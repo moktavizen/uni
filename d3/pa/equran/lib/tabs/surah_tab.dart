@@ -19,88 +19,88 @@ class SurahTab extends ConsumerWidget {
     final surahList = ref.watch(surahsProvider);
     return Builder(
       builder: (BuildContext context) => CustomScrollView(
-        key: const PageStorageKey('Surah'),
+        key: const PageStorageKey('surah'),
         slivers: [
           SliverOverlapInjector(
             handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
           ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 24),
-            sliver: switch (surahList) {
-              AsyncData(:final value) => SliverList.separated(
-                  itemBuilder: (context, index) {
-                    Surah surah = value.elementAt(index);
-
-                    return InkWell(
-                      splashColor: systemUiBackground,
-                      onTap: () {
-                        return context.goNamed(
-                          'surah',
-                          pathParameters: {
-                            'surahId': (surah.id).toString(),
-                          },
-                          extra: surah,
-                        );
-                      },
-                      child: TabListTile(
-                        leading: HizbBorder(
-                          child: Text(
-                            '${surah.id}',
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12,
-                              color: onSurface,
-                            ),
-                          ),
-                        ),
-                        title: Text(
-                          surah.latin,
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            color: onSurface,
-                          ),
-                        ),
-                        subtitle: Text(
-                          '${surah.location.toUpperCase()} • ${surah.ayahCount} AYAT',
+            sliver: surahList.when(
+              data: (value) => SliverList.separated(
+                itemBuilder: (context, index) {
+                  Surah surah = value.elementAt(index);
+                  return InkWell(
+                    splashColor: systemUiBackground,
+                    onTap: () {
+                      return context.goNamed(
+                        'surah',
+                        pathParameters: {'surahId': (surah.id).toString()},
+                        extra: surah,
+                      );
+                    },
+                    child: TabListTile(
+                      leading: HizbBorder(
+                        child: Text(
+                          '${surah.id}',
                           style: GoogleFonts.inter(
                             fontWeight: FontWeight.w500,
                             fontSize: 12,
-                            color: onSurfaceVar,
-                          ),
-                        ),
-                        trailing: Text(
-                          surah.arabic,
-                          style: const TextStyle(
-                            fontFamily: 'IsepMisbah',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                            color: primary,
+                            color: onSurface,
                           ),
                         ),
                       ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const Divider(
-                      height: 1,
-                      thickness: 1,
-                      color: listDecor,
-                    );
-                  },
-                  itemCount: value.length,
-                ),
-              AsyncError() => Center(
-                  child: SizedBox(
+                      title: Text(
+                        surah.latin,
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: onSurface,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${surah.location.toUpperCase()} • ${surah.ayahCount} AYAT',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: onSurfaceVar,
+                        ),
+                      ),
+                      trailing: Text(
+                        surah.arabic,
+                        style: const TextStyle(
+                          fontFamily: 'IsepMisbah',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: primary,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: listDecor,
+                  );
+                },
+                itemCount: value.length,
+              ),
+              error: (e, s) {
+                debugPrintStack(label: e.toString(), stackTrace: s);
+                return SliverToBoxAdapter(
+                  child: Center(
                     child: Text(
                       textAlign: TextAlign.center,
-                      'Oops!\nTerdapat kesalahan\nsaat memproses data Surah!',
+                      'Oops!\nTerdapat kesalahan\nmemproses data Surah!',
                       style: GoogleFonts.inter(color: onSurface),
                     ),
                   ),
-                ),
-              _ => const ListTileSkeleton(),
-            },
+                );
+              },
+              loading: () => const ListTileSkeleton(),
+            ),
           )
         ],
       ),

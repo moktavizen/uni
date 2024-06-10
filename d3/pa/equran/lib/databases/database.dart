@@ -5,7 +5,6 @@ import 'package:drift/native.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-// ignore: depend_on_referenced_packages
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 
@@ -51,4 +50,14 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  // Initial value for Last Read
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        beforeOpen: (OpeningDetails details) async {
+          if (details.wasCreated) {
+            await saveLastRead(1, 'Al-Fatihah', 0, 1);
+          }
+        },
+      );
 }

@@ -1,5 +1,5 @@
 
-CREATE TABLE IF NOT EXISTS surahs (
+CREATE TABLE surahs (
   id INTEGER PRIMARY KEY,
   arabic VARCHAR(16) NOT NULL,
   latin VARCHAR(16) NOT NULL,
@@ -8,14 +8,14 @@ CREATE TABLE IF NOT EXISTS surahs (
   location VARCHAR(12) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS juzs (
+CREATE TABLE juzs (
   id INTEGER PRIMARY KEY,
   ayah_count INTEGER NOT NULL,
   surah_start VARCHAR(16) NOT NULL,
   ayah_start INTEGER NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS ayahs (
+CREATE TABLE ayahs (
   id INTEGER PRIMARY KEY,
   surah_id INTEGER NOT NULL,
   juz_id INTEGER NOT NULL,
@@ -32,8 +32,35 @@ CREATE TABLE IF NOT EXISTS ayahs (
 CREATE INDEX IF NOT EXISTS idx_ayahs_surah_id ON ayahs (surah_id);
 CREATE INDEX IF NOT EXISTS idx_ayahs_juz_id ON ayahs (juz_id);
 
-allSurah: SELECT * FROM surahs;
-allJuz: SELECT * FROM juzs;
-ayahsInSurah: SELECT * FROM ayahs WHERE ayahs.surah_id = ?;
-ayahsInJuz: SELECT * FROM ayahs WHERE ayahs.juz_id = ?;
+CREATE TABLE last_read (
+  id INTEGER PRIMARY KEY,
+  screen_id INTEGER NOT NULL,
+  screen_title VARCHAR(16) NOT NULL,
+  ayah_index INTEGER NOT NULL,
+  ayah_num INTEGER NOT NULL,
+);
+
+CREATE TRIGGER enforce_single_last_read
+  BEFORE INSERT ON last_read
+  BEGIN DELETE FROM last_read;
+END;
+
+allSurah:
+SELECT * FROM surahs;
+
+allJuz:
+SELECT * FROM juzs;
+
+ayahsInSurah:
+SELECT * FROM ayahs WHERE surah_id = ?;
+
+ayahsInJuz:
+SELECT * FROM ayahs WHERE juz_id = ?;
+
+saveLastRead:
+INSERT INTO last_read (screen_id, screen_title, ayah_index, ayah_num)
+VALUES (:screen_id, :screen_title, :ayah_index, :ayah_num);
+
+getLastRead:
+SELECT * FROM last_read;
 

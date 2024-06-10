@@ -1,14 +1,8 @@
 import 'package:equran/databases/database.dart';
 import 'package:equran/providers/ayahs_in_juz_provider.dart';
-import 'package:equran/styles.dart';
-import 'package:equran/widgets/ayah_list_view.dart';
-import 'package:equran/widgets/bismillah_card.dart';
-import 'package:equran/widgets/custom_app_bar.dart';
+import 'package:equran/widgets/ayah_list_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:just_audio/just_audio.dart';
 
 class JuzDetailScreen extends ConsumerWidget {
   const JuzDetailScreen({
@@ -22,54 +16,16 @@ class JuzDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ayahList = ref.watch(ayahsInJuzProvider(int.parse(juzId!)));
-    final AudioPlayer player = AudioPlayer();
+    final parsedJuzId = int.parse(juzId!);
+    final ayahList = ref.watch(ayahsInJuzProvider(parsedJuzId));
 
-    return Scaffold(
-      backgroundColor: surface,
-      appBar: CustomAppBar(
-        leading: IconButton(
-          onPressed: () {
-            player.dispose();
-            context.pop();
-          },
-          icon: backIcon,
-        ),
-        title: Text(
-          'Juz ${juz.id} - ${juz.ayahCount} Ayat',
-          style: GoogleFonts.inter(
-            color: primary,
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 24,
-                  ),
-                  child: BismillahCard(
-                    title: 'Juz ${juz.id} - ${juz.ayahCount} Ayat',
-                    subtitle: 'Mulai Surah',
-                    caption:
-                        '${juz.surahStart.toUpperCase()} AYAT ${juz.ayahStart}',
-                  ),
-                ),
-              ],
-            ),
-          ),
-          AyahListView(
-            ayahList: ayahList,
-            player: player,
-          ),
-        ],
-      ),
+    return AyahListScaffold(
+      screenId: parsedJuzId,
+      headerTitle: 'Juz ${juz.id}',
+      headerSubtitle: '${juz.ayahCount} Ayat',
+      headerCaption:
+          'MULAI • ${juz.surahStart.toUpperCase()} AYAT ${juz.ayahStart}',
+      ayahList: ayahList,
     );
   }
 }

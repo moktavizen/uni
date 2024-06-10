@@ -11,7 +11,7 @@ class Surahs extends _$Surahs {
     // print('Fetching All Surah');
     final database = ref.watch(databaseProvider);
 
-    List<Surah> surahList = await database.allSurah().get();
+    final List<Surah> surahList = await database.allSurah().get();
 
     ref.keepAlive();
 

@@ -1038,6 +1038,301 @@ class AyahsCompanion extends UpdateCompanion<Ayah> {
   }
 }
 
+class LastRead extends Table with TableInfo<LastRead, LastReadData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  LastRead(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'PRIMARY KEY');
+  static const VerificationMeta _screenIdMeta =
+      const VerificationMeta('screenId');
+  late final GeneratedColumn<int> screenId = GeneratedColumn<int>(
+      'screen_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _screenTitleMeta =
+      const VerificationMeta('screenTitle');
+  late final GeneratedColumn<String> screenTitle = GeneratedColumn<String>(
+      'screen_title', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _ayahIndexMeta =
+      const VerificationMeta('ayahIndex');
+  late final GeneratedColumn<int> ayahIndex = GeneratedColumn<int>(
+      'ayah_index', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _ayahNumMeta =
+      const VerificationMeta('ayahNum');
+  late final GeneratedColumn<int> ayahNum = GeneratedColumn<int>(
+      'ayah_num', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, screenId, screenTitle, ayahIndex, ayahNum];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'last_read';
+  @override
+  VerificationContext validateIntegrity(Insertable<LastReadData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('screen_id')) {
+      context.handle(_screenIdMeta,
+          screenId.isAcceptableOrUnknown(data['screen_id']!, _screenIdMeta));
+    } else if (isInserting) {
+      context.missing(_screenIdMeta);
+    }
+    if (data.containsKey('screen_title')) {
+      context.handle(
+          _screenTitleMeta,
+          screenTitle.isAcceptableOrUnknown(
+              data['screen_title']!, _screenTitleMeta));
+    } else if (isInserting) {
+      context.missing(_screenTitleMeta);
+    }
+    if (data.containsKey('ayah_index')) {
+      context.handle(_ayahIndexMeta,
+          ayahIndex.isAcceptableOrUnknown(data['ayah_index']!, _ayahIndexMeta));
+    } else if (isInserting) {
+      context.missing(_ayahIndexMeta);
+    }
+    if (data.containsKey('ayah_num')) {
+      context.handle(_ayahNumMeta,
+          ayahNum.isAcceptableOrUnknown(data['ayah_num']!, _ayahNumMeta));
+    } else if (isInserting) {
+      context.missing(_ayahNumMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LastReadData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LastReadData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      screenId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}screen_id'])!,
+      screenTitle: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}screen_title'])!,
+      ayahIndex: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}ayah_index'])!,
+      ayahNum: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}ayah_num'])!,
+    );
+  }
+
+  @override
+  LastRead createAlias(String alias) {
+    return LastRead(attachedDatabase, alias);
+  }
+
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class LastReadData extends DataClass implements Insertable<LastReadData> {
+  final int id;
+  final int screenId;
+  final String screenTitle;
+  final int ayahIndex;
+  final int ayahNum;
+  const LastReadData(
+      {required this.id,
+      required this.screenId,
+      required this.screenTitle,
+      required this.ayahIndex,
+      required this.ayahNum});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['screen_id'] = Variable<int>(screenId);
+    map['screen_title'] = Variable<String>(screenTitle);
+    map['ayah_index'] = Variable<int>(ayahIndex);
+    map['ayah_num'] = Variable<int>(ayahNum);
+    return map;
+  }
+
+  LastReadCompanion toCompanion(bool nullToAbsent) {
+    return LastReadCompanion(
+      id: Value(id),
+      screenId: Value(screenId),
+      screenTitle: Value(screenTitle),
+      ayahIndex: Value(ayahIndex),
+      ayahNum: Value(ayahNum),
+    );
+  }
+
+  factory LastReadData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LastReadData(
+      id: serializer.fromJson<int>(json['id']),
+      screenId: serializer.fromJson<int>(json['screen_id']),
+      screenTitle: serializer.fromJson<String>(json['screen_title']),
+      ayahIndex: serializer.fromJson<int>(json['ayah_index']),
+      ayahNum: serializer.fromJson<int>(json['ayah_num']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'screen_id': serializer.toJson<int>(screenId),
+      'screen_title': serializer.toJson<String>(screenTitle),
+      'ayah_index': serializer.toJson<int>(ayahIndex),
+      'ayah_num': serializer.toJson<int>(ayahNum),
+    };
+  }
+
+  LastReadData copyWith(
+          {int? id,
+          int? screenId,
+          String? screenTitle,
+          int? ayahIndex,
+          int? ayahNum}) =>
+      LastReadData(
+        id: id ?? this.id,
+        screenId: screenId ?? this.screenId,
+        screenTitle: screenTitle ?? this.screenTitle,
+        ayahIndex: ayahIndex ?? this.ayahIndex,
+        ayahNum: ayahNum ?? this.ayahNum,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('LastReadData(')
+          ..write('id: $id, ')
+          ..write('screenId: $screenId, ')
+          ..write('screenTitle: $screenTitle, ')
+          ..write('ayahIndex: $ayahIndex, ')
+          ..write('ayahNum: $ayahNum')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, screenId, screenTitle, ayahIndex, ayahNum);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LastReadData &&
+          other.id == this.id &&
+          other.screenId == this.screenId &&
+          other.screenTitle == this.screenTitle &&
+          other.ayahIndex == this.ayahIndex &&
+          other.ayahNum == this.ayahNum);
+}
+
+class LastReadCompanion extends UpdateCompanion<LastReadData> {
+  final Value<int> id;
+  final Value<int> screenId;
+  final Value<String> screenTitle;
+  final Value<int> ayahIndex;
+  final Value<int> ayahNum;
+  const LastReadCompanion({
+    this.id = const Value.absent(),
+    this.screenId = const Value.absent(),
+    this.screenTitle = const Value.absent(),
+    this.ayahIndex = const Value.absent(),
+    this.ayahNum = const Value.absent(),
+  });
+  LastReadCompanion.insert({
+    this.id = const Value.absent(),
+    required int screenId,
+    required String screenTitle,
+    required int ayahIndex,
+    required int ayahNum,
+  })  : screenId = Value(screenId),
+        screenTitle = Value(screenTitle),
+        ayahIndex = Value(ayahIndex),
+        ayahNum = Value(ayahNum);
+  static Insertable<LastReadData> custom({
+    Expression<int>? id,
+    Expression<int>? screenId,
+    Expression<String>? screenTitle,
+    Expression<int>? ayahIndex,
+    Expression<int>? ayahNum,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (screenId != null) 'screen_id': screenId,
+      if (screenTitle != null) 'screen_title': screenTitle,
+      if (ayahIndex != null) 'ayah_index': ayahIndex,
+      if (ayahNum != null) 'ayah_num': ayahNum,
+    });
+  }
+
+  LastReadCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? screenId,
+      Value<String>? screenTitle,
+      Value<int>? ayahIndex,
+      Value<int>? ayahNum}) {
+    return LastReadCompanion(
+      id: id ?? this.id,
+      screenId: screenId ?? this.screenId,
+      screenTitle: screenTitle ?? this.screenTitle,
+      ayahIndex: ayahIndex ?? this.ayahIndex,
+      ayahNum: ayahNum ?? this.ayahNum,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (screenId.present) {
+      map['screen_id'] = Variable<int>(screenId.value);
+    }
+    if (screenTitle.present) {
+      map['screen_title'] = Variable<String>(screenTitle.value);
+    }
+    if (ayahIndex.present) {
+      map['ayah_index'] = Variable<int>(ayahIndex.value);
+    }
+    if (ayahNum.present) {
+      map['ayah_num'] = Variable<int>(ayahNum.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LastReadCompanion(')
+          ..write('id: $id, ')
+          ..write('screenId: $screenId, ')
+          ..write('screenTitle: $screenTitle, ')
+          ..write('ayahIndex: $ayahIndex, ')
+          ..write('ayahNum: $ayahNum')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
@@ -1048,6 +1343,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       'CREATE INDEX IF NOT EXISTS idx_ayahs_surah_id ON ayahs (surah_id)');
   late final Index idxAyahsJuzId = Index('idx_ayahs_juz_id',
       'CREATE INDEX IF NOT EXISTS idx_ayahs_juz_id ON ayahs (juz_id)');
+  late final LastRead lastRead = LastRead(this);
+  late final Trigger enforceSingleLastRead = Trigger(
+      'CREATE TRIGGER enforce_single_last_read BEFORE INSERT ON last_read BEGIN DELETE FROM last_read;END',
+      'enforce_single_last_read');
   Selectable<Surah> allSurah() {
     return customSelect('SELECT * FROM surahs', variables: [], readsFrom: {
       surahs,
@@ -1061,31 +1360,54 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   }
 
   Selectable<Ayah> ayahsInSurah(int var1) {
-    return customSelect('SELECT * FROM ayahs WHERE ayahs.surah_id = ?1',
-        variables: [
-          Variable<int>(var1)
-        ],
-        readsFrom: {
-          ayahs,
-        }).asyncMap(ayahs.mapFromRow);
+    return customSelect('SELECT * FROM ayahs WHERE surah_id = ?1', variables: [
+      Variable<int>(var1)
+    ], readsFrom: {
+      ayahs,
+    }).asyncMap(ayahs.mapFromRow);
   }
 
   Selectable<Ayah> ayahsInJuz(int var1) {
-    return customSelect('SELECT * FROM ayahs WHERE ayahs.juz_id = ?1',
-        variables: [
-          Variable<int>(var1)
-        ],
-        readsFrom: {
-          ayahs,
-        }).asyncMap(ayahs.mapFromRow);
+    return customSelect('SELECT * FROM ayahs WHERE juz_id = ?1', variables: [
+      Variable<int>(var1)
+    ], readsFrom: {
+      ayahs,
+    }).asyncMap(ayahs.mapFromRow);
+  }
+
+  Future<int> saveLastRead(
+      int screenId, String screenTitle, int ayahIndex, int ayahNum) {
+    return customInsert(
+      'INSERT INTO last_read (screen_id, screen_title, ayah_index, ayah_num) VALUES (?1, ?2, ?3, ?4)',
+      variables: [
+        Variable<int>(screenId),
+        Variable<String>(screenTitle),
+        Variable<int>(ayahIndex),
+        Variable<int>(ayahNum)
+      ],
+      updates: {lastRead},
+    );
+  }
+
+  Selectable<LastReadData> getLastRead() {
+    return customSelect('SELECT * FROM last_read', variables: [], readsFrom: {
+      lastRead,
+    }).asyncMap(lastRead.mapFromRow);
   }
 
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [surahs, juzs, ayahs, idxAyahsSurahId, idxAyahsJuzId];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        surahs,
+        juzs,
+        ayahs,
+        idxAyahsSurahId,
+        idxAyahsJuzId,
+        lastRead,
+        enforceSingleLastRead
+      ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
         [
@@ -1101,6 +1423,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('ayahs', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('last_read',
+                limitUpdateKind: UpdateKind.insert),
+            result: [
+              TableUpdate('last_read', kind: UpdateKind.delete),
             ],
           ),
         ],
@@ -1561,10 +1890,143 @@ class $AyahsOrderingComposer extends OrderingComposer<_$AppDatabase, Ayahs> {
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $LastReadInsertCompanionBuilder = LastReadCompanion Function({
+  Value<int> id,
+  required int screenId,
+  required String screenTitle,
+  required int ayahIndex,
+  required int ayahNum,
+});
+typedef $LastReadUpdateCompanionBuilder = LastReadCompanion Function({
+  Value<int> id,
+  Value<int> screenId,
+  Value<String> screenTitle,
+  Value<int> ayahIndex,
+  Value<int> ayahNum,
+});
+
+class $LastReadTableManager extends RootTableManager<
+    _$AppDatabase,
+    LastRead,
+    LastReadData,
+    $LastReadFilterComposer,
+    $LastReadOrderingComposer,
+    $LastReadProcessedTableManager,
+    $LastReadInsertCompanionBuilder,
+    $LastReadUpdateCompanionBuilder> {
+  $LastReadTableManager(_$AppDatabase db, LastRead table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer: $LastReadFilterComposer(ComposerState(db, table)),
+          orderingComposer: $LastReadOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $LastReadProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            Value<int> screenId = const Value.absent(),
+            Value<String> screenTitle = const Value.absent(),
+            Value<int> ayahIndex = const Value.absent(),
+            Value<int> ayahNum = const Value.absent(),
+          }) =>
+              LastReadCompanion(
+            id: id,
+            screenId: screenId,
+            screenTitle: screenTitle,
+            ayahIndex: ayahIndex,
+            ayahNum: ayahNum,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            required int screenId,
+            required String screenTitle,
+            required int ayahIndex,
+            required int ayahNum,
+          }) =>
+              LastReadCompanion.insert(
+            id: id,
+            screenId: screenId,
+            screenTitle: screenTitle,
+            ayahIndex: ayahIndex,
+            ayahNum: ayahNum,
+          ),
+        ));
+}
+
+class $LastReadProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    LastRead,
+    LastReadData,
+    $LastReadFilterComposer,
+    $LastReadOrderingComposer,
+    $LastReadProcessedTableManager,
+    $LastReadInsertCompanionBuilder,
+    $LastReadUpdateCompanionBuilder> {
+  $LastReadProcessedTableManager(super.$state);
+}
+
+class $LastReadFilterComposer extends FilterComposer<_$AppDatabase, LastRead> {
+  $LastReadFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get screenId => $state.composableBuilder(
+      column: $state.table.screenId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get screenTitle => $state.composableBuilder(
+      column: $state.table.screenTitle,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get ayahIndex => $state.composableBuilder(
+      column: $state.table.ayahIndex,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get ayahNum => $state.composableBuilder(
+      column: $state.table.ayahNum,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $LastReadOrderingComposer
+    extends OrderingComposer<_$AppDatabase, LastRead> {
+  $LastReadOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get screenId => $state.composableBuilder(
+      column: $state.table.screenId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get screenTitle => $state.composableBuilder(
+      column: $state.table.screenTitle,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get ayahIndex => $state.composableBuilder(
+      column: $state.table.ayahIndex,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get ayahNum => $state.composableBuilder(
+      column: $state.table.ayahNum,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class _$AppDatabaseManager {
   final _$AppDatabase _db;
   _$AppDatabaseManager(this._db);
   $SurahsTableManager get surahs => $SurahsTableManager(_db, _db.surahs);
   $JuzsTableManager get juzs => $JuzsTableManager(_db, _db.juzs);
   $AyahsTableManager get ayahs => $AyahsTableManager(_db, _db.ayahs);
+  $LastReadTableManager get lastRead =>
+      $LastReadTableManager(_db, _db.lastRead);
 }

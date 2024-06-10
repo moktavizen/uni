@@ -1,8 +1,11 @@
+import 'package:equran/providers/last_read_provider.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/tabs/juz_tab.dart';
 import 'package:equran/tabs/surah_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ReadScreen extends StatelessWidget {
   const ReadScreen({super.key});
@@ -97,72 +100,105 @@ class _Greeter extends StatelessWidget {
   }
 }
 
-class _LastRead extends StatelessWidget {
+class _LastRead extends ConsumerWidget {
   const _LastRead();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final lastRead = ref.watch(lastReadProvider);
+
     return InkWell(
       onTap: () {},
-      child: Stack(
-        children: [
-          Container(
-            height: 131,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [lastReadGrad1, lastReadGrad2],
-              ),
-            ),
-          ),
-          const Positioned(
-            bottom: 0,
-            right: 0,
-            child: quranBgHome,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+      child: Container(
+        height: 131,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: lastRead.when(
+          data: (value) => Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [lastReadGrad1, lastReadGrad2],
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    lastRead,
-                    const SizedBox(width: 8),
+                    Row(
+                      children: [
+                        lastReadIcon,
+                        const SizedBox(width: 8),
+                        Text(
+                          'Last Read',
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: surface,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
                     Text(
-                      'Last Read',
+                      value.screenTitle,
                       style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: surface,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Ayat No: ${value.ayahNum}',
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w400,
                         fontSize: 14,
                         color: surface,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  'Al-Fatihah',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                    color: surface,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Ayat No: 1',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: surface,
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
+              ),
+              const Positioned(
+                bottom: 0,
+                right: 0,
+                child: quranBgHome,
+              ),
+            ],
+          ),
+          error: (e, s) {
+            debugPrintStack(label: e.toString(), stackTrace: s);
+            return Center(
+              child: Text(
+                textAlign: TextAlign.center,
+                'Oops!\nTerdapat kesalahan\nmemproses data Terakhir Dibaca!',
+                style: GoogleFonts.inter(color: onSurface),
+              ),
+            );
+          },
+          loading: () => const _LastReadSkeleton(),
+        ),
+      ),
+    );
+  }
+}
+
+class _LastReadSkeleton extends StatelessWidget {
+  const _LastReadSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Skeletonizer.zone(
+      child: Bone(
+        height: double.infinity,
+        width: double.infinity,
       ),
     );
   }

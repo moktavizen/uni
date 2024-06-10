@@ -68,8 +68,8 @@ class _AppVer extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Final Project for University\n'
-              'EQuran - v0.0.1',
+              'EQuran - v0.0.1\n'
+              'Final Project for University',
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontWeight: FontWeight.w500,
@@ -122,13 +122,13 @@ class _SettingsListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {},
-      child: Padding(
+      child: Container(
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
           children: [
             SizedBox(
               width: 40,
-              height: 46,
+              height: 36,
               child: Align(
                 alignment: Alignment.topLeft,
                 child: leadingIcon,

@@ -11,7 +11,7 @@ class Juzs extends _$Juzs {
     // print('Fetching All Juz');
     final database = ref.watch(databaseProvider);
 
-    List<Juz> juzList = await database.allJuz().get();
+    final List<Juz> juzList = await database.allJuz().get();
 
     ref.keepAlive();
 

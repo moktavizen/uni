@@ -6,7 +6,7 @@ part of 'surahs_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$surahsHash() => r'bab69988b831a8c2fea4680f884138d9c3afd17a';
+String _$surahsHash() => r'92ccd56be626c8a93eb9aea5acab1e75970bc175';
 
 /// See also [Surahs].
 @ProviderFor(Surahs)

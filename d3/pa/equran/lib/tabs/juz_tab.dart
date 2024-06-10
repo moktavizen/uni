@@ -19,80 +19,80 @@ class JuzTab extends ConsumerWidget {
     final juzList = ref.watch(juzsProvider);
     return Builder(
       builder: (BuildContext context) => CustomScrollView(
-        key: const PageStorageKey('Juz'),
+        key: const PageStorageKey('juz'),
         slivers: [
           SliverOverlapInjector(
             handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
           ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 24),
-            sliver: switch (juzList) {
-              AsyncData(:final value) => SliverList.separated(
-                  itemBuilder: (context, index) {
-                    Juz juz = value.elementAt(index);
-
-                    return InkWell(
-                      splashColor: systemUiBackground,
-                      onTap: () {
-                        return context.goNamed(
-                          'juz',
-                          pathParameters: {
-                            'juzId': (juz.id).toString(),
-                          },
-                          extra: juz,
-                        );
-                      },
-                      child: TabListTile(
-                        leading: HizbBorder(
-                          child: Text(
-                            '${juz.id}',
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12,
-                              color: onSurface,
-                            ),
-                          ),
-                        ),
-                        title: Text(
-                          'Juz ${juz.id} - ${juz.ayahCount} Ayat',
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            color: onSurface,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'MULAI • ${juz.surahStart.toUpperCase()} AYAT ${juz.ayahStart}',
+            sliver: juzList.when(
+              data: (value) => SliverList.separated(
+                itemBuilder: (context, index) {
+                  Juz juz = value.elementAt(index);
+                  return InkWell(
+                    splashColor: systemUiBackground,
+                    onTap: () {
+                      return context.goNamed(
+                        'juz',
+                        pathParameters: {'juzId': (juz.id).toString()},
+                        extra: juz,
+                      );
+                    },
+                    child: TabListTile(
+                      leading: HizbBorder(
+                        child: Text(
+                          '${juz.id}',
                           style: GoogleFonts.inter(
                             fontWeight: FontWeight.w500,
                             fontSize: 12,
-                            color: onSurfaceVar,
+                            color: onSurface,
                           ),
                         ),
                       ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const Divider(
-                      height: 1,
-                      thickness: 1,
-                      color: listDecor,
-                    );
-                  },
-                  itemCount: value.length,
-                ),
-              AsyncError() => Center(
-                  child: SizedBox(
+                      title: Text(
+                        'Juz ${juz.id} - ${juz.ayahCount} Ayat',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: onSurface,
+                        ),
+                      ),
+                      subtitle: Text(
+                        'MULAI • ${juz.surahStart.toUpperCase()} AYAT ${juz.ayahStart}',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: onSurfaceVar,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: listDecor,
+                  );
+                },
+                itemCount: value.length,
+              ),
+              error: (e, s) {
+                debugPrintStack(label: e.toString(), stackTrace: s);
+                return SliverToBoxAdapter(
+                  child: Center(
                     child: Text(
                       textAlign: TextAlign.center,
-                      'Oops!\nTerdapat kesalahan\nsaat memproses data Juz!',
+                      'Oops!\nTerdapat kesalahan\nmemproses data Juz!',
                       style: GoogleFonts.inter(color: onSurface),
                     ),
                   ),
-                ),
-              _ => const ListTileSkeleton(),
-            },
-          )
+                );
+              },
+              loading: () => const ListTileSkeleton(),
+            ),
+          ),
         ],
       ),
     );

@@ -14,6 +14,7 @@ final GlobalKey<NavigatorState> _shellNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'shell');
 
 final GoRouter router = GoRouter(
+  // debugLogDiagnostics: true,
   initialLocation: '/read',
   navigatorKey: _rootNavigatorKey,
   routes: [

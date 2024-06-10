@@ -10,8 +10,6 @@ class Database extends _$Database {
     // print('Open Database');
     final database = AppDatabase();
 
-    ref.keepAlive();
-
     ref.onDispose(database.close);
 
     return database;

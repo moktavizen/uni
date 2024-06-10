@@ -31,7 +31,7 @@ class HomeNavigation extends StatefulWidget {
 }
 
 class _HomeNavigationState extends State<HomeNavigation> {
-  String currentTitle = 'EQuran';
+  String currentTitle = 'Baca';
 
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
@@ -39,10 +39,10 @@ class _HomeNavigationState extends State<HomeNavigation> {
         setState(() => currentTitle = 'Favorit');
         context.goNamed('favorite');
       case 1:
-        setState(() => currentTitle = 'EQuran');
+        setState(() => currentTitle = 'Baca');
         context.goNamed('read');
       case 2:
-        setState(() => currentTitle = 'Setting');
+        setState(() => currentTitle = 'Pengaturan');
         context.goNamed('setting');
     }
   }
