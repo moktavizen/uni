@@ -4,6 +4,7 @@ import 'package:equran/tabs/juz_tab.dart';
 import 'package:equran/tabs/surah_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -63,11 +64,12 @@ class ReadScreen extends StatelessWidget {
   }
 }
 
-class _Greeter extends StatelessWidget {
+class _Greeter extends ConsumerWidget {
   const _Greeter();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final lastRead = ref.watch(lastReadProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -92,7 +94,40 @@ class _Greeter extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          const _LastRead(),
+          lastRead.when(
+            data: (value) {
+              if (value.screenTitle.contains('Juz')) {
+                return _LastReadCard(
+                  onTap: () {
+                    context.goNamed(
+                      'juz',
+                      pathParameters: {'juzId': value.screenId.toString()},
+                      extra: value,
+                    );
+                  },
+                  title: value.screenTitle,
+                  subtitle: '${value.surahName} - ${value.ayahNum}',
+                );
+              } else {
+                return _LastReadCard(
+                  onTap: () {
+                    context.goNamed(
+                      'surah',
+                      pathParameters: {'surahId': value.screenId.toString()},
+                      extra: value,
+                    );
+                  },
+                  title: value.screenTitle,
+                  subtitle: 'Ayah No: ${value.ayahNum}',
+                );
+              }
+            },
+            error: (e, s) => const _LastReadCard(
+              title: 'Belum ada',
+              subtitle: 'ayat yang kamu baca',
+            ),
+            loading: () => const _LastReadSkeleton(),
+          ),
           const SizedBox(height: 24),
         ],
       ),
@@ -100,92 +135,124 @@ class _Greeter extends StatelessWidget {
   }
 }
 
-class _LastRead extends ConsumerWidget {
-  const _LastRead();
+class _LastReadCard extends StatelessWidget {
+  const _LastReadCard({
+    required this.title,
+    required this.subtitle,
+    this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final void Function()? onTap;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final lastRead = ref.watch(lastReadProvider);
-
+  Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
-      child: Container(
-        height: 131,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: lastRead.when(
-          data: (value) => Stack(
-            clipBehavior: Clip.none,
+      onTap: onTap,
+      child: _LastReadBg(
+        child: _LastReadTile(
+          badge: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [lastReadGrad1, lastReadGrad2],
-                  ),
+              lastReadIcon,
+              const SizedBox(width: 8),
+              Text(
+                'Last Read',
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                  color: surface,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        lastReadIcon,
-                        const SizedBox(width: 8),
-                        Text(
-                          'Last Read',
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: surface,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Text(
-                      value.screenTitle,
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: surface,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Ayat No: ${value.ayahNum}',
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: surface,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Positioned(
-                bottom: 0,
-                right: 0,
-                child: quranBgHome,
               ),
             ],
           ),
-          error: (e, s) {
-            debugPrintStack(label: e.toString(), stackTrace: s);
-            return Center(
-              child: Text(
-                textAlign: TextAlign.center,
-                'Oops!\nTerdapat kesalahan\nmemproses data Terakhir Dibaca!',
-                style: GoogleFonts.inter(color: onSurface),
-              ),
-            );
-          },
-          loading: () => const _LastReadSkeleton(),
+          title: Text(
+            title,
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              color: surface,
+            ),
+          ),
+          subtitle: Text(
+            subtitle,
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+              color: surface,
+            ),
+          ),
+          decoration: quranBgHome,
         ),
       ),
+    );
+  }
+}
+
+class _LastReadBg extends StatelessWidget {
+  const _LastReadBg({
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 131,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [lastReadGrad1, lastReadGrad2],
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: child,
+    );
+  }
+}
+
+class _LastReadTile extends StatelessWidget {
+  const _LastReadTile({
+    required this.badge,
+    required this.title,
+    required this.subtitle,
+    required this.decoration,
+  });
+
+  final Widget badge;
+  final Widget title;
+  final Widget subtitle;
+  final Widget decoration;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: const BoxDecoration(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              badge,
+              const Spacer(),
+              title,
+              const SizedBox(height: 4),
+              subtitle,
+            ],
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: decoration,
+        ),
+      ],
     );
   }
 }
@@ -195,10 +262,24 @@ class _LastReadSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Skeletonizer.zone(
-      child: Bone(
-        height: double.infinity,
+    return Skeletonizer.zone(
+      child: Container(
+        height: 131,
         width: double.infinity,
+        decoration: BoxDecoration(
+          color: surahBar,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: _LastReadTile(
+          badge: const Bone.text(width: 100, fontSize: 14),
+          title: const Bone.text(width: 92, fontSize: 18),
+          subtitle: const Bone.text(width: 72, fontSize: 14),
+          decoration: Bone(
+            width: 173,
+            height: 97,
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
       ),
     );
   }

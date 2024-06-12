@@ -7,12 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class JuzDetailScreen extends ConsumerWidget {
   const JuzDetailScreen({
     super.key,
-    required this.juz,
-    required this.juzId,
+    this.juzId,
+    this.juz,
+    this.lastRead,
   });
 
-  final Juz juz;
   final String? juzId;
+  final Juz? juz;
+  final LastRead? lastRead;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,11 +23,12 @@ class JuzDetailScreen extends ConsumerWidget {
 
     return AyahListScaffold(
       screenId: parsedJuzId,
-      headerTitle: 'Juz ${juz.id}',
-      headerSubtitle: '${juz.ayahCount} Ayat',
-      headerCaption:
-          'MULAI • ${juz.surahStart.toUpperCase()} AYAT ${juz.ayahStart}',
+      headerTitle: lastRead?.screenTitle ?? 'Juz ${juz!.id}',
+      headerSubtitle: lastRead?.screenSubtitle ?? '${juz!.ayahCount} Ayat',
+      headerCaption: lastRead?.screenCaption ??
+          'MULAI • ${juz!.surahStart.toUpperCase()} AYAT ${juz!.ayahStart}',
       ayahList: ayahList,
+      ayahIndex: lastRead?.ayahIndex,
     );
   }
 }

@@ -33,9 +33,9 @@ class JuzTab extends ConsumerWidget {
                   return InkWell(
                     splashColor: systemUiBackground,
                     onTap: () {
-                      return context.goNamed(
+                      context.goNamed(
                         'juz',
-                        pathParameters: {'juzId': (juz.id).toString()},
+                        pathParameters: {'juzId': juz.id.toString()},
                         extra: juz,
                       );
                     },

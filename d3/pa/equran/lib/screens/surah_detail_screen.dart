@@ -7,12 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class SurahDetailScreen extends ConsumerWidget {
   const SurahDetailScreen({
     super.key,
-    required this.surah,
-    required this.surahId,
+    this.surahId,
+    this.surah,
+    this.lastRead,
   });
 
-  final Surah surah;
   final String? surahId;
+  final Surah? surah;
+  final LastRead? lastRead;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,11 +23,12 @@ class SurahDetailScreen extends ConsumerWidget {
 
     return AyahListScaffold(
       screenId: parsedSurahId,
-      headerTitle: surah.latin,
-      headerSubtitle: surah.translation,
-      headerCaption:
-          '${surah.location.toUpperCase()} • ${surah.ayahCount} AYAT',
+      headerTitle: lastRead?.screenTitle ?? surah!.latin,
+      headerSubtitle: lastRead?.screenSubtitle ?? surah!.translation,
+      headerCaption: lastRead?.screenCaption ??
+          '${surah!.location.toUpperCase()} • ${surah!.ayahCount} AYAT',
       ayahList: ayahList,
+      ayahIndex: lastRead?.ayahIndex,
     );
   }
 }

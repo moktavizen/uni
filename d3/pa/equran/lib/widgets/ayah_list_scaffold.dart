@@ -23,6 +23,7 @@ class AyahListScaffold extends ConsumerStatefulWidget {
     required this.headerSubtitle,
     required this.headerCaption,
     required this.ayahList,
+    this.ayahIndex,
   });
 
   final int screenId;
@@ -30,6 +31,7 @@ class AyahListScaffold extends ConsumerStatefulWidget {
   final String headerSubtitle;
   final String headerCaption;
   final AsyncValue<List<Ayah>> ayahList;
+  final int? ayahIndex;
 
   @override
   ConsumerState<AyahListScaffold> createState() => _AyahListScaffoldState();
@@ -40,6 +42,7 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
   String _selectedPlayerState = '';
   int _lastReadIndex = 0;
   late int _lastReadAyahNum;
+  late String _lastReadSurahName;
   final _controller = AutoScrollController();
 
   @override
@@ -61,10 +64,10 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
     });
   }
 
-  void _updateLastRead(int index, int ayahNum) {
+  void _updateLastRead(int index, int ayahNum, String surahName) {
     _lastReadIndex = index;
     _lastReadAyahNum = ayahNum;
-    // print(_lastReadIdx);
+    _lastReadSurahName = surahName;
   }
 
   void _saveLastRead() {
@@ -73,15 +76,12 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
     database.saveLastRead(
       widget.screenId,
       widget.headerTitle,
+      widget.headerSubtitle,
+      widget.headerCaption,
       _lastReadIndex,
       _lastReadAyahNum,
+      _lastReadSurahName,
     );
-  }
-
-  void _onPressBack(AudioPlayer player) {
-    player.dispose();
-    _saveLastRead();
-    context.pop();
   }
 
   @override
@@ -98,17 +98,36 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
     }
   }
 
+  void _popScreen(AudioPlayer player) {
+    player.dispose();
+    _saveLastRead();
+    context.pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final player = ref.watch(murattalProvider);
+
     return Scaffold(
       backgroundColor: surface,
       appBar: CustomAppBar(
-        leading: IconButton(
-          onPressed: () {
-            _onPressBack(player);
+        leading: PopScope(
+          // Detect pop from system
+          canPop: false,
+          onPopInvoked: (bool didPop) async {
+            if (didPop) {
+              return;
+            }
+            // when pop from system
+            _popScreen(player);
           },
-          icon: backIcon,
+          child: IconButton(
+            onPressed: () {
+              // when pop from back button
+              _popScreen(player);
+            },
+            icon: backIcon,
+          ),
         ),
         title: Text(
           widget.headerTitle,
@@ -120,6 +139,7 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
         ),
       ),
       body: InViewNotifierCustomScrollView(
+        controller: _controller,
         isInViewPortCondition:
             (double deltaTop, double deltaBottom, double vpHeight) =>
                 deltaTop < 0 && deltaBottom > 0,
@@ -138,65 +158,80 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
             ),
           ),
           SliverPadding(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 24,
+            ),
             sliver: widget.ayahList.when(
-              data: (value) => SliverList.separated(
-                // itemPositionsListener: itemPositionsListener,
-                // listController: _listController,
-                itemBuilder: (context, index) {
-                  Ayah ayah = value.elementAt(index);
-
-                  _lastReadAyahNum = value.elementAt(0).ayahNum;
-
-                  return AutoScrollTag(
-                    index: index,
-                    controller: _controller,
-                    key: ValueKey(index),
-                    child: InViewNotifierWidget(
-                      id: '$index',
-                      builder:
-                          (BuildContext context, bool isInView, Widget? child) {
-                        if (isInView == true) {
-                          _updateLastRead(index, ayah.ayahNum);
-                        }
-                        return _AyahListTile(
-                          arabicText: _ArabicText(arabic: ayah.arabic),
-                          tlText: _TlText(translation: ayah.translation),
-                          actionBar: _AyahBar(
-                            ayahNum: _AyahNum(ayahNum: ayah.ayahNum),
-                            actions: [
-                              _ShareAyahButton(
-                                arabic: ayah.arabic,
-                                translation: ayah.translation,
-                                surahId: ayah.surahId,
-                                ayahNum: ayah.ayahNum,
-                              ),
-                              _ShowTafsirButton(
-                                surahName: ayah.surahName,
-                                ayahNum: ayah.ayahNum,
-                                tafsir: ayah.tafsir,
-                                surahId: ayah.surahId,
-                              ),
-                              _MurattalPlayButton(
-                                ayahNum: ayah.ayahNum,
-                                surahId: ayah.surahId,
-                                player: player,
-                                selectedPlayerState: _selectedPlayerState,
-                                updateSelectedPlayer: _updateSelectedPlayer,
-                                // updateLastRead: _updateLastRead,
-                              ),
-                              const _FavAyahButton(),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+              data: (value) {
+                if (widget.ayahIndex != null) {
+                  _controller.scrollToIndex(
+                    widget.ayahIndex!,
+                    preferPosition: AutoScrollPosition.begin,
                   );
-                },
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 28),
-                itemCount: value.length,
-              ),
+                }
+
+                return SliverList.builder(
+                  // itemPositionsListener: itemPositionsListener,
+                  itemBuilder: (context, index) {
+                    Ayah ayah = value.elementAt(index);
+
+                    // initial value
+                    _lastReadAyahNum = value.elementAt(0).ayahNum;
+                    _lastReadSurahName = value.elementAt(0).surahName;
+
+                    return AutoScrollTag(
+                      index: index,
+                      controller: _controller,
+                      key: ValueKey(index),
+                      child: InViewNotifierWidget(
+                        id: '$index',
+                        builder: (BuildContext context, bool isInView,
+                            Widget? child) {
+                          if (isInView == true) {
+                            _updateLastRead(
+                              index,
+                              ayah.ayahNum,
+                              ayah.surahName,
+                            );
+                          }
+                          return _AyahListTile(
+                            arabicText: _ArabicText(arabic: ayah.arabic),
+                            tlText: _TlText(translation: ayah.translation),
+                            actionBar: _AyahBar(
+                              ayahNum: _AyahNum(ayahNum: ayah.ayahNum),
+                              actions: [
+                                _ShareAyahButton(
+                                  arabic: ayah.arabic,
+                                  translation: ayah.translation,
+                                  surahId: ayah.surahId,
+                                  ayahNum: ayah.ayahNum,
+                                ),
+                                _ShowTafsirButton(
+                                  surahName: ayah.surahName,
+                                  ayahNum: ayah.ayahNum,
+                                  tafsir: ayah.tafsir,
+                                  surahId: ayah.surahId,
+                                ),
+                                _MurattalPlayButton(
+                                  ayahNum: ayah.ayahNum,
+                                  surahId: ayah.surahId,
+                                  player: player,
+                                  selectedPlayerState: _selectedPlayerState,
+                                  updateSelectedPlayer: _updateSelectedPlayer,
+                                  // updateLastRead: _updateLastRead,
+                                ),
+                                const _FavAyahButton(),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  itemCount: value.length,
+                );
+              },
               error: (e, s) {
                 debugPrintStack(label: e.toString(), stackTrace: s);
                 return SliverToBoxAdapter(
@@ -310,7 +345,7 @@ class _ListTileSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverList.separated(
+    return SliverList.builder(
       itemBuilder: (context, index) {
         return Skeletonizer.zone(
           child: _AyahListTile(
@@ -331,7 +366,6 @@ class _ListTileSkeleton extends StatelessWidget {
           ),
         );
       },
-      separatorBuilder: (context, index) => const SizedBox(height: 24),
       itemCount: 3,
     );
   }
@@ -353,11 +387,13 @@ class _AyahListTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        const SizedBox(height: 14),
         arabicText,
         const SizedBox(height: 16),
         tlText,
         const SizedBox(height: 16),
         actionBar,
+        const SizedBox(height: 14),
       ],
     );
   }

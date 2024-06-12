@@ -41,10 +41,15 @@ final GoRouter router = GoRouter(
               name: 'surah',
               parentNavigatorKey: _rootNavigatorKey,
               builder: (context, state) {
-                Surah surah = state.extra as Surah;
+                final Surah? surah =
+                    state.extra is Surah ? state.extra as Surah : null;
+                final LastRead? lastRead =
+                    state.extra is LastRead ? state.extra as LastRead : null;
+
                 return SurahDetailScreen(
-                  surah: surah,
                   surahId: state.pathParameters['surahId'],
+                  surah: surah,
+                  lastRead: lastRead,
                 );
               },
             ),
@@ -53,10 +58,14 @@ final GoRouter router = GoRouter(
               name: 'juz',
               parentNavigatorKey: _rootNavigatorKey,
               builder: (context, state) {
-                Juz juz = state.extra as Juz;
+                final Juz? juz = state.extra is Juz ? state.extra as Juz : null;
+                final LastRead? lastRead =
+                    state.extra is LastRead ? state.extra as LastRead : null;
+
                 return JuzDetailScreen(
-                  juz: juz,
                   juzId: state.pathParameters['juzId'],
+                  juz: juz,
+                  lastRead: lastRead,
                 );
               },
             ),

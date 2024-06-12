@@ -6,12 +6,12 @@ part of 'last_read_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$lastReadHash() => r'149e4985fe5256880fe11196b8fdbba6e22aeeb1';
+String _$lastReadHash() => r'f6fe822bf1ab04e87a6152a6ce8a7e838906008f';
 
 /// See also [LastRead].
 @ProviderFor(LastRead)
 final lastReadProvider =
-    AutoDisposeStreamNotifierProvider<LastRead, LastReadData>.internal(
+    AutoDisposeStreamNotifierProvider<LastRead, d.LastRead>.internal(
   LastRead.new,
   name: r'lastReadProvider',
   debugGetCreateSourceHash:
@@ -20,6 +20,6 @@ final lastReadProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$LastRead = AutoDisposeStreamNotifier<LastReadData>;
+typedef _$LastRead = AutoDisposeStreamNotifier<d.LastRead>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

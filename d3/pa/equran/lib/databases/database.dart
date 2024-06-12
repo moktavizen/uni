@@ -50,14 +50,4 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
-
-  // Initial value for Last Read
-  @override
-  MigrationStrategy get migration => MigrationStrategy(
-        beforeOpen: (OpeningDetails details) async {
-          if (details.wasCreated) {
-            await saveLastRead(1, 'Al-Fatihah', 0, 1);
-          }
-        },
-      );
 }

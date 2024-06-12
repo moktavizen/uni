@@ -33,9 +33,9 @@ class SurahTab extends ConsumerWidget {
                   return InkWell(
                     splashColor: systemUiBackground,
                     onTap: () {
-                      return context.goNamed(
+                      context.goNamed(
                         'surah',
-                        pathParameters: {'surahId': (surah.id).toString()},
+                        pathParameters: {'surahId': surah.id.toString()},
                         extra: surah,
                       );
                     },

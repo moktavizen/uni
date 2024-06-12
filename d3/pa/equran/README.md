@@ -20,7 +20,7 @@ This App is built using Flutter with the following packages:
 |:--------------------|:--------------:|:-------------:|
 | Read Quran          |        ✅       |       ✅       |
 | Voice Search        |        ✅       |       🛠️       |
-| Last Read           |        ✅       |       🛠️       |
+| Last Read           |        ✅       |       ✅       |
 | Translation         |        ✅       |       ✅       |
 | Share/Copy          |        ✅       |       ✅       |
 | Murottal Audio      |        ✅       |       ✅       |
@@ -29,13 +29,9 @@ This App is built using Flutter with the following packages:
 | Customization       |        ✅       |       🛠️       |
 
 To do:
- - Last Read
-    - Detect last read ayah ✅
-    - Save last read ayah 
-    - Go to last read ayah
  - Search
     - Open search screen
     - filter search
     - go to searched
- - Bookmark
+ - Favorites
  - Setting

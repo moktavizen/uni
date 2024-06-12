@@ -1038,11 +1038,11 @@ class AyahsCompanion extends UpdateCompanion<Ayah> {
   }
 }
 
-class LastRead extends Table with TableInfo<LastRead, LastReadData> {
+class LastReadTable extends Table with TableInfo<LastReadTable, LastRead> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  LastRead(this.attachedDatabase, [this._alias]);
+  LastReadTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
@@ -1063,6 +1063,20 @@ class LastRead extends Table with TableInfo<LastRead, LastReadData> {
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _screenSubtitleMeta =
+      const VerificationMeta('screenSubtitle');
+  late final GeneratedColumn<String> screenSubtitle = GeneratedColumn<String>(
+      'screen_subtitle', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _screenCaptionMeta =
+      const VerificationMeta('screenCaption');
+  late final GeneratedColumn<String> screenCaption = GeneratedColumn<String>(
+      'screen_caption', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
   static const VerificationMeta _ayahIndexMeta =
       const VerificationMeta('ayahIndex');
   late final GeneratedColumn<int> ayahIndex = GeneratedColumn<int>(
@@ -1077,16 +1091,31 @@ class LastRead extends Table with TableInfo<LastRead, LastReadData> {
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _surahNameMeta =
+      const VerificationMeta('surahName');
+  late final GeneratedColumn<String> surahName = GeneratedColumn<String>(
+      'surah_name', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, screenId, screenTitle, ayahIndex, ayahNum];
+  List<GeneratedColumn> get $columns => [
+        id,
+        screenId,
+        screenTitle,
+        screenSubtitle,
+        screenCaption,
+        ayahIndex,
+        ayahNum,
+        surahName
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'last_read';
   @override
-  VerificationContext validateIntegrity(Insertable<LastReadData> instance,
+  VerificationContext validateIntegrity(Insertable<LastRead> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -1107,6 +1136,22 @@ class LastRead extends Table with TableInfo<LastRead, LastReadData> {
     } else if (isInserting) {
       context.missing(_screenTitleMeta);
     }
+    if (data.containsKey('screen_subtitle')) {
+      context.handle(
+          _screenSubtitleMeta,
+          screenSubtitle.isAcceptableOrUnknown(
+              data['screen_subtitle']!, _screenSubtitleMeta));
+    } else if (isInserting) {
+      context.missing(_screenSubtitleMeta);
+    }
+    if (data.containsKey('screen_caption')) {
+      context.handle(
+          _screenCaptionMeta,
+          screenCaption.isAcceptableOrUnknown(
+              data['screen_caption']!, _screenCaptionMeta));
+    } else if (isInserting) {
+      context.missing(_screenCaptionMeta);
+    }
     if (data.containsKey('ayah_index')) {
       context.handle(_ayahIndexMeta,
           ayahIndex.isAcceptableOrUnknown(data['ayah_index']!, _ayahIndexMeta));
@@ -1119,57 +1164,78 @@ class LastRead extends Table with TableInfo<LastRead, LastReadData> {
     } else if (isInserting) {
       context.missing(_ayahNumMeta);
     }
+    if (data.containsKey('surah_name')) {
+      context.handle(_surahNameMeta,
+          surahName.isAcceptableOrUnknown(data['surah_name']!, _surahNameMeta));
+    } else if (isInserting) {
+      context.missing(_surahNameMeta);
+    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  LastReadData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  LastRead map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return LastReadData(
+    return LastRead(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       screenId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}screen_id'])!,
       screenTitle: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}screen_title'])!,
+      screenSubtitle: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}screen_subtitle'])!,
+      screenCaption: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}screen_caption'])!,
       ayahIndex: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}ayah_index'])!,
       ayahNum: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}ayah_num'])!,
+      surahName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}surah_name'])!,
     );
   }
 
   @override
-  LastRead createAlias(String alias) {
-    return LastRead(attachedDatabase, alias);
+  LastReadTable createAlias(String alias) {
+    return LastReadTable(attachedDatabase, alias);
   }
 
   @override
   bool get dontWriteConstraints => true;
 }
 
-class LastReadData extends DataClass implements Insertable<LastReadData> {
+class LastRead extends DataClass implements Insertable<LastRead> {
   final int id;
   final int screenId;
   final String screenTitle;
+  final String screenSubtitle;
+  final String screenCaption;
   final int ayahIndex;
   final int ayahNum;
-  const LastReadData(
+  final String surahName;
+  const LastRead(
       {required this.id,
       required this.screenId,
       required this.screenTitle,
+      required this.screenSubtitle,
+      required this.screenCaption,
       required this.ayahIndex,
-      required this.ayahNum});
+      required this.ayahNum,
+      required this.surahName});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['screen_id'] = Variable<int>(screenId);
     map['screen_title'] = Variable<String>(screenTitle);
+    map['screen_subtitle'] = Variable<String>(screenSubtitle);
+    map['screen_caption'] = Variable<String>(screenCaption);
     map['ayah_index'] = Variable<int>(ayahIndex);
     map['ayah_num'] = Variable<int>(ayahNum);
+    map['surah_name'] = Variable<String>(surahName);
     return map;
   }
 
@@ -1178,20 +1244,26 @@ class LastReadData extends DataClass implements Insertable<LastReadData> {
       id: Value(id),
       screenId: Value(screenId),
       screenTitle: Value(screenTitle),
+      screenSubtitle: Value(screenSubtitle),
+      screenCaption: Value(screenCaption),
       ayahIndex: Value(ayahIndex),
       ayahNum: Value(ayahNum),
+      surahName: Value(surahName),
     );
   }
 
-  factory LastReadData.fromJson(Map<String, dynamic> json,
+  factory LastRead.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return LastReadData(
+    return LastRead(
       id: serializer.fromJson<int>(json['id']),
       screenId: serializer.fromJson<int>(json['screen_id']),
       screenTitle: serializer.fromJson<String>(json['screen_title']),
+      screenSubtitle: serializer.fromJson<String>(json['screen_subtitle']),
+      screenCaption: serializer.fromJson<String>(json['screen_caption']),
       ayahIndex: serializer.fromJson<int>(json['ayah_index']),
       ayahNum: serializer.fromJson<int>(json['ayah_num']),
+      surahName: serializer.fromJson<String>(json['surah_name']),
     );
   }
   @override
@@ -1201,86 +1273,119 @@ class LastReadData extends DataClass implements Insertable<LastReadData> {
       'id': serializer.toJson<int>(id),
       'screen_id': serializer.toJson<int>(screenId),
       'screen_title': serializer.toJson<String>(screenTitle),
+      'screen_subtitle': serializer.toJson<String>(screenSubtitle),
+      'screen_caption': serializer.toJson<String>(screenCaption),
       'ayah_index': serializer.toJson<int>(ayahIndex),
       'ayah_num': serializer.toJson<int>(ayahNum),
+      'surah_name': serializer.toJson<String>(surahName),
     };
   }
 
-  LastReadData copyWith(
+  LastRead copyWith(
           {int? id,
           int? screenId,
           String? screenTitle,
+          String? screenSubtitle,
+          String? screenCaption,
           int? ayahIndex,
-          int? ayahNum}) =>
-      LastReadData(
+          int? ayahNum,
+          String? surahName}) =>
+      LastRead(
         id: id ?? this.id,
         screenId: screenId ?? this.screenId,
         screenTitle: screenTitle ?? this.screenTitle,
+        screenSubtitle: screenSubtitle ?? this.screenSubtitle,
+        screenCaption: screenCaption ?? this.screenCaption,
         ayahIndex: ayahIndex ?? this.ayahIndex,
         ayahNum: ayahNum ?? this.ayahNum,
+        surahName: surahName ?? this.surahName,
       );
   @override
   String toString() {
-    return (StringBuffer('LastReadData(')
+    return (StringBuffer('LastRead(')
           ..write('id: $id, ')
           ..write('screenId: $screenId, ')
           ..write('screenTitle: $screenTitle, ')
+          ..write('screenSubtitle: $screenSubtitle, ')
+          ..write('screenCaption: $screenCaption, ')
           ..write('ayahIndex: $ayahIndex, ')
-          ..write('ayahNum: $ayahNum')
+          ..write('ayahNum: $ayahNum, ')
+          ..write('surahName: $surahName')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, screenId, screenTitle, ayahIndex, ayahNum);
+  int get hashCode => Object.hash(id, screenId, screenTitle, screenSubtitle,
+      screenCaption, ayahIndex, ayahNum, surahName);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is LastReadData &&
+      (other is LastRead &&
           other.id == this.id &&
           other.screenId == this.screenId &&
           other.screenTitle == this.screenTitle &&
+          other.screenSubtitle == this.screenSubtitle &&
+          other.screenCaption == this.screenCaption &&
           other.ayahIndex == this.ayahIndex &&
-          other.ayahNum == this.ayahNum);
+          other.ayahNum == this.ayahNum &&
+          other.surahName == this.surahName);
 }
 
-class LastReadCompanion extends UpdateCompanion<LastReadData> {
+class LastReadCompanion extends UpdateCompanion<LastRead> {
   final Value<int> id;
   final Value<int> screenId;
   final Value<String> screenTitle;
+  final Value<String> screenSubtitle;
+  final Value<String> screenCaption;
   final Value<int> ayahIndex;
   final Value<int> ayahNum;
+  final Value<String> surahName;
   const LastReadCompanion({
     this.id = const Value.absent(),
     this.screenId = const Value.absent(),
     this.screenTitle = const Value.absent(),
+    this.screenSubtitle = const Value.absent(),
+    this.screenCaption = const Value.absent(),
     this.ayahIndex = const Value.absent(),
     this.ayahNum = const Value.absent(),
+    this.surahName = const Value.absent(),
   });
   LastReadCompanion.insert({
     this.id = const Value.absent(),
     required int screenId,
     required String screenTitle,
+    required String screenSubtitle,
+    required String screenCaption,
     required int ayahIndex,
     required int ayahNum,
+    required String surahName,
   })  : screenId = Value(screenId),
         screenTitle = Value(screenTitle),
+        screenSubtitle = Value(screenSubtitle),
+        screenCaption = Value(screenCaption),
         ayahIndex = Value(ayahIndex),
-        ayahNum = Value(ayahNum);
-  static Insertable<LastReadData> custom({
+        ayahNum = Value(ayahNum),
+        surahName = Value(surahName);
+  static Insertable<LastRead> custom({
     Expression<int>? id,
     Expression<int>? screenId,
     Expression<String>? screenTitle,
+    Expression<String>? screenSubtitle,
+    Expression<String>? screenCaption,
     Expression<int>? ayahIndex,
     Expression<int>? ayahNum,
+    Expression<String>? surahName,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (screenId != null) 'screen_id': screenId,
       if (screenTitle != null) 'screen_title': screenTitle,
+      if (screenSubtitle != null) 'screen_subtitle': screenSubtitle,
+      if (screenCaption != null) 'screen_caption': screenCaption,
       if (ayahIndex != null) 'ayah_index': ayahIndex,
       if (ayahNum != null) 'ayah_num': ayahNum,
+      if (surahName != null) 'surah_name': surahName,
     });
   }
 
@@ -1288,14 +1393,20 @@ class LastReadCompanion extends UpdateCompanion<LastReadData> {
       {Value<int>? id,
       Value<int>? screenId,
       Value<String>? screenTitle,
+      Value<String>? screenSubtitle,
+      Value<String>? screenCaption,
       Value<int>? ayahIndex,
-      Value<int>? ayahNum}) {
+      Value<int>? ayahNum,
+      Value<String>? surahName}) {
     return LastReadCompanion(
       id: id ?? this.id,
       screenId: screenId ?? this.screenId,
       screenTitle: screenTitle ?? this.screenTitle,
+      screenSubtitle: screenSubtitle ?? this.screenSubtitle,
+      screenCaption: screenCaption ?? this.screenCaption,
       ayahIndex: ayahIndex ?? this.ayahIndex,
       ayahNum: ayahNum ?? this.ayahNum,
+      surahName: surahName ?? this.surahName,
     );
   }
 
@@ -1311,11 +1422,20 @@ class LastReadCompanion extends UpdateCompanion<LastReadData> {
     if (screenTitle.present) {
       map['screen_title'] = Variable<String>(screenTitle.value);
     }
+    if (screenSubtitle.present) {
+      map['screen_subtitle'] = Variable<String>(screenSubtitle.value);
+    }
+    if (screenCaption.present) {
+      map['screen_caption'] = Variable<String>(screenCaption.value);
+    }
     if (ayahIndex.present) {
       map['ayah_index'] = Variable<int>(ayahIndex.value);
     }
     if (ayahNum.present) {
       map['ayah_num'] = Variable<int>(ayahNum.value);
+    }
+    if (surahName.present) {
+      map['surah_name'] = Variable<String>(surahName.value);
     }
     return map;
   }
@@ -1326,8 +1446,11 @@ class LastReadCompanion extends UpdateCompanion<LastReadData> {
           ..write('id: $id, ')
           ..write('screenId: $screenId, ')
           ..write('screenTitle: $screenTitle, ')
+          ..write('screenSubtitle: $screenSubtitle, ')
+          ..write('screenCaption: $screenCaption, ')
           ..write('ayahIndex: $ayahIndex, ')
-          ..write('ayahNum: $ayahNum')
+          ..write('ayahNum: $ayahNum, ')
+          ..write('surahName: $surahName')
           ..write(')'))
         .toString();
   }
@@ -1343,7 +1466,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       'CREATE INDEX IF NOT EXISTS idx_ayahs_surah_id ON ayahs (surah_id)');
   late final Index idxAyahsJuzId = Index('idx_ayahs_juz_id',
       'CREATE INDEX IF NOT EXISTS idx_ayahs_juz_id ON ayahs (juz_id)');
-  late final LastRead lastRead = LastRead(this);
+  late final LastReadTable lastRead = LastReadTable(this);
   late final Trigger enforceSingleLastRead = Trigger(
       'CREATE TRIGGER enforce_single_last_read BEFORE INSERT ON last_read BEGIN DELETE FROM last_read;END',
       'enforce_single_last_read');
@@ -1376,20 +1499,29 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   }
 
   Future<int> saveLastRead(
-      int screenId, String screenTitle, int ayahIndex, int ayahNum) {
+      int screenId,
+      String screenTitle,
+      String screenSubtitle,
+      String screenCaption,
+      int ayahIndex,
+      int ayahNum,
+      String surahName) {
     return customInsert(
-      'INSERT INTO last_read (screen_id, screen_title, ayah_index, ayah_num) VALUES (?1, ?2, ?3, ?4)',
+      'INSERT INTO last_read (screen_id, screen_title, screen_subtitle, screen_caption, ayah_index, ayah_num, surah_name) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)',
       variables: [
         Variable<int>(screenId),
         Variable<String>(screenTitle),
+        Variable<String>(screenSubtitle),
+        Variable<String>(screenCaption),
         Variable<int>(ayahIndex),
-        Variable<int>(ayahNum)
+        Variable<int>(ayahNum),
+        Variable<String>(surahName)
       ],
       updates: {lastRead},
     );
   }
 
-  Selectable<LastReadData> getLastRead() {
+  Selectable<LastRead> getLastRead() {
     return customSelect('SELECT * FROM last_read', variables: [], readsFrom: {
       lastRead,
     }).asyncMap(lastRead.mapFromRow);
@@ -1890,82 +2022,103 @@ class $AyahsOrderingComposer extends OrderingComposer<_$AppDatabase, Ayahs> {
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-typedef $LastReadInsertCompanionBuilder = LastReadCompanion Function({
+typedef $LastReadTableInsertCompanionBuilder = LastReadCompanion Function({
   Value<int> id,
   required int screenId,
   required String screenTitle,
+  required String screenSubtitle,
+  required String screenCaption,
   required int ayahIndex,
   required int ayahNum,
+  required String surahName,
 });
-typedef $LastReadUpdateCompanionBuilder = LastReadCompanion Function({
+typedef $LastReadTableUpdateCompanionBuilder = LastReadCompanion Function({
   Value<int> id,
   Value<int> screenId,
   Value<String> screenTitle,
+  Value<String> screenSubtitle,
+  Value<String> screenCaption,
   Value<int> ayahIndex,
   Value<int> ayahNum,
+  Value<String> surahName,
 });
 
-class $LastReadTableManager extends RootTableManager<
+class $LastReadTableTableManager extends RootTableManager<
     _$AppDatabase,
+    LastReadTable,
     LastRead,
-    LastReadData,
-    $LastReadFilterComposer,
-    $LastReadOrderingComposer,
-    $LastReadProcessedTableManager,
-    $LastReadInsertCompanionBuilder,
-    $LastReadUpdateCompanionBuilder> {
-  $LastReadTableManager(_$AppDatabase db, LastRead table)
+    $LastReadTableFilterComposer,
+    $LastReadTableOrderingComposer,
+    $LastReadTableProcessedTableManager,
+    $LastReadTableInsertCompanionBuilder,
+    $LastReadTableUpdateCompanionBuilder> {
+  $LastReadTableTableManager(_$AppDatabase db, LastReadTable table)
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer: $LastReadFilterComposer(ComposerState(db, table)),
-          orderingComposer: $LastReadOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) => $LastReadProcessedTableManager(p),
+          filteringComposer:
+              $LastReadTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $LastReadTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $LastReadTableProcessedTableManager(p),
           getUpdateCompanionBuilder: ({
             Value<int> id = const Value.absent(),
             Value<int> screenId = const Value.absent(),
             Value<String> screenTitle = const Value.absent(),
+            Value<String> screenSubtitle = const Value.absent(),
+            Value<String> screenCaption = const Value.absent(),
             Value<int> ayahIndex = const Value.absent(),
             Value<int> ayahNum = const Value.absent(),
+            Value<String> surahName = const Value.absent(),
           }) =>
               LastReadCompanion(
             id: id,
             screenId: screenId,
             screenTitle: screenTitle,
+            screenSubtitle: screenSubtitle,
+            screenCaption: screenCaption,
             ayahIndex: ayahIndex,
             ayahNum: ayahNum,
+            surahName: surahName,
           ),
           getInsertCompanionBuilder: ({
             Value<int> id = const Value.absent(),
             required int screenId,
             required String screenTitle,
+            required String screenSubtitle,
+            required String screenCaption,
             required int ayahIndex,
             required int ayahNum,
+            required String surahName,
           }) =>
               LastReadCompanion.insert(
             id: id,
             screenId: screenId,
             screenTitle: screenTitle,
+            screenSubtitle: screenSubtitle,
+            screenCaption: screenCaption,
             ayahIndex: ayahIndex,
             ayahNum: ayahNum,
+            surahName: surahName,
           ),
         ));
 }
 
-class $LastReadProcessedTableManager extends ProcessedTableManager<
+class $LastReadTableProcessedTableManager extends ProcessedTableManager<
     _$AppDatabase,
+    LastReadTable,
     LastRead,
-    LastReadData,
-    $LastReadFilterComposer,
-    $LastReadOrderingComposer,
-    $LastReadProcessedTableManager,
-    $LastReadInsertCompanionBuilder,
-    $LastReadUpdateCompanionBuilder> {
-  $LastReadProcessedTableManager(super.$state);
+    $LastReadTableFilterComposer,
+    $LastReadTableOrderingComposer,
+    $LastReadTableProcessedTableManager,
+    $LastReadTableInsertCompanionBuilder,
+    $LastReadTableUpdateCompanionBuilder> {
+  $LastReadTableProcessedTableManager(super.$state);
 }
 
-class $LastReadFilterComposer extends FilterComposer<_$AppDatabase, LastRead> {
-  $LastReadFilterComposer(super.$state);
+class $LastReadTableFilterComposer
+    extends FilterComposer<_$AppDatabase, LastReadTable> {
+  $LastReadTableFilterComposer(super.$state);
   ColumnFilters<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -1981,6 +2134,16 @@ class $LastReadFilterComposer extends FilterComposer<_$AppDatabase, LastRead> {
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnFilters<String> get screenSubtitle => $state.composableBuilder(
+      column: $state.table.screenSubtitle,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get screenCaption => $state.composableBuilder(
+      column: $state.table.screenCaption,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<int> get ayahIndex => $state.composableBuilder(
       column: $state.table.ayahIndex,
       builder: (column, joinBuilders) =>
@@ -1990,11 +2153,16 @@ class $LastReadFilterComposer extends FilterComposer<_$AppDatabase, LastRead> {
       column: $state.table.ayahNum,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get surahName => $state.composableBuilder(
+      column: $state.table.surahName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
-class $LastReadOrderingComposer
-    extends OrderingComposer<_$AppDatabase, LastRead> {
-  $LastReadOrderingComposer(super.$state);
+class $LastReadTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, LastReadTable> {
+  $LastReadTableOrderingComposer(super.$state);
   ColumnOrderings<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2010,6 +2178,16 @@ class $LastReadOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
+  ColumnOrderings<String> get screenSubtitle => $state.composableBuilder(
+      column: $state.table.screenSubtitle,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get screenCaption => $state.composableBuilder(
+      column: $state.table.screenCaption,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
   ColumnOrderings<int> get ayahIndex => $state.composableBuilder(
       column: $state.table.ayahIndex,
       builder: (column, joinBuilders) =>
@@ -2017,6 +2195,11 @@ class $LastReadOrderingComposer
 
   ColumnOrderings<int> get ayahNum => $state.composableBuilder(
       column: $state.table.ayahNum,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get surahName => $state.composableBuilder(
+      column: $state.table.surahName,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
@@ -2027,6 +2210,6 @@ class _$AppDatabaseManager {
   $SurahsTableManager get surahs => $SurahsTableManager(_db, _db.surahs);
   $JuzsTableManager get juzs => $JuzsTableManager(_db, _db.juzs);
   $AyahsTableManager get ayahs => $AyahsTableManager(_db, _db.ayahs);
-  $LastReadTableManager get lastRead =>
-      $LastReadTableManager(_db, _db.lastRead);
+  $LastReadTableTableManager get lastRead =>
+      $LastReadTableTableManager(_db, _db.lastRead);
 }
