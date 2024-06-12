@@ -41,8 +41,8 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
     with WidgetsBindingObserver {
   String _selectedPlayerState = '';
   int _lastReadIndex = 0;
-  late int _lastReadAyahNum;
-  late String _lastReadSurahName;
+  int _lastReadAyahNum = 0;
+  String _lastReadSurahName = '';
   final _controller = AutoScrollController();
 
   @override
@@ -164,7 +164,7 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
             ),
             sliver: widget.ayahList.when(
               data: (value) {
-                if (widget.ayahIndex != null) {
+                if (widget.ayahIndex != null && widget.ayahIndex! > 0) {
                   _controller.scrollToIndex(
                     widget.ayahIndex!,
                     preferPosition: AutoScrollPosition.begin,
