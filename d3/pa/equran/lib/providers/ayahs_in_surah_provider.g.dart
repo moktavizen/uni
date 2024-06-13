@@ -6,7 +6,7 @@ part of 'ayahs_in_surah_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ayahsInSurahHash() => r'9a0e39014fb58792c202588f8c01250e9dd391e8';
+String _$ayahsInSurahHash() => r'43ecbb98125f27b9f93cac68d49a87f8a32d81f9';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,10 +30,10 @@ class _SystemHash {
 }
 
 abstract class _$AyahsInSurah
-    extends BuildlessAutoDisposeAsyncNotifier<List<Ayah>> {
+    extends BuildlessAutoDisposeStreamNotifier<List<Ayah>> {
   late final int surahId;
 
-  FutureOr<List<Ayah>> build(
+  Stream<List<Ayah>> build(
     int surahId,
   );
 }
@@ -82,7 +82,7 @@ class AyahsInSurahFamily extends Family<AsyncValue<List<Ayah>>> {
 
 /// See also [AyahsInSurah].
 class AyahsInSurahProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<AyahsInSurah, List<Ayah>> {
+    extends AutoDisposeStreamNotifierProviderImpl<AyahsInSurah, List<Ayah>> {
   /// See also [AyahsInSurah].
   AyahsInSurahProvider(
     int surahId,
@@ -113,7 +113,7 @@ class AyahsInSurahProvider
   final int surahId;
 
   @override
-  FutureOr<List<Ayah>> runNotifierBuild(
+  Stream<List<Ayah>> runNotifierBuild(
     covariant AyahsInSurah notifier,
   ) {
     return notifier.build(
@@ -138,7 +138,7 @@ class AyahsInSurahProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<AyahsInSurah, List<Ayah>>
+  AutoDisposeStreamNotifierProviderElement<AyahsInSurah, List<Ayah>>
       createElement() {
     return _AyahsInSurahProviderElement(this);
   }
@@ -157,13 +157,13 @@ class AyahsInSurahProvider
   }
 }
 
-mixin AyahsInSurahRef on AutoDisposeAsyncNotifierProviderRef<List<Ayah>> {
+mixin AyahsInSurahRef on AutoDisposeStreamNotifierProviderRef<List<Ayah>> {
   /// The parameter `surahId` of this provider.
   int get surahId;
 }
 
 class _AyahsInSurahProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<AyahsInSurah, List<Ayah>>
+    extends AutoDisposeStreamNotifierProviderElement<AyahsInSurah, List<Ayah>>
     with AyahsInSurahRef {
   _AyahsInSurahProviderElement(super.provider);
 

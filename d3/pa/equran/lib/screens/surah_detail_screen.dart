@@ -10,11 +10,13 @@ class SurahDetailScreen extends ConsumerWidget {
     this.surahId,
     this.surah,
     this.lastRead,
+    this.fav,
   });
 
   final String? surahId;
   final Surah? surah;
   final LastRead? lastRead;
+  final Favorite? fav;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,12 +25,14 @@ class SurahDetailScreen extends ConsumerWidget {
 
     return AyahListScaffold(
       screenId: parsedSurahId,
-      headerTitle: lastRead?.screenTitle ?? surah!.latin,
-      headerSubtitle: lastRead?.screenSubtitle ?? surah!.translation,
+      headerTitle: lastRead?.screenTitle ?? fav?.screenTitle ?? surah!.latin,
+      headerSubtitle:
+          lastRead?.screenSubtitle ?? fav?.screenSubtitle ?? surah!.translation,
       headerCaption: lastRead?.screenCaption ??
+          fav?.screenCaption ??
           '${surah!.location.toUpperCase()} • ${surah!.ayahCount} AYAT',
       ayahList: ayahList,
-      ayahIndex: lastRead?.ayahIndex,
+      ayahIndex: lastRead?.ayahIndex ?? fav?.ayahIndex,
     );
   }
 }

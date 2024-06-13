@@ -648,6 +648,13 @@ class Ayahs extends Table with TableInfo<Ayahs, Ayah> {
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _isFavMeta = const VerificationMeta('isFav');
+  late final GeneratedColumn<int> isFav = GeneratedColumn<int>(
+      'is_fav', aliasedName, true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'DEFAULT 0',
+      defaultValue: const CustomExpression('0'));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -658,7 +665,8 @@ class Ayahs extends Table with TableInfo<Ayahs, Ayah> {
         arabic,
         latin,
         translation,
-        tafsir
+        tafsir,
+        isFav
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -723,6 +731,10 @@ class Ayahs extends Table with TableInfo<Ayahs, Ayah> {
     } else if (isInserting) {
       context.missing(_tafsirMeta);
     }
+    if (data.containsKey('is_fav')) {
+      context.handle(
+          _isFavMeta, isFav.isAcceptableOrUnknown(data['is_fav']!, _isFavMeta));
+    }
     return context;
   }
 
@@ -750,6 +762,8 @@ class Ayahs extends Table with TableInfo<Ayahs, Ayah> {
           .read(DriftSqlType.string, data['${effectivePrefix}translation'])!,
       tafsir: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}tafsir'])!,
+      isFav: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}is_fav']),
     );
   }
 
@@ -777,6 +791,7 @@ class Ayah extends DataClass implements Insertable<Ayah> {
   final String latin;
   final String translation;
   final String tafsir;
+  final int? isFav;
   const Ayah(
       {required this.id,
       required this.surahId,
@@ -786,7 +801,8 @@ class Ayah extends DataClass implements Insertable<Ayah> {
       required this.arabic,
       required this.latin,
       required this.translation,
-      required this.tafsir});
+      required this.tafsir,
+      this.isFav});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -799,6 +815,9 @@ class Ayah extends DataClass implements Insertable<Ayah> {
     map['latin'] = Variable<String>(latin);
     map['translation'] = Variable<String>(translation);
     map['tafsir'] = Variable<String>(tafsir);
+    if (!nullToAbsent || isFav != null) {
+      map['is_fav'] = Variable<int>(isFav);
+    }
     return map;
   }
 
@@ -813,6 +832,8 @@ class Ayah extends DataClass implements Insertable<Ayah> {
       latin: Value(latin),
       translation: Value(translation),
       tafsir: Value(tafsir),
+      isFav:
+          isFav == null && nullToAbsent ? const Value.absent() : Value(isFav),
     );
   }
 
@@ -829,6 +850,7 @@ class Ayah extends DataClass implements Insertable<Ayah> {
       latin: serializer.fromJson<String>(json['latin']),
       translation: serializer.fromJson<String>(json['translation']),
       tafsir: serializer.fromJson<String>(json['tafsir']),
+      isFav: serializer.fromJson<int?>(json['is_fav']),
     );
   }
   @override
@@ -844,6 +866,7 @@ class Ayah extends DataClass implements Insertable<Ayah> {
       'latin': serializer.toJson<String>(latin),
       'translation': serializer.toJson<String>(translation),
       'tafsir': serializer.toJson<String>(tafsir),
+      'is_fav': serializer.toJson<int?>(isFav),
     };
   }
 
@@ -856,7 +879,8 @@ class Ayah extends DataClass implements Insertable<Ayah> {
           String? arabic,
           String? latin,
           String? translation,
-          String? tafsir}) =>
+          String? tafsir,
+          Value<int?> isFav = const Value.absent()}) =>
       Ayah(
         id: id ?? this.id,
         surahId: surahId ?? this.surahId,
@@ -867,6 +891,7 @@ class Ayah extends DataClass implements Insertable<Ayah> {
         latin: latin ?? this.latin,
         translation: translation ?? this.translation,
         tafsir: tafsir ?? this.tafsir,
+        isFav: isFav.present ? isFav.value : this.isFav,
       );
   @override
   String toString() {
@@ -879,14 +904,15 @@ class Ayah extends DataClass implements Insertable<Ayah> {
           ..write('arabic: $arabic, ')
           ..write('latin: $latin, ')
           ..write('translation: $translation, ')
-          ..write('tafsir: $tafsir')
+          ..write('tafsir: $tafsir, ')
+          ..write('isFav: $isFav')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(id, surahId, juzId, surahName, ayahNum,
-      arabic, latin, translation, tafsir);
+      arabic, latin, translation, tafsir, isFav);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -899,7 +925,8 @@ class Ayah extends DataClass implements Insertable<Ayah> {
           other.arabic == this.arabic &&
           other.latin == this.latin &&
           other.translation == this.translation &&
-          other.tafsir == this.tafsir);
+          other.tafsir == this.tafsir &&
+          other.isFav == this.isFav);
 }
 
 class AyahsCompanion extends UpdateCompanion<Ayah> {
@@ -912,6 +939,7 @@ class AyahsCompanion extends UpdateCompanion<Ayah> {
   final Value<String> latin;
   final Value<String> translation;
   final Value<String> tafsir;
+  final Value<int?> isFav;
   const AyahsCompanion({
     this.id = const Value.absent(),
     this.surahId = const Value.absent(),
@@ -922,6 +950,7 @@ class AyahsCompanion extends UpdateCompanion<Ayah> {
     this.latin = const Value.absent(),
     this.translation = const Value.absent(),
     this.tafsir = const Value.absent(),
+    this.isFav = const Value.absent(),
   });
   AyahsCompanion.insert({
     this.id = const Value.absent(),
@@ -933,6 +962,7 @@ class AyahsCompanion extends UpdateCompanion<Ayah> {
     required String latin,
     required String translation,
     required String tafsir,
+    this.isFav = const Value.absent(),
   })  : surahId = Value(surahId),
         juzId = Value(juzId),
         surahName = Value(surahName),
@@ -951,6 +981,7 @@ class AyahsCompanion extends UpdateCompanion<Ayah> {
     Expression<String>? latin,
     Expression<String>? translation,
     Expression<String>? tafsir,
+    Expression<int>? isFav,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -962,6 +993,7 @@ class AyahsCompanion extends UpdateCompanion<Ayah> {
       if (latin != null) 'latin': latin,
       if (translation != null) 'translation': translation,
       if (tafsir != null) 'tafsir': tafsir,
+      if (isFav != null) 'is_fav': isFav,
     });
   }
 
@@ -974,7 +1006,8 @@ class AyahsCompanion extends UpdateCompanion<Ayah> {
       Value<String>? arabic,
       Value<String>? latin,
       Value<String>? translation,
-      Value<String>? tafsir}) {
+      Value<String>? tafsir,
+      Value<int?>? isFav}) {
     return AyahsCompanion(
       id: id ?? this.id,
       surahId: surahId ?? this.surahId,
@@ -985,6 +1018,7 @@ class AyahsCompanion extends UpdateCompanion<Ayah> {
       latin: latin ?? this.latin,
       translation: translation ?? this.translation,
       tafsir: tafsir ?? this.tafsir,
+      isFav: isFav ?? this.isFav,
     );
   }
 
@@ -1018,6 +1052,9 @@ class AyahsCompanion extends UpdateCompanion<Ayah> {
     if (tafsir.present) {
       map['tafsir'] = Variable<String>(tafsir.value);
     }
+    if (isFav.present) {
+      map['is_fav'] = Variable<int>(isFav.value);
+    }
     return map;
   }
 
@@ -1032,7 +1069,8 @@ class AyahsCompanion extends UpdateCompanion<Ayah> {
           ..write('arabic: $arabic, ')
           ..write('latin: $latin, ')
           ..write('translation: $translation, ')
-          ..write('tafsir: $tafsir')
+          ..write('tafsir: $tafsir, ')
+          ..write('isFav: $isFav')
           ..write(')'))
         .toString();
   }
@@ -1456,17 +1494,435 @@ class LastReadCompanion extends UpdateCompanion<LastRead> {
   }
 }
 
+class Favorites extends Table with TableInfo<Favorites, Favorite> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Favorites(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'PRIMARY KEY');
+  static const VerificationMeta _surahIdMeta =
+      const VerificationMeta('surahId');
+  late final GeneratedColumn<int> surahId = GeneratedColumn<int>(
+      'surah_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _surahNameMeta =
+      const VerificationMeta('surahName');
+  late final GeneratedColumn<String> surahName = GeneratedColumn<String>(
+      'surah_name', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _ayahIdMeta = const VerificationMeta('ayahId');
+  late final GeneratedColumn<int> ayahId = GeneratedColumn<int>(
+      'ayah_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _ayahIndexMeta =
+      const VerificationMeta('ayahIndex');
+  late final GeneratedColumn<int> ayahIndex = GeneratedColumn<int>(
+      'ayah_index', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _screenTitleMeta =
+      const VerificationMeta('screenTitle');
+  late final GeneratedColumn<String> screenTitle = GeneratedColumn<String>(
+      'screen_title', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _screenSubtitleMeta =
+      const VerificationMeta('screenSubtitle');
+  late final GeneratedColumn<String> screenSubtitle = GeneratedColumn<String>(
+      'screen_subtitle', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _screenCaptionMeta =
+      const VerificationMeta('screenCaption');
+  late final GeneratedColumn<String> screenCaption = GeneratedColumn<String>(
+      'screen_caption', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        surahId,
+        surahName,
+        ayahId,
+        ayahIndex,
+        screenTitle,
+        screenSubtitle,
+        screenCaption
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'favorites';
+  @override
+  VerificationContext validateIntegrity(Insertable<Favorite> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('surah_id')) {
+      context.handle(_surahIdMeta,
+          surahId.isAcceptableOrUnknown(data['surah_id']!, _surahIdMeta));
+    } else if (isInserting) {
+      context.missing(_surahIdMeta);
+    }
+    if (data.containsKey('surah_name')) {
+      context.handle(_surahNameMeta,
+          surahName.isAcceptableOrUnknown(data['surah_name']!, _surahNameMeta));
+    } else if (isInserting) {
+      context.missing(_surahNameMeta);
+    }
+    if (data.containsKey('ayah_id')) {
+      context.handle(_ayahIdMeta,
+          ayahId.isAcceptableOrUnknown(data['ayah_id']!, _ayahIdMeta));
+    } else if (isInserting) {
+      context.missing(_ayahIdMeta);
+    }
+    if (data.containsKey('ayah_index')) {
+      context.handle(_ayahIndexMeta,
+          ayahIndex.isAcceptableOrUnknown(data['ayah_index']!, _ayahIndexMeta));
+    } else if (isInserting) {
+      context.missing(_ayahIndexMeta);
+    }
+    if (data.containsKey('screen_title')) {
+      context.handle(
+          _screenTitleMeta,
+          screenTitle.isAcceptableOrUnknown(
+              data['screen_title']!, _screenTitleMeta));
+    } else if (isInserting) {
+      context.missing(_screenTitleMeta);
+    }
+    if (data.containsKey('screen_subtitle')) {
+      context.handle(
+          _screenSubtitleMeta,
+          screenSubtitle.isAcceptableOrUnknown(
+              data['screen_subtitle']!, _screenSubtitleMeta));
+    } else if (isInserting) {
+      context.missing(_screenSubtitleMeta);
+    }
+    if (data.containsKey('screen_caption')) {
+      context.handle(
+          _screenCaptionMeta,
+          screenCaption.isAcceptableOrUnknown(
+              data['screen_caption']!, _screenCaptionMeta));
+    } else if (isInserting) {
+      context.missing(_screenCaptionMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Favorite map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Favorite(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      surahId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}surah_id'])!,
+      surahName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}surah_name'])!,
+      ayahId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}ayah_id'])!,
+      ayahIndex: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}ayah_index'])!,
+      screenTitle: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}screen_title'])!,
+      screenSubtitle: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}screen_subtitle'])!,
+      screenCaption: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}screen_caption'])!,
+    );
+  }
+
+  @override
+  Favorites createAlias(String alias) {
+    return Favorites(attachedDatabase, alias);
+  }
+
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class Favorite extends DataClass implements Insertable<Favorite> {
+  final int id;
+  final int surahId;
+  final String surahName;
+  final int ayahId;
+  final int ayahIndex;
+  final String screenTitle;
+  final String screenSubtitle;
+  final String screenCaption;
+  const Favorite(
+      {required this.id,
+      required this.surahId,
+      required this.surahName,
+      required this.ayahId,
+      required this.ayahIndex,
+      required this.screenTitle,
+      required this.screenSubtitle,
+      required this.screenCaption});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['surah_id'] = Variable<int>(surahId);
+    map['surah_name'] = Variable<String>(surahName);
+    map['ayah_id'] = Variable<int>(ayahId);
+    map['ayah_index'] = Variable<int>(ayahIndex);
+    map['screen_title'] = Variable<String>(screenTitle);
+    map['screen_subtitle'] = Variable<String>(screenSubtitle);
+    map['screen_caption'] = Variable<String>(screenCaption);
+    return map;
+  }
+
+  FavoritesCompanion toCompanion(bool nullToAbsent) {
+    return FavoritesCompanion(
+      id: Value(id),
+      surahId: Value(surahId),
+      surahName: Value(surahName),
+      ayahId: Value(ayahId),
+      ayahIndex: Value(ayahIndex),
+      screenTitle: Value(screenTitle),
+      screenSubtitle: Value(screenSubtitle),
+      screenCaption: Value(screenCaption),
+    );
+  }
+
+  factory Favorite.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Favorite(
+      id: serializer.fromJson<int>(json['id']),
+      surahId: serializer.fromJson<int>(json['surah_id']),
+      surahName: serializer.fromJson<String>(json['surah_name']),
+      ayahId: serializer.fromJson<int>(json['ayah_id']),
+      ayahIndex: serializer.fromJson<int>(json['ayah_index']),
+      screenTitle: serializer.fromJson<String>(json['screen_title']),
+      screenSubtitle: serializer.fromJson<String>(json['screen_subtitle']),
+      screenCaption: serializer.fromJson<String>(json['screen_caption']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'surah_id': serializer.toJson<int>(surahId),
+      'surah_name': serializer.toJson<String>(surahName),
+      'ayah_id': serializer.toJson<int>(ayahId),
+      'ayah_index': serializer.toJson<int>(ayahIndex),
+      'screen_title': serializer.toJson<String>(screenTitle),
+      'screen_subtitle': serializer.toJson<String>(screenSubtitle),
+      'screen_caption': serializer.toJson<String>(screenCaption),
+    };
+  }
+
+  Favorite copyWith(
+          {int? id,
+          int? surahId,
+          String? surahName,
+          int? ayahId,
+          int? ayahIndex,
+          String? screenTitle,
+          String? screenSubtitle,
+          String? screenCaption}) =>
+      Favorite(
+        id: id ?? this.id,
+        surahId: surahId ?? this.surahId,
+        surahName: surahName ?? this.surahName,
+        ayahId: ayahId ?? this.ayahId,
+        ayahIndex: ayahIndex ?? this.ayahIndex,
+        screenTitle: screenTitle ?? this.screenTitle,
+        screenSubtitle: screenSubtitle ?? this.screenSubtitle,
+        screenCaption: screenCaption ?? this.screenCaption,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Favorite(')
+          ..write('id: $id, ')
+          ..write('surahId: $surahId, ')
+          ..write('surahName: $surahName, ')
+          ..write('ayahId: $ayahId, ')
+          ..write('ayahIndex: $ayahIndex, ')
+          ..write('screenTitle: $screenTitle, ')
+          ..write('screenSubtitle: $screenSubtitle, ')
+          ..write('screenCaption: $screenCaption')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, surahId, surahName, ayahId, ayahIndex,
+      screenTitle, screenSubtitle, screenCaption);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Favorite &&
+          other.id == this.id &&
+          other.surahId == this.surahId &&
+          other.surahName == this.surahName &&
+          other.ayahId == this.ayahId &&
+          other.ayahIndex == this.ayahIndex &&
+          other.screenTitle == this.screenTitle &&
+          other.screenSubtitle == this.screenSubtitle &&
+          other.screenCaption == this.screenCaption);
+}
+
+class FavoritesCompanion extends UpdateCompanion<Favorite> {
+  final Value<int> id;
+  final Value<int> surahId;
+  final Value<String> surahName;
+  final Value<int> ayahId;
+  final Value<int> ayahIndex;
+  final Value<String> screenTitle;
+  final Value<String> screenSubtitle;
+  final Value<String> screenCaption;
+  const FavoritesCompanion({
+    this.id = const Value.absent(),
+    this.surahId = const Value.absent(),
+    this.surahName = const Value.absent(),
+    this.ayahId = const Value.absent(),
+    this.ayahIndex = const Value.absent(),
+    this.screenTitle = const Value.absent(),
+    this.screenSubtitle = const Value.absent(),
+    this.screenCaption = const Value.absent(),
+  });
+  FavoritesCompanion.insert({
+    this.id = const Value.absent(),
+    required int surahId,
+    required String surahName,
+    required int ayahId,
+    required int ayahIndex,
+    required String screenTitle,
+    required String screenSubtitle,
+    required String screenCaption,
+  })  : surahId = Value(surahId),
+        surahName = Value(surahName),
+        ayahId = Value(ayahId),
+        ayahIndex = Value(ayahIndex),
+        screenTitle = Value(screenTitle),
+        screenSubtitle = Value(screenSubtitle),
+        screenCaption = Value(screenCaption);
+  static Insertable<Favorite> custom({
+    Expression<int>? id,
+    Expression<int>? surahId,
+    Expression<String>? surahName,
+    Expression<int>? ayahId,
+    Expression<int>? ayahIndex,
+    Expression<String>? screenTitle,
+    Expression<String>? screenSubtitle,
+    Expression<String>? screenCaption,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (surahId != null) 'surah_id': surahId,
+      if (surahName != null) 'surah_name': surahName,
+      if (ayahId != null) 'ayah_id': ayahId,
+      if (ayahIndex != null) 'ayah_index': ayahIndex,
+      if (screenTitle != null) 'screen_title': screenTitle,
+      if (screenSubtitle != null) 'screen_subtitle': screenSubtitle,
+      if (screenCaption != null) 'screen_caption': screenCaption,
+    });
+  }
+
+  FavoritesCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? surahId,
+      Value<String>? surahName,
+      Value<int>? ayahId,
+      Value<int>? ayahIndex,
+      Value<String>? screenTitle,
+      Value<String>? screenSubtitle,
+      Value<String>? screenCaption}) {
+    return FavoritesCompanion(
+      id: id ?? this.id,
+      surahId: surahId ?? this.surahId,
+      surahName: surahName ?? this.surahName,
+      ayahId: ayahId ?? this.ayahId,
+      ayahIndex: ayahIndex ?? this.ayahIndex,
+      screenTitle: screenTitle ?? this.screenTitle,
+      screenSubtitle: screenSubtitle ?? this.screenSubtitle,
+      screenCaption: screenCaption ?? this.screenCaption,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (surahId.present) {
+      map['surah_id'] = Variable<int>(surahId.value);
+    }
+    if (surahName.present) {
+      map['surah_name'] = Variable<String>(surahName.value);
+    }
+    if (ayahId.present) {
+      map['ayah_id'] = Variable<int>(ayahId.value);
+    }
+    if (ayahIndex.present) {
+      map['ayah_index'] = Variable<int>(ayahIndex.value);
+    }
+    if (screenTitle.present) {
+      map['screen_title'] = Variable<String>(screenTitle.value);
+    }
+    if (screenSubtitle.present) {
+      map['screen_subtitle'] = Variable<String>(screenSubtitle.value);
+    }
+    if (screenCaption.present) {
+      map['screen_caption'] = Variable<String>(screenCaption.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FavoritesCompanion(')
+          ..write('id: $id, ')
+          ..write('surahId: $surahId, ')
+          ..write('surahName: $surahName, ')
+          ..write('ayahId: $ayahId, ')
+          ..write('ayahIndex: $ayahIndex, ')
+          ..write('screenTitle: $screenTitle, ')
+          ..write('screenSubtitle: $screenSubtitle, ')
+          ..write('screenCaption: $screenCaption')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
   late final Surahs surahs = Surahs(this);
   late final Juzs juzs = Juzs(this);
   late final Ayahs ayahs = Ayahs(this);
+  late final LastReadTable lastRead = LastReadTable(this);
+  late final Favorites favorites = Favorites(this);
   late final Index idxAyahsSurahId = Index('idx_ayahs_surah_id',
       'CREATE INDEX IF NOT EXISTS idx_ayahs_surah_id ON ayahs (surah_id)');
   late final Index idxAyahsJuzId = Index('idx_ayahs_juz_id',
       'CREATE INDEX IF NOT EXISTS idx_ayahs_juz_id ON ayahs (juz_id)');
-  late final LastReadTable lastRead = LastReadTable(this);
   late final Trigger enforceSingleLastRead = Trigger(
       'CREATE TRIGGER enforce_single_last_read BEFORE INSERT ON last_read BEGIN DELETE FROM last_read;END',
       'enforce_single_last_read');
@@ -1492,6 +1948,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 
   Selectable<Ayah> ayahsInJuz(int var1) {
     return customSelect('SELECT * FROM ayahs WHERE juz_id = ?1', variables: [
+      Variable<int>(var1)
+    ], readsFrom: {
+      ayahs,
+    }).asyncMap(ayahs.mapFromRow);
+  }
+
+  Selectable<Ayah> singleAyah(int var1) {
+    return customSelect('SELECT * FROM ayahs WHERE id = ?1', variables: [
       Variable<int>(var1)
     ], readsFrom: {
       ayahs,
@@ -1527,6 +1991,64 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     }).asyncMap(lastRead.mapFromRow);
   }
 
+  Future<int> setFavorite(int var1) {
+    return customUpdate(
+      'UPDATE ayahs SET is_fav = 1 WHERE id = ?1',
+      variables: [Variable<int>(var1)],
+      updates: {ayahs},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Future<int> unsetFavorite(int var1) {
+    return customUpdate(
+      'UPDATE ayahs SET is_fav = 0 WHERE id = ?1',
+      variables: [Variable<int>(var1)],
+      updates: {ayahs},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Future<int> saveFavorite(
+      int surahId,
+      String surahName,
+      int ayahId,
+      int ayahIndex,
+      String screenTitle,
+      String screenSubtitle,
+      String screenCaption) {
+    return customInsert(
+      'INSERT INTO favorites (surah_id, surah_name, ayah_id, ayah_index, screen_title, screen_subtitle, screen_caption) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)',
+      variables: [
+        Variable<int>(surahId),
+        Variable<String>(surahName),
+        Variable<int>(ayahId),
+        Variable<int>(ayahIndex),
+        Variable<String>(screenTitle),
+        Variable<String>(screenSubtitle),
+        Variable<String>(screenCaption)
+      ],
+      updates: {favorites},
+    );
+  }
+
+  Future<int> deleteFavorite(int var1) {
+    return customUpdate(
+      'DELETE FROM favorites WHERE ayah_id = ?1',
+      variables: [Variable<int>(var1)],
+      updates: {favorites},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Selectable<Favorite> allFavorite() {
+    return customSelect('SELECT * FROM favorites ORDER BY surah_id',
+        variables: [],
+        readsFrom: {
+          favorites,
+        }).asyncMap(favorites.mapFromRow);
+  }
+
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1535,9 +2057,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         surahs,
         juzs,
         ayahs,
+        lastRead,
+        favorites,
         idxAyahsSurahId,
         idxAyahsJuzId,
-        lastRead,
         enforceSingleLastRead
       ];
   @override
@@ -1838,6 +2361,7 @@ typedef $AyahsInsertCompanionBuilder = AyahsCompanion Function({
   required String latin,
   required String translation,
   required String tafsir,
+  Value<int?> isFav,
 });
 typedef $AyahsUpdateCompanionBuilder = AyahsCompanion Function({
   Value<int> id,
@@ -1849,6 +2373,7 @@ typedef $AyahsUpdateCompanionBuilder = AyahsCompanion Function({
   Value<String> latin,
   Value<String> translation,
   Value<String> tafsir,
+  Value<int?> isFav,
 });
 
 class $AyahsTableManager extends RootTableManager<
@@ -1877,6 +2402,7 @@ class $AyahsTableManager extends RootTableManager<
             Value<String> latin = const Value.absent(),
             Value<String> translation = const Value.absent(),
             Value<String> tafsir = const Value.absent(),
+            Value<int?> isFav = const Value.absent(),
           }) =>
               AyahsCompanion(
             id: id,
@@ -1888,6 +2414,7 @@ class $AyahsTableManager extends RootTableManager<
             latin: latin,
             translation: translation,
             tafsir: tafsir,
+            isFav: isFav,
           ),
           getInsertCompanionBuilder: ({
             Value<int> id = const Value.absent(),
@@ -1899,6 +2426,7 @@ class $AyahsTableManager extends RootTableManager<
             required String latin,
             required String translation,
             required String tafsir,
+            Value<int?> isFav = const Value.absent(),
           }) =>
               AyahsCompanion.insert(
             id: id,
@@ -1910,6 +2438,7 @@ class $AyahsTableManager extends RootTableManager<
             latin: latin,
             translation: translation,
             tafsir: tafsir,
+            isFav: isFav,
           ),
         ));
 }
@@ -1972,6 +2501,11 @@ class $AyahsFilterComposer extends FilterComposer<_$AppDatabase, Ayahs> {
       column: $state.table.tafsir,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get isFav => $state.composableBuilder(
+      column: $state.table.isFav,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $AyahsOrderingComposer extends OrderingComposer<_$AppDatabase, Ayahs> {
@@ -2018,6 +2552,11 @@ class $AyahsOrderingComposer extends OrderingComposer<_$AppDatabase, Ayahs> {
 
   ColumnOrderings<String> get tafsir => $state.composableBuilder(
       column: $state.table.tafsir,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get isFav => $state.composableBuilder(
+      column: $state.table.isFav,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
@@ -2204,6 +2743,187 @@ class $LastReadTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $FavoritesInsertCompanionBuilder = FavoritesCompanion Function({
+  Value<int> id,
+  required int surahId,
+  required String surahName,
+  required int ayahId,
+  required int ayahIndex,
+  required String screenTitle,
+  required String screenSubtitle,
+  required String screenCaption,
+});
+typedef $FavoritesUpdateCompanionBuilder = FavoritesCompanion Function({
+  Value<int> id,
+  Value<int> surahId,
+  Value<String> surahName,
+  Value<int> ayahId,
+  Value<int> ayahIndex,
+  Value<String> screenTitle,
+  Value<String> screenSubtitle,
+  Value<String> screenCaption,
+});
+
+class $FavoritesTableManager extends RootTableManager<
+    _$AppDatabase,
+    Favorites,
+    Favorite,
+    $FavoritesFilterComposer,
+    $FavoritesOrderingComposer,
+    $FavoritesProcessedTableManager,
+    $FavoritesInsertCompanionBuilder,
+    $FavoritesUpdateCompanionBuilder> {
+  $FavoritesTableManager(_$AppDatabase db, Favorites table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer: $FavoritesFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $FavoritesOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $FavoritesProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            Value<int> surahId = const Value.absent(),
+            Value<String> surahName = const Value.absent(),
+            Value<int> ayahId = const Value.absent(),
+            Value<int> ayahIndex = const Value.absent(),
+            Value<String> screenTitle = const Value.absent(),
+            Value<String> screenSubtitle = const Value.absent(),
+            Value<String> screenCaption = const Value.absent(),
+          }) =>
+              FavoritesCompanion(
+            id: id,
+            surahId: surahId,
+            surahName: surahName,
+            ayahId: ayahId,
+            ayahIndex: ayahIndex,
+            screenTitle: screenTitle,
+            screenSubtitle: screenSubtitle,
+            screenCaption: screenCaption,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            required int surahId,
+            required String surahName,
+            required int ayahId,
+            required int ayahIndex,
+            required String screenTitle,
+            required String screenSubtitle,
+            required String screenCaption,
+          }) =>
+              FavoritesCompanion.insert(
+            id: id,
+            surahId: surahId,
+            surahName: surahName,
+            ayahId: ayahId,
+            ayahIndex: ayahIndex,
+            screenTitle: screenTitle,
+            screenSubtitle: screenSubtitle,
+            screenCaption: screenCaption,
+          ),
+        ));
+}
+
+class $FavoritesProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    Favorites,
+    Favorite,
+    $FavoritesFilterComposer,
+    $FavoritesOrderingComposer,
+    $FavoritesProcessedTableManager,
+    $FavoritesInsertCompanionBuilder,
+    $FavoritesUpdateCompanionBuilder> {
+  $FavoritesProcessedTableManager(super.$state);
+}
+
+class $FavoritesFilterComposer
+    extends FilterComposer<_$AppDatabase, Favorites> {
+  $FavoritesFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get surahId => $state.composableBuilder(
+      column: $state.table.surahId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get surahName => $state.composableBuilder(
+      column: $state.table.surahName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get ayahId => $state.composableBuilder(
+      column: $state.table.ayahId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get ayahIndex => $state.composableBuilder(
+      column: $state.table.ayahIndex,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get screenTitle => $state.composableBuilder(
+      column: $state.table.screenTitle,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get screenSubtitle => $state.composableBuilder(
+      column: $state.table.screenSubtitle,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get screenCaption => $state.composableBuilder(
+      column: $state.table.screenCaption,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $FavoritesOrderingComposer
+    extends OrderingComposer<_$AppDatabase, Favorites> {
+  $FavoritesOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get surahId => $state.composableBuilder(
+      column: $state.table.surahId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get surahName => $state.composableBuilder(
+      column: $state.table.surahName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get ayahId => $state.composableBuilder(
+      column: $state.table.ayahId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get ayahIndex => $state.composableBuilder(
+      column: $state.table.ayahIndex,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get screenTitle => $state.composableBuilder(
+      column: $state.table.screenTitle,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get screenSubtitle => $state.composableBuilder(
+      column: $state.table.screenSubtitle,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get screenCaption => $state.composableBuilder(
+      column: $state.table.screenCaption,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class _$AppDatabaseManager {
   final _$AppDatabase _db;
   _$AppDatabaseManager(this._db);
@@ -2212,4 +2932,6 @@ class _$AppDatabaseManager {
   $AyahsTableManager get ayahs => $AyahsTableManager(_db, _db.ayahs);
   $LastReadTableTableManager get lastRead =>
       $LastReadTableTableManager(_db, _db.lastRead);
+  $FavoritesTableManager get favorites =>
+      $FavoritesTableManager(_db, _db.favorites);
 }

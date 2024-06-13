@@ -38,12 +38,15 @@ class _HomeNavigationState extends State<HomeNavigation> {
       case 0:
         setState(() => currentTitle = 'Favorit');
         context.goNamed('favorite');
+        break;
       case 1:
         setState(() => currentTitle = 'Baca');
         context.goNamed('read');
+        break;
       case 2:
         setState(() => currentTitle = 'Pengaturan');
         context.goNamed('setting');
+        break;
     }
   }
 

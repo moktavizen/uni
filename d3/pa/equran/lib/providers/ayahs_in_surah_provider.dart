@@ -7,11 +7,11 @@ part 'ayahs_in_surah_provider.g.dart';
 @riverpod
 class AyahsInSurah extends _$AyahsInSurah {
   @override
-  Future<List<Ayah>> build(int surahId) async {
+  Stream<List<Ayah>> build(int surahId) {
     // print('Fetching Ayahs for Surah $surahId');
     final database = ref.watch(databaseProvider);
 
-    List<Ayah> ayahList = await database.ayahsInSurah(surahId).get();
+    final ayahList = database.ayahsInSurah(surahId).watch();
 
     return ayahList;
   }

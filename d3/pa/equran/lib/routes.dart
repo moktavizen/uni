@@ -45,11 +45,14 @@ final GoRouter router = GoRouter(
                     state.extra is Surah ? state.extra as Surah : null;
                 final LastRead? lastRead =
                     state.extra is LastRead ? state.extra as LastRead : null;
+                final Favorite? fav =
+                    state.extra is Favorite ? state.extra as Favorite : null;
 
                 return SurahDetailScreen(
                   surahId: state.pathParameters['surahId'],
                   surah: surah,
                   lastRead: lastRead,
+                  fav: fav,
                 );
               },
             ),

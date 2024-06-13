@@ -27,7 +27,7 @@ class SurahTab extends ConsumerWidget {
           SliverPadding(
             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 24),
             sliver: surahList.when(
-              data: (value) => SliverList.separated(
+              data: (value) => SliverList.builder(
                 itemBuilder: (context, index) {
                   Surah surah = value.elementAt(index);
                   return InkWell(
@@ -76,13 +76,6 @@ class SurahTab extends ConsumerWidget {
                         ),
                       ),
                     ),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: listDecor,
                   );
                 },
                 itemCount: value.length,

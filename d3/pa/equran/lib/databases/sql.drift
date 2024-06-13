@@ -25,12 +25,10 @@ CREATE TABLE ayahs (
     latin VARCHAR(1024) NOT NULL,
     translation VARCHAR(1664) NOT NULL,
     tafsir VARCHAR(3712) NOT NULL,
+    is_fav INTEGER DEFAULT 0,
     FOREIGN KEY (surah_id) REFERENCES surahs (id) ON DELETE CASCADE,
     FOREIGN KEY (juz_id) REFERENCES juzs (id) ON DELETE CASCADE
 );
-
-CREATE INDEX IF NOT EXISTS idx_ayahs_surah_id ON ayahs (surah_id);
-CREATE INDEX IF NOT EXISTS idx_ayahs_juz_id ON ayahs (juz_id);
 
 CREATE TABLE last_read (
     id INTEGER PRIMARY KEY,
@@ -42,6 +40,20 @@ CREATE TABLE last_read (
     ayah_num INTEGER NOT NULL,
     surah_name VARCHAR(16) NOT NULL,
 ) AS LastRead;
+
+CREATE TABLE favorites(
+    id INTEGER PRIMARY KEY,
+    surah_id INTEGER NOT NULL,
+    surah_name VARCHAR(16) NOT NULL,
+    ayah_id INTEGER NOT NULL,
+    ayah_index INTEGER NOT NULL,
+    screen_title VARCHAR(16) NOT NULL,
+    screen_subtitle VARCHAR(16) NOT NULL,
+    screen_caption VARCHAR(36) NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_ayahs_surah_id ON ayahs (surah_id);
+CREATE INDEX IF NOT EXISTS idx_ayahs_juz_id ON ayahs (juz_id);
 
 CREATE TRIGGER enforce_single_last_read
     BEFORE INSERT ON last_read
@@ -59,6 +71,9 @@ SELECT * FROM ayahs WHERE surah_id = ?;
 
 ayahsInJuz:
 SELECT * FROM ayahs WHERE juz_id = ?;
+
+singleAyah:
+SELECT * FROM ayahs WHERE id = ?;
 
 saveLastRead:
 INSERT INTO last_read (
@@ -81,4 +96,40 @@ INSERT INTO last_read (
 
 getLastRead:
 SELECT * FROM last_read;
+
+setFavorite:
+UPDATE ayahs
+SET is_fav = 1
+WHERE id = ?;
+
+unsetFavorite:
+UPDATE ayahs
+SET is_fav = 0
+WHERE id = ?;
+
+saveFavorite:
+INSERT INTO favorites (
+    surah_id,
+    surah_name,
+    ayah_id,
+    ayah_index,
+    screen_title,
+    screen_subtitle,
+    screen_caption
+) VALUES (
+    :surah_id,
+    :surah_name,
+    :ayah_id,
+    :ayah_index,
+    :screen_title,
+    :screen_subtitle,
+    :screen_caption
+);
+
+deleteFavorite:
+DELETE from favorites
+WHERE ayah_id = ?;
+
+allFavorite:
+SELECT * FROM favorites ORDER BY surah_id;
 

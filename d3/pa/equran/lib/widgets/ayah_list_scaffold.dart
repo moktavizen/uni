@@ -98,7 +98,7 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
     }
   }
 
-  void _popScreen(AudioPlayer player) {
+  void _popScreen(AudioPlayer player, BuildContext context) {
     _saveLastRead();
     player.dispose();
     context.pop();
@@ -119,12 +119,12 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
               return;
             }
             // when pop from system
-            _popScreen(player);
+            _popScreen(player, context);
           },
           child: IconButton(
             onPressed: () {
               // when pop from back button
-              _popScreen(player);
+              _popScreen(player, context);
             },
             icon: backIcon,
           ),
@@ -221,7 +221,16 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
                                   updateSelectedPlayer: _updateSelectedPlayer,
                                   // updateLastRead: _updateLastRead,
                                 ),
-                                const _FavAyahButton(),
+                                _FavAyahButton(
+                                  surahId: ayah.surahId,
+                                  surahName: ayah.surahName,
+                                  ayahId: ayah.id,
+                                  ayahNum: ayah.ayahNum,
+                                  isFav: ayah.isFav!,
+                                  screenTitle: widget.headerTitle,
+                                  screenSubtitle: widget.headerSubtitle,
+                                  screenCaption: widget.headerCaption,
+                                )
                               ],
                             ),
                           );
@@ -762,9 +771,13 @@ class _MurattalPlayButtonState extends State<_MurattalPlayButton> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 backgroundColor: error,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                showCloseIcon: true,
                 content: Text(
-                  textAlign: TextAlign.center,
-                  'Fitur ini membutuhkan koneksi internet!',
+                  'Fitur ini butuh internet!',
                   style: GoogleFonts.inter(color: surface),
                 ),
               ),
@@ -778,14 +791,72 @@ class _MurattalPlayButtonState extends State<_MurattalPlayButton> {
   }
 }
 
-class _FavAyahButton extends StatelessWidget {
-  const _FavAyahButton();
+class _FavAyahButton extends ConsumerWidget {
+  const _FavAyahButton({
+    required this.surahId,
+    required this.surahName,
+    required this.ayahId,
+    required this.ayahNum,
+    required this.isFav,
+    required this.screenTitle,
+    required this.screenSubtitle,
+    required this.screenCaption,
+  });
+
+  final int surahId;
+  final String surahName;
+  final int ayahId;
+  final int ayahNum;
+  final int isFav;
+  final String screenTitle;
+  final String screenSubtitle;
+  final String screenCaption;
+
+  void _toggleFavorite(WidgetRef ref, BuildContext context) {
+    final database = ref.read(databaseProvider);
+
+    switch (isFav) {
+      case 0:
+        database.setFavorite(ayahId);
+        database.saveFavorite(
+          surahId,
+          surahName,
+          ayahId,
+          ayahNum - 1,
+          screenTitle,
+          screenSubtitle,
+          screenCaption,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Ditambahkan ke Daftar Favorit',
+              style: GoogleFonts.inter(color: surface),
+            ),
+            showCloseIcon: true,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+
+        break;
+      case 1:
+        database.unsetFavorite(ayahId);
+        database.deleteFavorite(ayahId);
+        ScaffoldMessenger.of(context).clearSnackBars();
+        break;
+    }
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
-      onPressed: () {},
-      icon: favoriteIcon,
+      onPressed: () {
+        _toggleFavorite(ref, context);
+      },
+      icon: isFav == 1 ? favoriteIconSolid : favoriteIcon,
     );
   }
 }

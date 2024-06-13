@@ -1,3 +1,4 @@
+import 'package:equran/styles.dart';
 import 'package:flutter/material.dart';
 
 class TabListTile extends StatelessWidget {
@@ -17,8 +18,16 @@ class TabListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 88,
+      height: 89,
       padding: const EdgeInsets.symmetric(vertical: 22),
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: listDecor,
+            width: 1,
+          ),
+        ),
+      ),
       child: Row(
         children: [
           leading,

@@ -6,7 +6,7 @@ part of 'ayahs_in_juz_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ayahsInJuzHash() => r'0014dcd619be4a37d77e04e3b6d3c58417899e02';
+String _$ayahsInJuzHash() => r'd6d603cdf3cae970452109896797480f0655fd20';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,10 +30,10 @@ class _SystemHash {
 }
 
 abstract class _$AyahsInJuz
-    extends BuildlessAutoDisposeAsyncNotifier<List<Ayah>> {
+    extends BuildlessAutoDisposeStreamNotifier<List<Ayah>> {
   late final int juzId;
 
-  FutureOr<List<Ayah>> build(
+  Stream<List<Ayah>> build(
     int juzId,
   );
 }
@@ -82,7 +82,7 @@ class AyahsInJuzFamily extends Family<AsyncValue<List<Ayah>>> {
 
 /// See also [AyahsInJuz].
 class AyahsInJuzProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<AyahsInJuz, List<Ayah>> {
+    extends AutoDisposeStreamNotifierProviderImpl<AyahsInJuz, List<Ayah>> {
   /// See also [AyahsInJuz].
   AyahsInJuzProvider(
     int juzId,
@@ -113,7 +113,7 @@ class AyahsInJuzProvider
   final int juzId;
 
   @override
-  FutureOr<List<Ayah>> runNotifierBuild(
+  Stream<List<Ayah>> runNotifierBuild(
     covariant AyahsInJuz notifier,
   ) {
     return notifier.build(
@@ -138,7 +138,7 @@ class AyahsInJuzProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<AyahsInJuz, List<Ayah>>
+  AutoDisposeStreamNotifierProviderElement<AyahsInJuz, List<Ayah>>
       createElement() {
     return _AyahsInJuzProviderElement(this);
   }
@@ -157,13 +157,13 @@ class AyahsInJuzProvider
   }
 }
 
-mixin AyahsInJuzRef on AutoDisposeAsyncNotifierProviderRef<List<Ayah>> {
+mixin AyahsInJuzRef on AutoDisposeStreamNotifierProviderRef<List<Ayah>> {
   /// The parameter `juzId` of this provider.
   int get juzId;
 }
 
 class _AyahsInJuzProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<AyahsInJuz, List<Ayah>>
+    extends AutoDisposeStreamNotifierProviderElement<AyahsInJuz, List<Ayah>>
     with AyahsInJuzRef {
   _AyahsInJuzProviderElement(super.provider);
 
