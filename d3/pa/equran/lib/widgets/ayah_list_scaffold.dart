@@ -99,8 +99,8 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
   }
 
   void _popScreen(AudioPlayer player) {
-    player.dispose();
     _saveLastRead();
+    player.dispose();
     context.pop();
   }
 
@@ -164,6 +164,10 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
             ),
             sliver: widget.ayahList.when(
               data: (value) {
+                // initial value
+                _lastReadAyahNum = value.elementAt(0).ayahNum;
+                _lastReadSurahName = value.elementAt(0).surahName;
+
                 if (widget.ayahIndex != null && widget.ayahIndex! > 0) {
                   _controller.scrollToIndex(
                     widget.ayahIndex!,
@@ -175,10 +179,6 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
                   // itemPositionsListener: itemPositionsListener,
                   itemBuilder: (context, index) {
                     Ayah ayah = value.elementAt(index);
-
-                    // initial value
-                    _lastReadAyahNum = value.elementAt(0).ayahNum;
-                    _lastReadSurahName = value.elementAt(0).surahName;
 
                     return AutoScrollTag(
                       index: index,
@@ -785,7 +785,7 @@ class _FavAyahButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {},
-      icon: bookmarkIcon,
+      icon: favoriteIcon,
     );
   }
 }

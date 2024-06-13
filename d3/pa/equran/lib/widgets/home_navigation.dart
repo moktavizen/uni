@@ -80,18 +80,18 @@ class _HomeNavigationState extends State<HomeNavigation> {
           unselectedLabelStyle: GoogleFonts.inter(fontSize: 14),
           items: const [
             BottomNavigationBarItem(
-              icon: favoriteIcon,
-              activeIcon: favoriteIconSolid,
+              icon: favoriteScreenIcon,
+              activeIcon: favoriteScreenIconSolid,
               label: 'Favorit',
             ),
             BottomNavigationBarItem(
-              icon: readIcon,
-              activeIcon: readIconSolid,
+              icon: readScreenIcon,
+              activeIcon: readScreenIconSolid,
               label: 'Baca',
             ),
             BottomNavigationBarItem(
-              icon: settingIcon,
-              activeIcon: settingIconSolid,
+              icon: settingScreenIcon,
+              activeIcon: settingScreenIconSolid,
               label: 'Pengaturan',
             ),
           ],
