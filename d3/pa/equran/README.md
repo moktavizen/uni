@@ -25,13 +25,12 @@ This App is built using Flutter with the following packages:
 | Share/Copy          |        ✅       |       ✅       |
 | Murottal Audio      |        ✅       |       ✅       |
 | Tafsir              |        ✅       |       ✅       |
-| Favorites           |        ✅       |       🛠️       |
-| Customization       |        ✅       |       🛠️       |
+| Favorites           |        ✅       |       ✅       |
+| Personalization     |        ✅       |       🛠️       |
 
 To do:
  - Search
     - Open search screen
     - filter search
     - go to searched
- - Favorites
- - Setting
+ - Personalization
