@@ -2,6 +2,7 @@ import 'package:equran/databases/database.dart';
 import 'package:equran/screens/favorites_screen.dart';
 import 'package:equran/screens/juz_detail_screen.dart';
 import 'package:equran/screens/read_screen.dart';
+import 'package:equran/screens/search_screen.dart';
 import 'package:equran/screens/setting_screen.dart';
 import 'package:equran/screens/surah_detail_screen.dart';
 import 'package:equran/widgets/home_navigation.dart';
@@ -18,6 +19,17 @@ final GoRouter router = GoRouter(
   initialLocation: '/read',
   navigatorKey: _rootNavigatorKey,
   routes: [
+    GoRoute(
+      path: '/search',
+      name: 'search',
+      builder: (context, state) {
+        final List<Surah> allSurah = state.extra as List<Surah>;
+
+        return SearchScreen(
+          allSurah: allSurah,
+        );
+      },
+    ),
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) => HomeNavigation(child: child),

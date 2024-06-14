@@ -157,7 +157,7 @@ class _LastReadCard extends StatelessWidget {
               lastReadIcon,
               const SizedBox(width: 8),
               Text(
-                'Last Read',
+                'Terakhir Dibaca',
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.w500,
                   fontSize: 14,

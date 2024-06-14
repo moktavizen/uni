@@ -635,7 +635,7 @@ class _ShowTafsirButton extends StatelessWidget {
                             visualDensity: VisualDensity.compact,
                           ),
                           IconButton.filledTonal(
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () => context.pop(),
                             icon: closeIcon,
                             padding: const EdgeInsets.all(0),
                             visualDensity: VisualDensity.compact,

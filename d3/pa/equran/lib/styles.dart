@@ -18,6 +18,7 @@ const SvgAsset menuIcon = SvgAsset(name: 'menu-icon');
 const SvgAsset backIcon = SvgAsset(name: 'back-icon');
 const SvgAsset closeIcon = SvgAsset(name: 'close-icon');
 const SvgAsset searchIcon = SvgAsset(name: 'search-icon');
+const SvgAsset micIcon = SvgAsset(name: 'mic-icon');
 const SvgAsset favoriteScreenIcon = SvgAsset(name: 'favorite-screen-icon');
 const SvgAsset favoriteScreenIconSolid =
     SvgAsset(name: 'favorite-screen-icon-solid');

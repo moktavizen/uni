@@ -1,121 +1,54 @@
+import 'package:equran/providers/database_provider.dart';
 import 'package:equran/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
     required this.title,
     required this.leading,
+    this.action,
   });
 
-  final Widget? title;
-  final Widget? leading;
+  final Widget title;
+  final Widget leading;
+  final Widget? action;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: AppBar(
         backgroundColor: surface,
         elevation: 0,
         scrolledUnderElevation: 0,
+        automaticallyImplyLeading: false,
         leading: leading,
         title: title,
+        titleSpacing: 8,
         actions: [
-          IconButton(
-            onPressed: () {
-              showSearch(context: context, delegate: _CustomSearchDelegate());
-            },
-            icon: searchIcon,
-          ),
+          action ??
+              IconButton(
+                onPressed: () async {
+                  final database = ref.read(databaseProvider);
+                  final allSUrah = await database.allSurah().get();
+
+                  if (context.mounted) {
+                    context.push(
+                      '/search',
+                      extra: allSUrah,
+                    );
+                  }
+                },
+                icon: searchIcon,
+              ),
         ],
       ),
-    );
-  }
-}
-
-class _CustomSearchDelegate extends SearchDelegate {
-  List<String> searchTerms = [
-    "Al-Fatihah",
-    "Al-Baqarah",
-    "Ali ‘Imran",
-    "An-Nisa'",
-    "Al-Ma'idah",
-    "Al-An‘am",
-    "Al-A‘raf",
-    "Al-Anfal",
-    "At-Taubah",
-    "Yunus",
-    "Hud",
-    "Yusuf",
-    "Ar-Ra‘d",
-    "Ibrahim",
-    "Al-Hijr",
-    "An-Nahl",
-  ];
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        onPressed: () {
-          query = '';
-        },
-        icon: const Icon(Icons.clear),
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        close(context, null);
-      },
-      icon: backIcon,
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    List<String> matchQuery = [];
-
-    for (var surah in searchTerms) {
-      if (surah.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(surah);
-      }
-    }
-
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        var result = matchQuery[index];
-
-        return ListTile(title: Text(result));
-      },
-      itemCount: matchQuery.length,
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<String> matchQuery = [];
-
-    for (var surah in searchTerms) {
-      if (surah.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(surah);
-      }
-    }
-
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        var result = matchQuery[index];
-
-        return ListTile(title: Text(result));
-      },
-      itemCount: matchQuery.length,
     );
   }
 }

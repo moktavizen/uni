@@ -203,60 +203,6 @@ class FavoritesScreen extends ConsumerWidget {
   }
 }
 
-// class _FavoriteListTile extends StatelessWidget {
-//   const _FavoriteListTile({
-//     required this.titleText,
-//     required this.subtitleText,
-//   });
-//
-//   final String titleText;
-//   final String subtitleText;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return InkWell(
-//       onTap: () {},
-//       child: Container(
-//         padding: const EdgeInsets.symmetric(vertical: 6),
-//         child: Row(
-//           children: [
-//             const Column(
-//               children: [
-//                 folderIcon,
-//                 SizedBox(height: 16),
-//               ],
-//             ),
-//             const SizedBox(width: 16),
-//             Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(
-//                   titleText,
-//                   style: GoogleFonts.inter(
-//                     fontWeight: FontWeight.w500,
-//                     fontSize: 16,
-//                     color: onSurface,
-//                   ),
-//                 ),
-//                 const SizedBox(height: 4),
-//                 Text(
-//                   subtitleText,
-//                   style: GoogleFonts.inter(
-//                     fontWeight: FontWeight.w500,
-//                     fontSize: 12,
-//                     color: onSurfaceVar,
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             const Spacer(),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class _AddCollection extends StatelessWidget {
   const _AddCollection();
 
