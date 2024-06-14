@@ -10,9 +10,12 @@ This App is built using Flutter with the following packages:
  - `riverpod` - State Management
  - `drift` - Database Persistence
  - `flutter_svg` - SVG Rendering
- - `just_audio` - Audio Player
- - `share_plus` - Content Sharing
  - `skeletonizer` - Loading Placeholder
+ - `just_audio` - Murattal Audio Player
+ - `share_plus` - Content Sharing
+ - `inview_notifier_list` - Detect Last Read Ayah
+ - `scroll_to_index` - Scroll to Last Read Ayah
+
 
 ## Features Progress
 
@@ -33,4 +36,5 @@ To do:
     - Open search screen
     - filter search
     - go to searched
+    - implement voice search
  - Personalization
