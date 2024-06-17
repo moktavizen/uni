@@ -1,4 +1,3 @@
-import 'package:equran/styles.dart';
 import 'package:equran/widgets/tab_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -10,7 +9,7 @@ class ListTileSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverList.separated(
+    return SliverList.builder(
       itemBuilder: (context, index) {
         return const Skeletonizer.zone(
           child: TabListTile(
@@ -21,11 +20,6 @@ class ListTileSkeleton extends StatelessWidget {
           ),
         );
       },
-      separatorBuilder: (context, index) => const Divider(
-        height: 1,
-        thickness: 1,
-        color: listDecor,
-      ),
       itemCount: 7,
     );
   }

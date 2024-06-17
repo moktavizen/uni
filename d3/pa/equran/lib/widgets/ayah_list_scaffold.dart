@@ -48,6 +48,12 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
   @override
   void initState() {
     super.initState();
+    if (widget.ayahIndex != null && widget.ayahIndex! > 0) {
+      _controller.scrollToIndex(
+        widget.ayahIndex!,
+        preferPosition: AutoScrollPosition.begin,
+      );
+    }
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -101,13 +107,12 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
   void _popScreen(AudioPlayer player, BuildContext context) {
     _saveLastRead();
     player.dispose();
-    context.pop();
+    context.goNamed('read');
   }
 
   @override
   Widget build(BuildContext context) {
     final player = ref.watch(murattalProvider);
-
     return Scaffold(
       backgroundColor: surface,
       appBar: CustomAppBar(
@@ -167,13 +172,6 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
                 // initial value
                 _lastReadAyahNum = value.elementAt(0).ayahNum;
                 _lastReadSurahName = value.elementAt(0).surahName;
-
-                if (widget.ayahIndex != null && widget.ayahIndex! > 0) {
-                  _controller.scrollToIndex(
-                    widget.ayahIndex!,
-                    preferPosition: AutoScrollPosition.begin,
-                  );
-                }
 
                 return SliverList.builder(
                   // itemPositionsListener: itemPositionsListener,
@@ -635,7 +633,7 @@ class _ShowTafsirButton extends StatelessWidget {
                             visualDensity: VisualDensity.compact,
                           ),
                           IconButton.filledTonal(
-                            onPressed: () => context.pop(),
+                            onPressed: () => Navigator.of(context).pop(),
                             icon: closeIcon,
                             padding: const EdgeInsets.all(0),
                             visualDensity: VisualDensity.compact,
@@ -705,21 +703,27 @@ class _MurattalPlayButtonState extends State<_MurattalPlayButton> {
   late final String _murattalId = _paddedSurahId + _paddedAyahNum;
 
   void _playButton(playerId) {
-    setState(() {
-      _playerButtonState = '$playerId playing';
-    });
+    if (mounted) {
+      setState(() {
+        _playerButtonState = '$playerId playing';
+      });
+    }
   }
 
   void _pauseButton(playerId) {
-    setState(() {
-      _playerButtonState = '$playerId paused';
-    });
+    if (mounted) {
+      setState(() {
+        _playerButtonState = '$playerId paused';
+      });
+    }
   }
 
   void _stopButton(playerId) {
-    setState(() {
-      _playerButtonState = '$playerId stopped';
-    });
+    if (mounted) {
+      setState(() {
+        _playerButtonState = '$playerId stopped';
+      });
+    }
   }
 
   Future<void> playAudio() async {

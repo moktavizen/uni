@@ -2,6 +2,7 @@ import 'package:equran/databases/database.dart';
 import 'package:equran/providers/database_provider.dart';
 import 'package:equran/providers/favorites_provider.dart';
 import 'package:equran/styles.dart';
+import 'package:equran/widgets/custom_app_bar.dart';
 import 'package:equran/widgets/hizb_border.dart';
 import 'package:equran/widgets/tab_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -38,23 +39,18 @@ class FavoritesScreen extends ConsumerWidget {
     final favoriteList = ref.watch(favoritesProvider);
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            children: [
-              SizedBox(height: 10),
-              _AddCollection(),
-              SizedBox(
-                height: 16,
-              ),
-              Divider(
-                height: 1,
-                thickness: 1,
-                color: listDecor,
-              )
-            ],
-          ),
+          padding: EdgeInsets.only(top: 10, right: 24, bottom: 16, left: 24),
+          child: _AddCollection(),
+        ),
+        const Divider(
+          height: 1,
+          thickness: 1,
+          color: listDecor,
+          indent: 24,
+          endIndent: 24,
         ),
         Expanded(
           child: favoriteList.when(
@@ -177,7 +173,7 @@ class FavoritesScreen extends ConsumerWidget {
                 ),
               );
             },
-            loading: () => ListView.separated(
+            loading: () => ListView.builder(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 24),
               itemBuilder: (context, index) {
                 return const Skeletonizer.zone(
@@ -189,11 +185,6 @@ class FavoritesScreen extends ConsumerWidget {
                   ),
                 );
               },
-              separatorBuilder: (context, index) => const Divider(
-                height: 1,
-                thickness: 1,
-                color: listDecor,
-              ),
               itemCount: 7,
             ),
           ),
@@ -203,25 +194,30 @@ class FavoritesScreen extends ConsumerWidget {
   }
 }
 
-class _AddCollection extends StatelessWidget {
+class _AddCollection extends ConsumerWidget {
   const _AddCollection();
 
   @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        addFolderIcon,
-        const SizedBox(width: 8),
-        Text(
-          'Tambah Favorit',
-          style: GoogleFonts.inter(
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
-            color: primary,
+  Widget build(BuildContext context, WidgetRef ref) {
+    return InkWell(
+      onTap: () {
+        CustomAppBar.goSearch(ref, context);
+      },
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          addFolderIcon,
+          const SizedBox(width: 8),
+          Text(
+            'Tambah Favorit',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
+              color: primary,
+            ),
           ),
-        ),
-        const Spacer(),
-      ],
+        ],
+      ),
     );
   }
 }

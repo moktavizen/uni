@@ -1,4 +1,6 @@
+import 'package:equran/databases/database.dart';
 import 'package:equran/providers/database_provider.dart';
+import 'package:equran/providers/murattal_provider.dart';
 import 'package:equran/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +21,26 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
+  static void goSearch(WidgetRef ref, BuildContext context) async {
+    final player = ref.read(murattalProvider);
+    player.stop();
+
+    final database = ref.read(databaseProvider);
+    final List<Surah> allSurah = await database.allSurah().get();
+    final List<Juz> allJuz = await database.allJuz().get();
+    final List<dynamic> data = [
+      ...allSurah,
+      ...allJuz,
+    ];
+
+    if (context.mounted) {
+      context.pushNamed(
+        'search',
+        extra: data,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
@@ -34,16 +56,8 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
         actions: [
           action ??
               IconButton(
-                onPressed: () async {
-                  final database = ref.read(databaseProvider);
-                  final allSUrah = await database.allSurah().get();
-
-                  if (context.mounted) {
-                    context.push(
-                      '/search',
-                      extra: allSUrah,
-                    );
-                  }
+                onPressed: () {
+                  goSearch(ref, context);
                 },
                 icon: searchIcon,
               ),

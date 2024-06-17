@@ -23,10 +23,10 @@ final GoRouter router = GoRouter(
       path: '/search',
       name: 'search',
       builder: (context, state) {
-        final List<Surah> allSurah = state.extra as List<Surah>;
+        final List<dynamic> data = state.extra as List<dynamic>;
 
         return SearchScreen(
-          allSurah: allSurah,
+          data: data,
         );
       },
     ),
