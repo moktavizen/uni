@@ -5,6 +5,7 @@ const Color surface = Color(0xffffffff);
 const Color onSurface = Color(0xff240f4f);
 const Color onSurfaceVar = Color(0xff8789a3);
 const Color primary = Color(0xff672cbc);
+const Color primary50 = Color(0xffdbccef);
 const Color secondary = Color(0xff863ed5);
 const Color lastReadGrad1 = Color(0xffdf98fa);
 const Color lastReadGrad2 = Color(0xff9055ff);

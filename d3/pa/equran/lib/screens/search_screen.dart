@@ -175,7 +175,7 @@ class _SearchScreenState extends State<SearchScreen> {
             boxShadow: [
               BoxShadow(
                 spreadRadius: level * 2,
-                color: primary.withOpacity(0.25),
+                color: primary50,
               )
             ],
           ),
