@@ -80,6 +80,7 @@ class _SearchScreenState extends State<SearchScreen> {
         );
 
         if (result.finalResult == true) {
+          level = 0.0;
           _searchFromInput(_textFromSpeech);
         }
       },
