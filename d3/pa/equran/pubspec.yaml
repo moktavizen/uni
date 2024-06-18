@@ -49,6 +49,7 @@ dependencies:
   inview_notifier_list: ^3.0.0
   scroll_to_index: ^3.0.1
   fuzzywuzzy: ^1.1.6
+  speech_to_text: ^6.6.2
 
 dev_dependencies:
   flutter_test:

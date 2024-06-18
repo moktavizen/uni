@@ -45,7 +45,9 @@
 		<true/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
+		<key>NSSpeechRecognitionUsageDescription</key>
+		<string>This App need speech recognition for Voice Search Feature</string>
 		<key>NSMicrophoneUsageDescription</key>
-		<string>Microphone API is included in AVAudioSession API, but this App doesn't use the Microphone</string>
+		<string>This App need microphone access for Voice Search Feature</string>
 		</dict>
 	</plist>

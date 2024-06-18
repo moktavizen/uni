@@ -43,7 +43,7 @@ class FavoritesScreen extends ConsumerWidget {
       children: [
         const Padding(
           padding: EdgeInsets.only(top: 10, right: 24, bottom: 16, left: 24),
-          child: _AddCollection(),
+          child: _AddFavorite(),
         ),
         const Divider(
           height: 1,
@@ -194,12 +194,14 @@ class FavoritesScreen extends ConsumerWidget {
   }
 }
 
-class _AddCollection extends ConsumerWidget {
-  const _AddCollection();
+class _AddFavorite extends ConsumerWidget {
+  const _AddFavorite();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
+      splashColor: systemUiBackground,
+      highlightColor: systemUiBackground,
       onTap: () {
         CustomAppBar.goSearch(ref, context);
       },
