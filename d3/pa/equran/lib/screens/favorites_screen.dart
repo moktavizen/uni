@@ -215,7 +215,7 @@ class _AddFavorite extends ConsumerWidget {
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w500,
               fontSize: 16,
-              color: primary,
+              color: secondary,
             ),
           ),
         ],

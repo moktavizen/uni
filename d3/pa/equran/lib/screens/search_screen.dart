@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:equran/databases/database.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/custom_app_bar.dart';
@@ -27,6 +29,9 @@ class _SearchScreenState extends State<SearchScreen> {
   List<ExtractedResult<dynamic>> _searchResults = [];
   final SpeechToText _speechToText = SpeechToText();
   String _textFromSpeech = '';
+  double level = 0.0;
+  double minSoundLevel = 50000;
+  double maxSoundLevel = -50000;
 
   @override
   void initState() {
@@ -69,14 +74,27 @@ class _SearchScreenState extends State<SearchScreen> {
     await _speechToText.listen(
       onResult: (SpeechRecognitionResult result) {
         _textFromSpeech = result.recognizedWords;
-        _searchFromInput(_textFromSpeech);
-        _textController.text += _textFromSpeech;
+        _textController.text = _textFromSpeech;
         _textController.selection = TextSelection.fromPosition(
           TextPosition(offset: _textController.text.length),
         );
+
+        if (result.finalResult == true) {
+          _searchFromInput(_textFromSpeech);
+        }
       },
+      onSoundLevelChange: _soundLevelListener,
       localeId: 'in_ID',
     );
+  }
+
+  void _soundLevelListener(double level) {
+    minSoundLevel = min(minSoundLevel, level);
+    maxSoundLevel = max(maxSoundLevel, level);
+    // _logEvent('sound level $level: $minSoundLevel - $maxSoundLevel ');
+    setState(() {
+      this.level = level;
+    });
   }
 
   @override
@@ -150,13 +168,24 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(8),
-        child: FloatingActionButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(32),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            boxShadow: [
+              BoxShadow(
+                spreadRadius: level * 2,
+                color: primary.withOpacity(0.25),
+              )
+            ],
           ),
-          onPressed: _startListening,
-          tooltip: 'Voice Search',
-          child: micIcon,
+          child: FloatingActionButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+            onPressed: _startListening,
+            tooltip: 'Voice Search',
+            child: micIcon,
+          ),
         ),
       ),
     );
