@@ -34,6 +34,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void dispose() {
     _textController.dispose();
+    _speechToText.cancel();
     super.dispose();
   }
 
