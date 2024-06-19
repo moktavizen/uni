@@ -5,6 +5,7 @@ import 'package:equran/providers/database_provider.dart';
 import 'package:equran/providers/murattal_provider.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/custom_app_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -102,95 +103,98 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold> {
           ),
         ),
       ),
-      body: CustomScrollView(
+      body: CupertinoScrollbar(
         controller: _controller,
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
+        child: CustomScrollView(
+          controller: _controller,
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 24,
+                ),
+                child: _BismillahCard(
+                  title: widget.headerTitle,
+                  subtitle: widget.headerSubtitle,
+                  caption: widget.headerCaption,
+                ),
+              ),
+            ),
+            SliverPadding(
               padding: const EdgeInsets.symmetric(
-                vertical: 12,
+                vertical: 10,
                 horizontal: 24,
               ),
-              child: _BismillahCard(
-                title: widget.headerTitle,
-                subtitle: widget.headerSubtitle,
-                caption: widget.headerCaption,
+              sliver: widget.ayahList.when(
+                data: (value) {
+                  return SliverList.builder(
+                    // itemPositionsListener: itemPositionsListener,
+                    itemBuilder: (context, index) {
+                      Ayah ayah = value.elementAt(index);
+
+                      return AutoScrollTag(
+                        index: index,
+                        controller: _controller,
+                        key: ValueKey(index),
+                        child: _AyahListTile(
+                          arabicText: _ArabicText(arabic: ayah.arabic),
+                          tlText: _TlText(translation: ayah.translation),
+                          actionBar: _AyahBar(
+                            ayahNum: _AyahNum(ayahNum: ayah.ayahNum),
+                            actions: [
+                              _ShareAyahButton(
+                                arabic: ayah.arabic,
+                                translation: ayah.translation,
+                                surahId: ayah.surahId,
+                                ayahNum: ayah.ayahNum,
+                              ),
+                              _ShowTafsirButton(
+                                surahName: ayah.surahName,
+                                ayahNum: ayah.ayahNum,
+                                tafsir: ayah.tafsir,
+                                surahId: ayah.surahId,
+                              ),
+                              _MurattalPlayButton(
+                                ayahNum: ayah.ayahNum,
+                                surahId: ayah.surahId,
+                                player: player,
+                                selectedPlayerState: _selectedPlayerState,
+                                updateSelectedPlayer: _updateSelectedPlayer,
+                                // updateLastRead: _updateLastRead,
+                              ),
+                              _FavAyahButton(
+                                ayah: ayah,
+                                screenId: widget.screenId,
+                                screenTitle: widget.headerTitle,
+                                screenSubtitle: widget.headerSubtitle,
+                                screenCaption: widget.headerCaption,
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    itemCount: value.length,
+                  );
+                },
+                error: (e, s) {
+                  debugPrintStack(label: e.toString(), stackTrace: s);
+                  return SliverToBoxAdapter(
+                    child: Center(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        'Oops!\nTerdapat kesalahan\nmemproses data Ayah!',
+                        style: GoogleFonts.inter(color: onSurface),
+                      ),
+                    ),
+                  );
+                },
+                loading: () => const _ListTileSkeleton(),
               ),
             ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 24,
-            ),
-            sliver: widget.ayahList.when(
-              data: (value) {
-                return SliverList.builder(
-                  // itemPositionsListener: itemPositionsListener,
-                  itemBuilder: (context, index) {
-                    Ayah ayah = value.elementAt(index);
-
-                    return AutoScrollTag(
-                      index: index,
-                      controller: _controller,
-                      key: ValueKey(index),
-                      child: _AyahListTile(
-                        arabicText: _ArabicText(arabic: ayah.arabic),
-                        tlText: _TlText(translation: ayah.translation),
-                        actionBar: _AyahBar(
-                          ayahNum: _AyahNum(ayahNum: ayah.ayahNum),
-                          actions: [
-                            _ShareAyahButton(
-                              arabic: ayah.arabic,
-                              translation: ayah.translation,
-                              surahId: ayah.surahId,
-                              ayahNum: ayah.ayahNum,
-                            ),
-                            _ShowTafsirButton(
-                              surahName: ayah.surahName,
-                              ayahNum: ayah.ayahNum,
-                              tafsir: ayah.tafsir,
-                              surahId: ayah.surahId,
-                            ),
-                            _MurattalPlayButton(
-                              ayahNum: ayah.ayahNum,
-                              surahId: ayah.surahId,
-                              player: player,
-                              selectedPlayerState: _selectedPlayerState,
-                              updateSelectedPlayer: _updateSelectedPlayer,
-                              // updateLastRead: _updateLastRead,
-                            ),
-                            _FavAyahButton(
-                              ayah: ayah,
-                              screenId: widget.screenId,
-                              screenTitle: widget.headerTitle,
-                              screenSubtitle: widget.headerSubtitle,
-                              screenCaption: widget.headerCaption,
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                  itemCount: value.length,
-                );
-              },
-              error: (e, s) {
-                debugPrintStack(label: e.toString(), stackTrace: s);
-                return SliverToBoxAdapter(
-                  child: Center(
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      'Oops!\nTerdapat kesalahan\nmemproses data Ayah!',
-                      style: GoogleFonts.inter(color: onSurface),
-                    ),
-                  ),
-                );
-              },
-              loading: () => const _ListTileSkeleton(),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -857,7 +861,7 @@ class _FavAyahButton extends ConsumerWidget {
                           Text(
                             'Tandai Terakhir Dibaca',
                             style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w400,
                               fontSize: 16,
                               color: onSurface,
                             ),
@@ -883,7 +887,7 @@ class _FavAyahButton extends ConsumerWidget {
                           Text(
                             'Tambah ke Daftar Favorit',
                             style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w400,
                               fontSize: 16,
                               color: onSurface,
                             ),
