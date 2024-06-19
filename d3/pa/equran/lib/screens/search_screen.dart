@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:io';
 
 import 'package:equran/databases/database.dart';
 import 'package:equran/styles.dart';
@@ -30,14 +30,6 @@ class _SearchScreenState extends State<SearchScreen> {
   final SpeechToText _speechToText = SpeechToText();
   String _textFromSpeech = '';
   double level = 0.0;
-  double minSoundLevel = 50000;
-  double maxSoundLevel = -50000;
-
-  @override
-  void initState() {
-    super.initState();
-    _initSpeech();
-  }
 
   @override
   void dispose() {
@@ -71,16 +63,16 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _startListening() async {
+    _initSpeech();
     await _speechToText.listen(
       onResult: (SpeechRecognitionResult result) {
-        _textFromSpeech = result.recognizedWords;
-        _textController.text = _textFromSpeech;
-        _textController.selection = TextSelection.fromPosition(
-          TextPosition(offset: _textController.text.length),
-        );
-
         if (result.finalResult == true) {
           level = 0.0;
+          _textFromSpeech = result.recognizedWords;
+          _textController.text = _textFromSpeech;
+          _textController.selection = TextSelection.fromPosition(
+            TextPosition(offset: _textController.text.length),
+          );
           _searchFromInput(_textFromSpeech);
         }
       },
@@ -90,9 +82,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _soundLevelListener(double level) {
-    minSoundLevel = min(minSoundLevel, level);
-    maxSoundLevel = max(maxSoundLevel, level);
-    // _logEvent('sound level $level: $minSoundLevel - $maxSoundLevel ');
     setState(() {
       this.level = level;
     });
@@ -154,38 +143,62 @@ class _SearchScreenState extends State<SearchScreen> {
               },
               itemCount: _searchResults.length,
             );
-          }
-          // else if (_isListening == true) {
-          //   return const Column(
-          //     children: [
-          //       Center(child: Text('Now Listening')),
-          //     ],
-          //   );
-          // }
-          else {
+          } else {
             return const SizedBox.shrink();
           }
         },
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            boxShadow: [
-              BoxShadow(
-                spreadRadius: level * 2,
-                color: primary50,
-              )
-            ],
-          ),
-          child: FloatingActionButton(
-            shape: RoundedRectangleBorder(
+      floatingActionButton: RepaintBoundary(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Container(
+            decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
+              boxShadow: [
+                BoxShadow(
+                  spreadRadius: level * 2,
+                  color: primary50,
+                )
+              ],
             ),
-            onPressed: _startListening,
-            tooltip: 'Voice Search',
-            child: micIcon,
+            child: FloatingActionButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
+              ),
+              onPressed: () async {
+                try {
+                  final conn = await InternetAddress.lookup('example.com');
+                  final bool isConn =
+                      conn.isNotEmpty && conn[0].rawAddress.isNotEmpty;
+
+                  if (isConn == true && context.mounted) {
+                    ScaffoldMessenger.of(context).clearSnackBars();
+
+                    _startListening();
+                  }
+                } on SocketException catch (_) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: error,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        showCloseIcon: true,
+                        content: Text(
+                          'Fitur ini butuh internet!',
+                          style: GoogleFonts.inter(color: surface),
+                        ),
+                      ),
+                    );
+                  }
+                }
+              },
+              tooltip: 'Voice Search',
+              child: micIcon,
+            ),
           ),
         ),
       ),
