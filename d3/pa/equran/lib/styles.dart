@@ -29,6 +29,7 @@ const SvgAsset settingScreenIcon = SvgAsset(name: 'setting-screen-icon');
 const SvgAsset settingScreenIconSolid =
     SvgAsset(name: 'setting-screen-icon-solid');
 const SvgAsset lastReadIcon = SvgAsset(name: 'last-read-icon');
+const SvgAsset lastReadSolidIcon = SvgAsset(name: 'last-read-solid-icon');
 const SvgAsset shareIcon = SvgAsset(name: 'share-icon');
 const SvgAsset playIcon = SvgAsset(name: 'play-icon');
 const SvgAsset pauseIcon = SvgAsset(name: 'pause-icon');

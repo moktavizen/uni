@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:share_plus/share_plus.dart';
@@ -37,12 +36,8 @@ class AyahListScaffold extends ConsumerStatefulWidget {
   ConsumerState<AyahListScaffold> createState() => _AyahListScaffoldState();
 }
 
-class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
-    with WidgetsBindingObserver {
+class _AyahListScaffoldState extends ConsumerState<AyahListScaffold> {
   String _selectedPlayerState = '';
-  int _lastReadIndex = 0;
-  int _lastReadAyahNum = 0;
-  String _lastReadSurahName = '';
   final _controller = AutoScrollController();
 
   @override
@@ -54,12 +49,11 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
         preferPosition: AutoScrollPosition.begin,
       );
     }
-    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    AutoScrollController().dispose();
     super.dispose();
   }
 
@@ -70,42 +64,7 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
     });
   }
 
-  void _updateLastRead(int index, int ayahNum, String surahName) {
-    _lastReadIndex = index;
-    _lastReadAyahNum = ayahNum;
-    _lastReadSurahName = surahName;
-  }
-
-  void _saveLastRead() {
-    final database = ref.read(databaseProvider);
-
-    database.saveLastRead(
-      widget.screenId,
-      widget.headerTitle,
-      widget.headerSubtitle,
-      widget.headerCaption,
-      _lastReadIndex,
-      _lastReadAyahNum,
-      _lastReadSurahName,
-    );
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.detached) return;
-
-    final bool isBackground = state == AppLifecycleState.paused;
-
-    if (isBackground) {
-      _saveLastRead();
-    }
-  }
-
   void _popScreen(AudioPlayer player, BuildContext context) {
-    _saveLastRead();
     player.dispose();
     context.goNamed('read');
   }
@@ -143,11 +102,8 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
           ),
         ),
       ),
-      body: InViewNotifierCustomScrollView(
+      body: CustomScrollView(
         controller: _controller,
-        isInViewPortCondition:
-            (double deltaTop, double deltaBottom, double vpHeight) =>
-                deltaTop < 0 && deltaBottom > 0,
         slivers: [
           SliverToBoxAdapter(
             child: Padding(
@@ -169,10 +125,6 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
             ),
             sliver: widget.ayahList.when(
               data: (value) {
-                // initial value
-                _lastReadAyahNum = value.elementAt(0).ayahNum;
-                _lastReadSurahName = value.elementAt(0).surahName;
-
                 return SliverList.builder(
                   // itemPositionsListener: itemPositionsListener,
                   itemBuilder: (context, index) {
@@ -182,57 +134,41 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold>
                       index: index,
                       controller: _controller,
                       key: ValueKey(index),
-                      child: InViewNotifierWidget(
-                        id: '$index',
-                        builder: (BuildContext context, bool isInView,
-                            Widget? child) {
-                          if (isInView == true) {
-                            _updateLastRead(
-                              index,
-                              ayah.ayahNum,
-                              ayah.surahName,
-                            );
-                          }
-                          return _AyahListTile(
-                            arabicText: _ArabicText(arabic: ayah.arabic),
-                            tlText: _TlText(translation: ayah.translation),
-                            actionBar: _AyahBar(
-                              ayahNum: _AyahNum(ayahNum: ayah.ayahNum),
-                              actions: [
-                                _ShareAyahButton(
-                                  arabic: ayah.arabic,
-                                  translation: ayah.translation,
-                                  surahId: ayah.surahId,
-                                  ayahNum: ayah.ayahNum,
-                                ),
-                                _ShowTafsirButton(
-                                  surahName: ayah.surahName,
-                                  ayahNum: ayah.ayahNum,
-                                  tafsir: ayah.tafsir,
-                                  surahId: ayah.surahId,
-                                ),
-                                _MurattalPlayButton(
-                                  ayahNum: ayah.ayahNum,
-                                  surahId: ayah.surahId,
-                                  player: player,
-                                  selectedPlayerState: _selectedPlayerState,
-                                  updateSelectedPlayer: _updateSelectedPlayer,
-                                  // updateLastRead: _updateLastRead,
-                                ),
-                                _FavAyahButton(
-                                  surahId: ayah.surahId,
-                                  surahName: ayah.surahName,
-                                  ayahId: ayah.id,
-                                  ayahNum: ayah.ayahNum,
-                                  isFav: ayah.isFav!,
-                                  screenTitle: widget.headerTitle,
-                                  screenSubtitle: widget.headerSubtitle,
-                                  screenCaption: widget.headerCaption,
-                                )
-                              ],
+                      child: _AyahListTile(
+                        arabicText: _ArabicText(arabic: ayah.arabic),
+                        tlText: _TlText(translation: ayah.translation),
+                        actionBar: _AyahBar(
+                          ayahNum: _AyahNum(ayahNum: ayah.ayahNum),
+                          actions: [
+                            _ShareAyahButton(
+                              arabic: ayah.arabic,
+                              translation: ayah.translation,
+                              surahId: ayah.surahId,
+                              ayahNum: ayah.ayahNum,
                             ),
-                          );
-                        },
+                            _ShowTafsirButton(
+                              surahName: ayah.surahName,
+                              ayahNum: ayah.ayahNum,
+                              tafsir: ayah.tafsir,
+                              surahId: ayah.surahId,
+                            ),
+                            _MurattalPlayButton(
+                              ayahNum: ayah.ayahNum,
+                              surahId: ayah.surahId,
+                              player: player,
+                              selectedPlayerState: _selectedPlayerState,
+                              updateSelectedPlayer: _updateSelectedPlayer,
+                              // updateLastRead: _updateLastRead,
+                            ),
+                            _FavAyahButton(
+                              ayah: ayah,
+                              screenId: widget.screenId,
+                              screenTitle: widget.headerTitle,
+                              screenSubtitle: widget.headerSubtitle,
+                              screenCaption: widget.headerCaption,
+                            )
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -586,6 +522,7 @@ class _ShowTafsirButton extends StatelessWidget {
     return IconButton(
       onPressed: () {
         showModalBottomSheet(
+          backgroundColor: surface,
           isScrollControlled: true,
           context: context,
           builder: (BuildContext context) {
@@ -596,7 +533,6 @@ class _ShowTafsirButton extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: surface,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -797,21 +733,15 @@ class _MurattalPlayButtonState extends State<_MurattalPlayButton> {
 
 class _FavAyahButton extends ConsumerWidget {
   const _FavAyahButton({
-    required this.surahId,
-    required this.surahName,
-    required this.ayahId,
-    required this.ayahNum,
-    required this.isFav,
+    required this.ayah,
+    required this.screenId,
     required this.screenTitle,
     required this.screenSubtitle,
     required this.screenCaption,
   });
 
-  final int surahId;
-  final String surahName;
-  final int ayahId;
-  final int ayahNum;
-  final int isFav;
+  final Ayah ayah;
+  final int screenId;
   final String screenTitle;
   final String screenSubtitle;
   final String screenCaption;
@@ -819,14 +749,14 @@ class _FavAyahButton extends ConsumerWidget {
   void _toggleFavorite(WidgetRef ref, BuildContext context) {
     final database = ref.read(databaseProvider);
 
-    switch (isFav) {
+    switch (ayah.isFav) {
       case 0:
-        database.setFavorite(ayahId);
+        database.setFavorite(ayah.id);
         database.saveFavorite(
-          surahId,
-          surahName,
-          ayahId,
-          ayahNum - 1,
+          ayah.surahId,
+          ayah.surahName,
+          ayah.id,
+          ayah.ayahNum - 1,
           screenTitle,
           screenSubtitle,
           screenCaption,
@@ -847,20 +777,128 @@ class _FavAyahButton extends ConsumerWidget {
 
         break;
       case 1:
-        database.unsetFavorite(ayahId);
-        database.deleteFavorite(ayahId);
+        database.unsetFavorite(ayah.id);
+        database.deleteFavorite(ayah.id);
         ScaffoldMessenger.of(context).clearSnackBars();
         break;
     }
+  }
+
+  void _saveLastRead(WidgetRef ref) {
+    final database = ref.read(databaseProvider);
+
+    database.saveLastRead(
+      screenId,
+      screenTitle,
+      screenSubtitle,
+      screenCaption,
+      ayah.ayahNum - 1,
+      ayah.ayahNum,
+      ayah.surahName,
+    );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
       onPressed: () {
-        _toggleFavorite(ref, context);
+        showModalBottomSheet(
+          backgroundColor: surface,
+          context: context,
+          builder: (BuildContext context) => ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxHeight: 238,
+            ),
+            child: SizedBox.expand(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 16,
+                      right: 20,
+                      bottom: 8,
+                      left: 24,
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          '${ayah.surahName} Ayat ${ayah.ayahNum}',
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17,
+                            color: primary,
+                          ),
+                        ),
+                        const Spacer(),
+                        IconButton.filledTonal(
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: closeIcon,
+                          padding: const EdgeInsets.all(0),
+                          visualDensity: VisualDensity.compact,
+                        )
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _saveLastRead(ref);
+                      Navigator.of(context).pop();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 20,
+                      ),
+                      child: Row(
+                        children: [
+                          lastReadSolidIcon,
+                          const SizedBox(width: 16),
+                          Text(
+                            'Tandai Terakhir Dibaca',
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: onSurface,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _toggleFavorite(ref, context);
+                      Navigator.of(context).pop();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 20,
+                      ),
+                      child: Row(
+                        children: [
+                          favoriteIconSolid,
+                          const SizedBox(width: 16),
+                          Text(
+                            'Tambah ke Daftar Favorit',
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: onSurface,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
       },
-      icon: isFav == 1 ? favoriteIconSolid : favoriteIcon,
+      icon: ayah.isFav == 1 ? favoriteIconSolid : favoriteIcon,
     );
   }
 }
