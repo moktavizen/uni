@@ -48,7 +48,6 @@ class FavoritesScreen extends ConsumerWidget {
         const Divider(
           height: 1,
           thickness: 1,
-          color: listDecor,
           indent: 24,
           endIndent: 24,
         ),
@@ -63,17 +62,18 @@ class FavoritesScreen extends ConsumerWidget {
                   child: Text(
                     textAlign: TextAlign.center,
                     'Kamu belum mempunyai\ndaftar ayat favorit!',
-                    style: GoogleFonts.inter(color: onSurface),
+                    style: GoogleFonts.inter(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                 );
               } else {
                 return ListView.builder(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 0, horizontal: 24),
+                      const EdgeInsets.only(bottom: 64, left: 24, right: 24),
                   itemBuilder: (context, index) {
                     Favorite fav = value.elementAt(index);
                     return InkWell(
-                      splashColor: systemUiBackground,
                       onTap: () {
                         context.goNamed(
                           'surah',
@@ -88,7 +88,7 @@ class FavoritesScreen extends ConsumerWidget {
                             style: GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
                               fontSize: 12,
-                              color: onSurface,
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -97,7 +97,7 @@ class FavoritesScreen extends ConsumerWidget {
                           style: GoogleFonts.inter(
                             fontWeight: FontWeight.w500,
                             fontSize: 16,
-                            color: onSurface,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                         subtitle: Text(
@@ -105,7 +105,8 @@ class FavoritesScreen extends ConsumerWidget {
                           style: GoogleFonts.inter(
                             fontWeight: FontWeight.w500,
                             fontSize: 12,
-                            color: onSurfaceVar,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                         trailing: MenuAnchor(
@@ -128,7 +129,11 @@ class FavoritesScreen extends ConsumerWidget {
                                   const SizedBox(width: 8),
                                   Text(
                                     'Bagi',
-                                    style: GoogleFonts.inter(color: onSurface),
+                                    style: GoogleFonts.inter(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -143,7 +148,11 @@ class FavoritesScreen extends ConsumerWidget {
                                   const SizedBox(width: 8),
                                   Text(
                                     'Hapus',
-                                    style: GoogleFonts.inter(color: onSurface),
+                                    style: GoogleFonts.inter(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -169,7 +178,9 @@ class FavoritesScreen extends ConsumerWidget {
                 child: Text(
                   textAlign: TextAlign.center,
                   'Kamu belum mempunyai\ndaftar ayat favorit!',
-                  style: GoogleFonts.inter(color: onSurface),
+                  style: GoogleFonts.inter(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
               );
             },
@@ -200,8 +211,6 @@ class _AddFavorite extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-      splashColor: systemUiBackground,
-      highlightColor: systemUiBackground,
       onTap: () {
         CustomAppBar.goSearch(ref, context);
       },
@@ -215,7 +224,7 @@ class _AddFavorite extends ConsumerWidget {
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w500,
               fontSize: 16,
-              color: secondary,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
         ],

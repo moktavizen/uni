@@ -1,4 +1,3 @@
-import 'package:equran/styles.dart';
 import 'package:flutter/material.dart';
 
 class TabListTile extends StatelessWidget {
@@ -20,10 +19,10 @@ class TabListTile extends StatelessWidget {
     return Container(
       height: 89,
       padding: const EdgeInsets.symmetric(vertical: 22),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: listDecor,
+            color: Theme.of(context).colorScheme.outlineVariant,
             width: 1,
           ),
         ),

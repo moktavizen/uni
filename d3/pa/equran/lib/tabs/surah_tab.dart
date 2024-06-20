@@ -1,6 +1,5 @@
 import 'package:equran/databases/database.dart';
 import 'package:equran/providers/surahs_provider.dart';
-import 'package:equran/styles.dart';
 import 'package:equran/widgets/list_tile_skeleton.dart';
 import 'package:equran/widgets/surah_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +38,9 @@ class SurahTab extends ConsumerWidget {
                     child: Text(
                       textAlign: TextAlign.center,
                       'Oops!\nTerdapat kesalahan\nmemproses data Surah!',
-                      style: GoogleFonts.inter(color: onSurface),
+                      style: GoogleFonts.inter(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                   ),
                 );

@@ -23,21 +23,21 @@ class ReadScreen extends StatelessWidget {
           SliverOverlapAbsorber(
             handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
             sliver: SliverAppBar(
-              backgroundColor: surface,
               pinned: true,
               elevation: 0,
               scrolledUnderElevation: 0,
               toolbarHeight: 0,
               bottom: TabBar(
-                labelColor: primary,
+                labelColor: Theme.of(context).colorScheme.primary,
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                unselectedLabelColor: onSurfaceVar,
+                unselectedLabelColor:
+                    Theme.of(context).colorScheme.onSurfaceVariant,
                 splashBorderRadius: BorderRadius.circular(10),
-                indicatorColor: primary,
+                indicatorColor: Theme.of(context).colorScheme.primary,
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicatorWeight: 3,
                 dividerHeight: 3,
-                dividerColor: surahBar,
+                dividerColor: Theme.of(context).colorScheme.primaryContainer,
                 labelStyle: GoogleFonts.inter(
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
@@ -81,7 +81,7 @@ class _Greeter extends ConsumerWidget {
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w500,
               fontSize: 18,
-              color: onSurfaceVar,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 4),
@@ -90,7 +90,7 @@ class _Greeter extends ConsumerWidget {
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w600,
               fontSize: 24,
-              color: onSurface,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 24),
@@ -161,7 +161,7 @@ class _LastReadCard extends StatelessWidget {
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
-                  color: surface,
+                  color: Theme.of(context).colorScheme.onInverseSurface,
                 ),
               ),
             ],
@@ -171,7 +171,7 @@ class _LastReadCard extends StatelessWidget {
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w600,
               fontSize: 18,
-              color: surface,
+              color: Theme.of(context).colorScheme.onInverseSurface,
             ),
           ),
           subtitle: Text(
@@ -179,7 +179,7 @@ class _LastReadCard extends StatelessWidget {
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w400,
               fontSize: 14,
-              color: surface,
+              color: Theme.of(context).colorScheme.onInverseSurface,
             ),
           ),
           decoration: quranBgHome,
@@ -202,10 +202,13 @@ class _LastReadBg extends StatelessWidget {
       height: 131,
       width: double.infinity,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [lastReadGrad1, lastReadGrad2],
+          colors: [
+            Theme.of(context).colorScheme.secondaryContainer,
+            Theme.of(context).colorScheme.tertiaryContainer,
+          ],
         ),
         borderRadius: BorderRadius.circular(10),
       ),
@@ -267,7 +270,7 @@ class _LastReadSkeleton extends StatelessWidget {
         height: 131,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: surahBar,
+          color: Theme.of(context).colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(10),
         ),
         child: _LastReadTile(

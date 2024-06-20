@@ -2344,6 +2344,15 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     );
   }
 
+  Future<int> setTheme(int var1) {
+    return customUpdate(
+      'UPDATE setting SET is_dark = ?1',
+      variables: [Variable<int>(var1)],
+      updates: {setting},
+      updateKind: UpdateKind.update,
+    );
+  }
+
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();

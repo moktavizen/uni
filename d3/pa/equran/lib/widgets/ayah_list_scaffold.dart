@@ -75,7 +75,6 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold> {
   Widget build(BuildContext context) {
     final player = ref.watch(murattalProvider);
     return Scaffold(
-      backgroundColor: surface,
       appBar: CustomAppBar(
         leading: PopScope(
           // Detect pop from system
@@ -98,7 +97,7 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold> {
         title: Text(
           widget.headerTitle,
           style: GoogleFonts.inter(
-            color: primary,
+            color: Theme.of(context).colorScheme.primary,
             fontSize: 20,
             fontWeight: FontWeight.w700,
           ),
@@ -123,9 +122,11 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold> {
               ),
             ),
             SliverPadding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 24,
+              padding: const EdgeInsets.only(
+                top: 10,
+                bottom: 64,
+                left: 24,
+                right: 24,
               ),
               sliver: widget.ayahList.when(
                 data: (value) {
@@ -186,7 +187,9 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold> {
                       child: Text(
                         textAlign: TextAlign.center,
                         'Oops!\nTerdapat kesalahan\nmemproses data Ayah!',
-                        style: GoogleFonts.inter(color: onSurface),
+                        style: GoogleFonts.inter(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
                     ),
                   );
@@ -222,11 +225,14 @@ class _BismillahCard extends StatelessWidget {
         children: [
           Container(
             height: 257,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [lastReadGrad1, lastReadGrad2],
+                colors: [
+                  Theme.of(context).colorScheme.secondaryContainer,
+                  Theme.of(context).colorScheme.tertiaryContainer,
+                ],
               ),
             ),
           ),
@@ -249,7 +255,7 @@ class _BismillahCard extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w500,
                     fontSize: 26,
-                    color: surface,
+                    color: Theme.of(context).colorScheme.onInverseSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -258,7 +264,7 @@ class _BismillahCard extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
-                    color: surface,
+                    color: Theme.of(context).colorScheme.onInverseSurface,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -267,14 +273,17 @@ class _BismillahCard extends StatelessWidget {
                   endIndent: 64,
                   thickness: 1,
                   height: 32,
-                  color: surface.withOpacity(0.35),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onInverseSurface
+                      .withOpacity(0.35),
                 ),
                 Text(
                   caption,
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
-                    color: surface,
+                    color: Theme.of(context).colorScheme.onInverseSurface,
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -362,7 +371,7 @@ class _AyahBar extends StatelessWidget {
       height: 47,
       padding: const EdgeInsets.only(left: 12, right: 4),
       decoration: BoxDecoration(
-        color: surahBar,
+        color: Theme.of(context).colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -413,7 +422,7 @@ class _ArabicText extends ConsumerWidget {
         fontFamily: 'IsepMisbah',
         fontWeight: FontWeight.w700,
         fontSize: setting.value?.arabicFontSize.toDouble(),
-        color: onSurface,
+        color: Theme.of(context).colorScheme.onSurface,
         height: 2.5,
       ),
     );
@@ -436,7 +445,7 @@ class _TlText extends ConsumerWidget {
       style: GoogleFonts.inter(
         fontWeight: FontWeight.w400,
         fontSize: setting.value?.latinFontSize.toDouble(),
-        color: onSurface,
+        color: Theme.of(context).colorScheme.onSurface,
       ),
     );
   }
@@ -446,12 +455,12 @@ class _TlText extends ConsumerWidget {
 // style: GoogleFonts.amiri(
 //   fontWeight: FontWeight.w700,
 //   fontSize: 20,
-//   color: onSurface,
+//   color: Theme.of(context).colorScheme.onSurface,,
 //   height: 2.5,
 // style: GoogleFonts.notoNaskhArabic(
 //   fontWeight: FontWeight.w700,
 //   fontSize: 20,
-//   color: onSurface,
+//   color: Theme.of(context).colorScheme.onSurface,,
 //   height: 2,
 
 class _AyahNum extends StatelessWidget {
@@ -467,7 +476,7 @@ class _AyahNum extends StatelessWidget {
       width: 27,
       height: 27,
       decoration: BoxDecoration(
-        color: secondary,
+        color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(13.5),
       ),
       child: Center(
@@ -476,7 +485,7 @@ class _AyahNum extends StatelessWidget {
           style: GoogleFonts.inter(
             fontWeight: FontWeight.w500,
             fontSize: 12,
-            color: surface,
+            color: Theme.of(context).colorScheme.onInverseSurface,
           ),
         ),
       ),
@@ -531,7 +540,7 @@ class _ShowTafsirButton extends StatelessWidget {
     return IconButton(
       onPressed: () {
         showModalBottomSheet(
-          backgroundColor: surface,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           isScrollControlled: true,
           context: context,
           builder: (BuildContext context) {
@@ -561,7 +570,7 @@ class _ShowTafsirButton extends StatelessWidget {
                             style: GoogleFonts.inter(
                               fontWeight: FontWeight.w600,
                               fontSize: 17,
-                              color: primary,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                           const Spacer(),
@@ -581,6 +590,11 @@ class _ShowTafsirButton extends StatelessWidget {
                             onPressed: () => Navigator.of(context).pop(),
                             icon: closeIcon,
                             padding: const EdgeInsets.all(0),
+                            style: IconButton.styleFrom(
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer,
+                            ),
                             visualDensity: VisualDensity.compact,
                           )
                         ],
@@ -590,7 +604,7 @@ class _ShowTafsirButton extends StatelessWidget {
                       child: SingleChildScrollView(
                         padding: const EdgeInsets.only(
                           right: 24,
-                          bottom: 24,
+                          bottom: 64,
                           left: 24,
                         ),
                         child: Text(
@@ -598,7 +612,7 @@ class _ShowTafsirButton extends StatelessWidget {
                           style: GoogleFonts.inter(
                             fontWeight: FontWeight.w400,
                             fontSize: 14,
-                            color: onSurface,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),
@@ -719,7 +733,7 @@ class _MurattalPlayButtonState extends State<_MurattalPlayButton> {
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                backgroundColor: error,
+                backgroundColor: Theme.of(context).colorScheme.errorContainer,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -727,7 +741,9 @@ class _MurattalPlayButtonState extends State<_MurattalPlayButton> {
                 showCloseIcon: true,
                 content: Text(
                   'Fitur ini butuh internet!',
-                  style: GoogleFonts.inter(color: surface),
+                  style: GoogleFonts.inter(
+                    color: Theme.of(context).colorScheme.onInverseSurface,
+                  ),
                 ),
               ),
             );
@@ -770,12 +786,16 @@ class _FavAyahButton extends ConsumerWidget {
           screenSubtitle,
           screenCaption,
         );
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               'Ditambahkan ke Daftar Favorit',
-              style: GoogleFonts.inter(color: surface),
+              style: GoogleFonts.inter(
+                color: Theme.of(context).colorScheme.onInverseSurface,
+              ),
             ),
+            backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
             showCloseIcon: true,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -789,6 +809,23 @@ class _FavAyahButton extends ConsumerWidget {
         database.unsetFavorite(ayah.id);
         database.deleteFavorite(ayah.id);
         ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Dihapus dari Daftar Favorit',
+              style: GoogleFonts.inter(
+                color: Theme.of(context).colorScheme.onInverseSurface,
+              ),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+            showCloseIcon: true,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+
         break;
     }
   }
@@ -812,7 +849,7 @@ class _FavAyahButton extends ConsumerWidget {
     return IconButton(
       onPressed: () {
         showModalBottomSheet(
-          backgroundColor: surface,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           context: context,
           builder: (BuildContext context) => Container(
             decoration: BoxDecoration(
@@ -835,7 +872,7 @@ class _FavAyahButton extends ConsumerWidget {
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
                           fontSize: 17,
-                          color: primary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                       const Spacer(),
@@ -843,6 +880,10 @@ class _FavAyahButton extends ConsumerWidget {
                         onPressed: () => Navigator.of(context).pop(),
                         icon: closeIcon,
                         padding: const EdgeInsets.all(0),
+                        style: IconButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primaryContainer,
+                        ),
                         visualDensity: VisualDensity.compact,
                       )
                     ],
@@ -852,6 +893,25 @@ class _FavAyahButton extends ConsumerWidget {
                   onTap: () {
                     _saveLastRead(ref);
                     Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Ditandai sebagai Terakhir Dibaca',
+                          style: GoogleFonts.inter(
+                            color:
+                                Theme.of(context).colorScheme.onInverseSurface,
+                          ),
+                        ),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.tertiaryContainer,
+                        showCloseIcon: true,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    );
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -867,7 +927,7 @@ class _FavAyahButton extends ConsumerWidget {
                           style: GoogleFonts.inter(
                             fontWeight: FontWeight.w400,
                             fontSize: 16,
-                            color: onSurface,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         )
                       ],
@@ -889,11 +949,13 @@ class _FavAyahButton extends ConsumerWidget {
                         favoriteIconSolid,
                         const SizedBox(width: 16),
                         Text(
-                          'Tambah ke Daftar Favorit',
+                          ayah.isFav == 0
+                              ? 'Tambah ke Daftar Favorit'
+                              : 'Hapus dari Daftar Favorit',
                           style: GoogleFonts.inter(
                             fontWeight: FontWeight.w400,
                             fontSize: 16,
-                            color: onSurface,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         )
                       ],

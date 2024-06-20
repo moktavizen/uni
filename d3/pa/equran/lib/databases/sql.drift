@@ -167,3 +167,7 @@ setArabicFontSize:
 UPDATE setting
 SET arabic_font_size = ?;
 
+setTheme:
+UPDATE setting
+SET is_dark = ?;
+

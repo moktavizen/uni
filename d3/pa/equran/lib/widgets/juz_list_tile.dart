@@ -1,5 +1,4 @@
 import 'package:equran/databases/database.dart';
-import 'package:equran/styles.dart';
 import 'package:equran/widgets/hizb_border.dart';
 import 'package:equran/widgets/tab_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +16,6 @@ class JuzListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      splashColor: systemUiBackground,
       onTap: () {
         context.pushNamed(
           'juz',
@@ -32,7 +30,7 @@ class JuzListTile extends StatelessWidget {
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w500,
               fontSize: 12,
-              color: onSurface,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ),
@@ -41,7 +39,7 @@ class JuzListTile extends StatelessWidget {
           style: GoogleFonts.inter(
             fontWeight: FontWeight.w500,
             fontSize: 16,
-            color: onSurface,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         subtitle: Text(
@@ -49,7 +47,7 @@ class JuzListTile extends StatelessWidget {
           style: GoogleFonts.inter(
             fontWeight: FontWeight.w500,
             fontSize: 12,
-            color: onSurfaceVar,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
       ),

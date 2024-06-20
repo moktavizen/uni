@@ -46,7 +46,6 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: AppBar(
-        backgroundColor: surface,
         elevation: 0,
         scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,

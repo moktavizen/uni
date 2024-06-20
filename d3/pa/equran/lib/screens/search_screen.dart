@@ -59,12 +59,12 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  void _initSpeech() async {
+  Future<void> _initSpeech() async {
     await _speechToText.initialize();
   }
 
   void _startListening() async {
-    _initSpeech();
+    await _initSpeech();
     await _speechToText.listen(
       onResult: (SpeechRecognitionResult result) {
         if (result.finalResult == true) {
@@ -91,7 +91,6 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: surface,
       appBar: CustomAppBar(
         leading: IconButton(
           onPressed: () {
@@ -108,15 +107,20 @@ class _SearchScreenState extends State<SearchScreen> {
             _textController.clear();
             _searchFromInput('');
           },
-          icon: const Icon(Icons.close, color: onSurfaceVar),
-          style: IconButton.styleFrom(backgroundColor: surahBar),
+          icon: Icon(
+            Icons.close,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+          style: IconButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          ),
         ),
       ),
       body: Builder(
         builder: (context) {
           if (_textController.text.isEmpty) {
             return ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.only(left: 24, right: 24, bottom: 64),
               itemBuilder: (context, index) {
                 final result = widget.data.elementAt(index);
                 if (result is Surah) {
@@ -131,7 +135,7 @@ class _SearchScreenState extends State<SearchScreen> {
             );
           } else if (_textController.text.isNotEmpty) {
             return ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.only(left: 24, right: 24, bottom: 64),
               itemBuilder: (context, index) {
                 final result = _searchResults.elementAt(index).choice;
                 if (result is Surah) {
@@ -158,11 +162,12 @@ class _SearchScreenState extends State<SearchScreen> {
               boxShadow: [
                 BoxShadow(
                   spreadRadius: level * 2,
-                  color: primary50,
+                  color: Theme.of(context).colorScheme.primaryFixedDim,
                 )
               ],
             ),
             child: FloatingActionButton(
+              backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50),
               ),
@@ -182,7 +187,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     ScaffoldMessenger.of(context).clearSnackBars();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        backgroundColor: error,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.errorContainer,
                         behavior: SnackBarBehavior.floating,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -190,7 +196,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         showCloseIcon: true,
                         content: Text(
                           'Fitur ini butuh internet!',
-                          style: GoogleFonts.inter(color: surface),
+                          style: GoogleFonts.inter(
+                            color:
+                                Theme.of(context).colorScheme.onInverseSurface,
+                          ),
                         ),
                       ),
                     );
@@ -225,7 +234,7 @@ class _TextField extends StatelessWidget {
       style: GoogleFonts.inter(
         fontWeight: FontWeight.w400,
         fontSize: 14,
-        color: onSurface,
+        color: Theme.of(context).colorScheme.onSurface,
       ),
       decoration: InputDecoration(
         isDense: true,
@@ -236,12 +245,12 @@ class _TextField extends StatelessWidget {
           borderSide: BorderSide.none,
         ),
         filled: true,
-        fillColor: surahBar,
+        fillColor: Theme.of(context).colorScheme.primaryContainer,
         hintText: 'Cari Surah atau Juz',
         hintStyle: GoogleFonts.inter(
           fontWeight: FontWeight.w400,
           fontSize: 14,
-          color: onSurfaceVar,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
       ),
       textInputAction: TextInputAction.search,

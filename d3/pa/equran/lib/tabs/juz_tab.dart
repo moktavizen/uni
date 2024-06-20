@@ -1,6 +1,5 @@
 import 'package:equran/databases/database.dart';
 import 'package:equran/providers/juzs_provider.dart';
-import 'package:equran/styles.dart';
 import 'package:equran/widgets/juz_list_tile.dart';
 import 'package:equran/widgets/list_tile_skeleton.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +38,9 @@ class JuzTab extends ConsumerWidget {
                     child: Text(
                       textAlign: TextAlign.center,
                       'Oops!\nTerdapat kesalahan\nmemproses data Juz!',
-                      style: GoogleFonts.inter(color: onSurface),
+                      style: GoogleFonts.inter(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                   ),
                 );

@@ -53,7 +53,6 @@ class _HomeNavigationState extends State<HomeNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: surface,
       appBar: CustomAppBar(
         leading: IconButton(
           onPressed: () {},
@@ -62,43 +61,37 @@ class _HomeNavigationState extends State<HomeNavigation> {
         title: Text(
           currentTitle,
           style: GoogleFonts.inter(
-            color: primary,
+            color: Theme.of(context).colorScheme.primary,
             fontSize: 20,
             fontWeight: FontWeight.w700,
           ),
         ),
       ),
       body: widget.child,
-      bottomNavigationBar: Theme(
-        data: ThemeData(
-          splashColor: systemUiBackground,
-          highlightColor: systemUiBackground,
-        ),
-        child: BottomNavigationBar(
-          currentIndex: HomeNavigation._calculateSelectedIndex(context),
-          onTap: (int idx) => _onItemTapped(idx, context),
-          backgroundColor: surface,
-          elevation: 16,
-          selectedLabelStyle: GoogleFonts.inter(fontSize: 14),
-          unselectedLabelStyle: GoogleFonts.inter(fontSize: 14),
-          items: const [
-            BottomNavigationBarItem(
-              icon: favoriteScreenIcon,
-              activeIcon: favoriteScreenIconSolid,
-              label: 'Favorit',
-            ),
-            BottomNavigationBarItem(
-              icon: readScreenIcon,
-              activeIcon: readScreenIconSolid,
-              label: 'Baca',
-            ),
-            BottomNavigationBarItem(
-              icon: settingScreenIcon,
-              activeIcon: settingScreenIconSolid,
-              label: 'Pengaturan',
-            ),
-          ],
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: HomeNavigation._calculateSelectedIndex(context),
+        onTap: (int idx) => _onItemTapped(idx, context),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        elevation: 16,
+        selectedLabelStyle: GoogleFonts.inter(fontSize: 14),
+        unselectedLabelStyle: GoogleFonts.inter(fontSize: 14),
+        items: const [
+          BottomNavigationBarItem(
+            icon: favoriteScreenIcon,
+            activeIcon: favoriteScreenIconSolid,
+            label: 'Favorit',
+          ),
+          BottomNavigationBarItem(
+            icon: readScreenIcon,
+            activeIcon: readScreenIconSolid,
+            label: 'Baca',
+          ),
+          BottomNavigationBarItem(
+            icon: settingScreenIcon,
+            activeIcon: settingScreenIconSolid,
+            label: 'Pengaturan',
+          ),
+        ],
       ),
     );
   }
