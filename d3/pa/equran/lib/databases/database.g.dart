@@ -1911,6 +1911,261 @@ class FavoritesCompanion extends UpdateCompanion<Favorite> {
   }
 }
 
+class SettingTable extends Table with TableInfo<SettingTable, Setting> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  SettingTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'PRIMARY KEY');
+  static const VerificationMeta _isDarkMeta = const VerificationMeta('isDark');
+  late final GeneratedColumn<int> isDark = GeneratedColumn<int>(
+      'is_dark', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _arabicFontSizeMeta =
+      const VerificationMeta('arabicFontSize');
+  late final GeneratedColumn<int> arabicFontSize = GeneratedColumn<int>(
+      'arabic_font_size', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _latinFontSizeMeta =
+      const VerificationMeta('latinFontSize');
+  late final GeneratedColumn<int> latinFontSize = GeneratedColumn<int>(
+      'latin_font_size', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, isDark, arabicFontSize, latinFontSize];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'setting';
+  @override
+  VerificationContext validateIntegrity(Insertable<Setting> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('is_dark')) {
+      context.handle(_isDarkMeta,
+          isDark.isAcceptableOrUnknown(data['is_dark']!, _isDarkMeta));
+    } else if (isInserting) {
+      context.missing(_isDarkMeta);
+    }
+    if (data.containsKey('arabic_font_size')) {
+      context.handle(
+          _arabicFontSizeMeta,
+          arabicFontSize.isAcceptableOrUnknown(
+              data['arabic_font_size']!, _arabicFontSizeMeta));
+    } else if (isInserting) {
+      context.missing(_arabicFontSizeMeta);
+    }
+    if (data.containsKey('latin_font_size')) {
+      context.handle(
+          _latinFontSizeMeta,
+          latinFontSize.isAcceptableOrUnknown(
+              data['latin_font_size']!, _latinFontSizeMeta));
+    } else if (isInserting) {
+      context.missing(_latinFontSizeMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Setting map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Setting(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      isDark: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}is_dark'])!,
+      arabicFontSize: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}arabic_font_size'])!,
+      latinFontSize: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}latin_font_size'])!,
+    );
+  }
+
+  @override
+  SettingTable createAlias(String alias) {
+    return SettingTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class Setting extends DataClass implements Insertable<Setting> {
+  final int id;
+  final int isDark;
+  final int arabicFontSize;
+  final int latinFontSize;
+  const Setting(
+      {required this.id,
+      required this.isDark,
+      required this.arabicFontSize,
+      required this.latinFontSize});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['is_dark'] = Variable<int>(isDark);
+    map['arabic_font_size'] = Variable<int>(arabicFontSize);
+    map['latin_font_size'] = Variable<int>(latinFontSize);
+    return map;
+  }
+
+  SettingCompanion toCompanion(bool nullToAbsent) {
+    return SettingCompanion(
+      id: Value(id),
+      isDark: Value(isDark),
+      arabicFontSize: Value(arabicFontSize),
+      latinFontSize: Value(latinFontSize),
+    );
+  }
+
+  factory Setting.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Setting(
+      id: serializer.fromJson<int>(json['id']),
+      isDark: serializer.fromJson<int>(json['is_dark']),
+      arabicFontSize: serializer.fromJson<int>(json['arabic_font_size']),
+      latinFontSize: serializer.fromJson<int>(json['latin_font_size']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'is_dark': serializer.toJson<int>(isDark),
+      'arabic_font_size': serializer.toJson<int>(arabicFontSize),
+      'latin_font_size': serializer.toJson<int>(latinFontSize),
+    };
+  }
+
+  Setting copyWith(
+          {int? id, int? isDark, int? arabicFontSize, int? latinFontSize}) =>
+      Setting(
+        id: id ?? this.id,
+        isDark: isDark ?? this.isDark,
+        arabicFontSize: arabicFontSize ?? this.arabicFontSize,
+        latinFontSize: latinFontSize ?? this.latinFontSize,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Setting(')
+          ..write('id: $id, ')
+          ..write('isDark: $isDark, ')
+          ..write('arabicFontSize: $arabicFontSize, ')
+          ..write('latinFontSize: $latinFontSize')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, isDark, arabicFontSize, latinFontSize);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Setting &&
+          other.id == this.id &&
+          other.isDark == this.isDark &&
+          other.arabicFontSize == this.arabicFontSize &&
+          other.latinFontSize == this.latinFontSize);
+}
+
+class SettingCompanion extends UpdateCompanion<Setting> {
+  final Value<int> id;
+  final Value<int> isDark;
+  final Value<int> arabicFontSize;
+  final Value<int> latinFontSize;
+  const SettingCompanion({
+    this.id = const Value.absent(),
+    this.isDark = const Value.absent(),
+    this.arabicFontSize = const Value.absent(),
+    this.latinFontSize = const Value.absent(),
+  });
+  SettingCompanion.insert({
+    this.id = const Value.absent(),
+    required int isDark,
+    required int arabicFontSize,
+    required int latinFontSize,
+  })  : isDark = Value(isDark),
+        arabicFontSize = Value(arabicFontSize),
+        latinFontSize = Value(latinFontSize);
+  static Insertable<Setting> custom({
+    Expression<int>? id,
+    Expression<int>? isDark,
+    Expression<int>? arabicFontSize,
+    Expression<int>? latinFontSize,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (isDark != null) 'is_dark': isDark,
+      if (arabicFontSize != null) 'arabic_font_size': arabicFontSize,
+      if (latinFontSize != null) 'latin_font_size': latinFontSize,
+    });
+  }
+
+  SettingCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? isDark,
+      Value<int>? arabicFontSize,
+      Value<int>? latinFontSize}) {
+    return SettingCompanion(
+      id: id ?? this.id,
+      isDark: isDark ?? this.isDark,
+      arabicFontSize: arabicFontSize ?? this.arabicFontSize,
+      latinFontSize: latinFontSize ?? this.latinFontSize,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (isDark.present) {
+      map['is_dark'] = Variable<int>(isDark.value);
+    }
+    if (arabicFontSize.present) {
+      map['arabic_font_size'] = Variable<int>(arabicFontSize.value);
+    }
+    if (latinFontSize.present) {
+      map['latin_font_size'] = Variable<int>(latinFontSize.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SettingCompanion(')
+          ..write('id: $id, ')
+          ..write('isDark: $isDark, ')
+          ..write('arabicFontSize: $arabicFontSize, ')
+          ..write('latinFontSize: $latinFontSize')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
@@ -1919,6 +2174,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final Ayahs ayahs = Ayahs(this);
   late final LastReadTable lastRead = LastReadTable(this);
   late final Favorites favorites = Favorites(this);
+  late final SettingTable setting = SettingTable(this);
   late final Index idxAyahsSurahId = Index('idx_ayahs_surah_id',
       'CREATE INDEX IF NOT EXISTS idx_ayahs_surah_id ON ayahs (surah_id)');
   late final Index idxAyahsJuzId = Index('idx_ayahs_juz_id',
@@ -1926,6 +2182,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final Trigger enforceSingleLastRead = Trigger(
       'CREATE TRIGGER enforce_single_last_read BEFORE INSERT ON last_read BEGIN DELETE FROM last_read;END',
       'enforce_single_last_read');
+  late final Trigger enforceSingleSetting = Trigger(
+      'CREATE TRIGGER enforce_single_setting BEFORE INSERT ON setting BEGIN DELETE FROM setting;END',
+      'enforce_single_setting');
   Selectable<Surah> allSurah() {
     return customSelect('SELECT * FROM surahs', variables: [], readsFrom: {
       surahs,
@@ -2049,6 +2308,42 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         }).asyncMap(favorites.mapFromRow);
   }
 
+  Future<int> saveSetting(int isDark, int arabicFontSize, int latinFontSize) {
+    return customInsert(
+      'INSERT INTO setting (is_dark, arabic_font_size, latin_font_size) VALUES (?1, ?2, ?3)',
+      variables: [
+        Variable<int>(isDark),
+        Variable<int>(arabicFontSize),
+        Variable<int>(latinFontSize)
+      ],
+      updates: {setting},
+    );
+  }
+
+  Selectable<Setting> getSetting() {
+    return customSelect('SELECT * FROM setting', variables: [], readsFrom: {
+      setting,
+    }).asyncMap(setting.mapFromRow);
+  }
+
+  Future<int> setLatinFontSize(int var1) {
+    return customUpdate(
+      'UPDATE setting SET latin_font_size = ?1',
+      variables: [Variable<int>(var1)],
+      updates: {setting},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Future<int> setArabicFontSize(int var1) {
+    return customUpdate(
+      'UPDATE setting SET arabic_font_size = ?1',
+      variables: [Variable<int>(var1)],
+      updates: {setting},
+      updateKind: UpdateKind.update,
+    );
+  }
+
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2059,9 +2354,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         ayahs,
         lastRead,
         favorites,
+        setting,
         idxAyahsSurahId,
         idxAyahsJuzId,
-        enforceSingleLastRead
+        enforceSingleLastRead,
+        enforceSingleSetting
       ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
@@ -2085,6 +2382,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.insert),
             result: [
               TableUpdate('last_read', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('setting',
+                limitUpdateKind: UpdateKind.insert),
+            result: [
+              TableUpdate('setting', kind: UpdateKind.delete),
             ],
           ),
         ],
@@ -2924,6 +3228,124 @@ class $FavoritesOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $SettingTableInsertCompanionBuilder = SettingCompanion Function({
+  Value<int> id,
+  required int isDark,
+  required int arabicFontSize,
+  required int latinFontSize,
+});
+typedef $SettingTableUpdateCompanionBuilder = SettingCompanion Function({
+  Value<int> id,
+  Value<int> isDark,
+  Value<int> arabicFontSize,
+  Value<int> latinFontSize,
+});
+
+class $SettingTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    SettingTable,
+    Setting,
+    $SettingTableFilterComposer,
+    $SettingTableOrderingComposer,
+    $SettingTableProcessedTableManager,
+    $SettingTableInsertCompanionBuilder,
+    $SettingTableUpdateCompanionBuilder> {
+  $SettingTableTableManager(_$AppDatabase db, SettingTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $SettingTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $SettingTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $SettingTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            Value<int> isDark = const Value.absent(),
+            Value<int> arabicFontSize = const Value.absent(),
+            Value<int> latinFontSize = const Value.absent(),
+          }) =>
+              SettingCompanion(
+            id: id,
+            isDark: isDark,
+            arabicFontSize: arabicFontSize,
+            latinFontSize: latinFontSize,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            required int isDark,
+            required int arabicFontSize,
+            required int latinFontSize,
+          }) =>
+              SettingCompanion.insert(
+            id: id,
+            isDark: isDark,
+            arabicFontSize: arabicFontSize,
+            latinFontSize: latinFontSize,
+          ),
+        ));
+}
+
+class $SettingTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    SettingTable,
+    Setting,
+    $SettingTableFilterComposer,
+    $SettingTableOrderingComposer,
+    $SettingTableProcessedTableManager,
+    $SettingTableInsertCompanionBuilder,
+    $SettingTableUpdateCompanionBuilder> {
+  $SettingTableProcessedTableManager(super.$state);
+}
+
+class $SettingTableFilterComposer
+    extends FilterComposer<_$AppDatabase, SettingTable> {
+  $SettingTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get isDark => $state.composableBuilder(
+      column: $state.table.isDark,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get arabicFontSize => $state.composableBuilder(
+      column: $state.table.arabicFontSize,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get latinFontSize => $state.composableBuilder(
+      column: $state.table.latinFontSize,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $SettingTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, SettingTable> {
+  $SettingTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get isDark => $state.composableBuilder(
+      column: $state.table.isDark,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get arabicFontSize => $state.composableBuilder(
+      column: $state.table.arabicFontSize,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get latinFontSize => $state.composableBuilder(
+      column: $state.table.latinFontSize,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class _$AppDatabaseManager {
   final _$AppDatabase _db;
   _$AppDatabaseManager(this._db);
@@ -2934,4 +3356,6 @@ class _$AppDatabaseManager {
       $LastReadTableTableManager(_db, _db.lastRead);
   $FavoritesTableManager get favorites =>
       $FavoritesTableManager(_db, _db.favorites);
+  $SettingTableTableManager get setting =>
+      $SettingTableTableManager(_db, _db.setting);
 }

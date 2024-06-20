@@ -13,7 +13,6 @@ This App is built using Flutter with the following packages:
  - `skeletonizer` - Loading Placeholder
  - `just_audio` - Murattal Audio Player
  - `share_plus` - Content Sharing
- - `inview_notifier_list` - Detect Last Read Ayah
  - `scroll_to_index` - Scroll to Last Read Ayah
  - `fuzzywuzzy` - Fuzzy Search
  - `speech_to_text` - Voice Search Input

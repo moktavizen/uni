@@ -52,12 +52,24 @@ CREATE TABLE favorites(
     screen_caption VARCHAR(36) NOT NULL
 );
 
+CREATE TABLE setting (
+    id INTEGER PRIMARY KEY,
+    is_dark INTEGER NOT NULL,
+    arabic_font_size INTEGER NOT NULL,
+    latin_font_size INTEGER NOT NULL
+) AS Setting;
+
 CREATE INDEX IF NOT EXISTS idx_ayahs_surah_id ON ayahs (surah_id);
 CREATE INDEX IF NOT EXISTS idx_ayahs_juz_id ON ayahs (juz_id);
 
 CREATE TRIGGER enforce_single_last_read
     BEFORE INSERT ON last_read
     BEGIN DELETE FROM last_read;
+END;
+
+CREATE TRIGGER enforce_single_setting
+    BEFORE INSERT ON setting
+    BEGIN DELETE FROM setting;
 END;
 
 allSurah:
@@ -132,4 +144,26 @@ WHERE ayah_id = ?;
 
 allFavorite:
 SELECT * FROM favorites ORDER BY surah_id;
+
+saveSetting:
+INSERT INTO setting (
+    is_dark,
+    arabic_font_size,
+    latin_font_size
+) VALUES (
+    :is_dark,
+    :arabic_font_size,
+    :latin_font_size
+);
+
+getSetting:
+SELECT * FROM setting;
+
+setLatinFontSize:
+UPDATE setting
+SET latin_font_size = ?;
+
+setArabicFontSize:
+UPDATE setting
+SET arabic_font_size = ?;
 

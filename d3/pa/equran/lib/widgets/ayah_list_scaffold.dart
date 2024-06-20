@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:equran/databases/database.dart';
 import 'package:equran/providers/database_provider.dart';
 import 'package:equran/providers/murattal_provider.dart';
+import 'package:equran/providers/settings_provider.dart';
 import 'package:equran/styles.dart';
 import 'package:equran/widgets/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -394,7 +395,7 @@ class _AyahBar extends StatelessWidget {
   }
 }
 
-class _ArabicText extends StatelessWidget {
+class _ArabicText extends ConsumerWidget {
   const _ArabicText({
     required this.arabic,
   });
@@ -402,14 +403,16 @@ class _ArabicText extends StatelessWidget {
   final String arabic;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final setting = ref.watch(settingProvider);
+
     return Text(
       arabic,
       textAlign: TextAlign.right,
-      style: const TextStyle(
+      style: TextStyle(
         fontFamily: 'IsepMisbah',
         fontWeight: FontWeight.w700,
-        fontSize: 20,
+        fontSize: setting.value?.arabicFontSize.toDouble(),
         color: onSurface,
         height: 2.5,
       ),
@@ -417,7 +420,7 @@ class _ArabicText extends StatelessWidget {
   }
 }
 
-class _TlText extends StatelessWidget {
+class _TlText extends ConsumerWidget {
   const _TlText({
     required this.translation,
   });
@@ -425,12 +428,14 @@ class _TlText extends StatelessWidget {
   final String translation;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final setting = ref.watch(settingProvider);
+
     return Text(
       translation,
       style: GoogleFonts.inter(
         fontWeight: FontWeight.w400,
-        fontSize: 14,
+        fontSize: setting.value?.latinFontSize.toDouble(),
         color: onSurface,
       ),
     );
@@ -809,95 +814,94 @@ class _FavAyahButton extends ConsumerWidget {
         showModalBottomSheet(
           backgroundColor: surface,
           context: context,
-          builder: (BuildContext context) => ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxHeight: 238,
+          builder: (BuildContext context) => Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
             ),
-            child: SizedBox.expand(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 16,
-                      right: 20,
-                      bottom: 8,
-                      left: 24,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 16,
+                    right: 20,
+                    bottom: 8,
+                    left: 24,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        '${ayah.surahName} Ayat ${ayah.ayahNum}',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17,
+                          color: primary,
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton.filledTonal(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: closeIcon,
+                        padding: const EdgeInsets.all(0),
+                        visualDensity: VisualDensity.compact,
+                      )
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    _saveLastRead(ref);
+                    Navigator.of(context).pop();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 20,
                     ),
                     child: Row(
                       children: [
+                        lastReadSolidIcon,
+                        const SizedBox(width: 16),
                         Text(
-                          '${ayah.surahName} Ayat ${ayah.ayahNum}',
+                          'Tandai Terakhir Dibaca',
                           style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 17,
-                            color: primary,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                            color: onSurface,
                           ),
-                        ),
-                        const Spacer(),
-                        IconButton.filledTonal(
-                          onPressed: () => Navigator.of(context).pop(),
-                          icon: closeIcon,
-                          padding: const EdgeInsets.all(0),
-                          visualDensity: VisualDensity.compact,
                         )
                       ],
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      _saveLastRead(ref);
-                      Navigator.of(context).pop();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 20,
-                      ),
-                      child: Row(
-                        children: [
-                          lastReadSolidIcon,
-                          const SizedBox(width: 16),
-                          Text(
-                            'Tandai Terakhir Dibaca',
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                              color: onSurface,
-                            ),
-                          )
-                        ],
-                      ),
+                ),
+                InkWell(
+                  onTap: () {
+                    _toggleFavorite(ref, context);
+                    Navigator.of(context).pop();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 20,
+                    ),
+                    child: Row(
+                      children: [
+                        favoriteIconSolid,
+                        const SizedBox(width: 16),
+                        Text(
+                          'Tambah ke Daftar Favorit',
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                            color: onSurface,
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      _toggleFavorite(ref, context);
-                      Navigator.of(context).pop();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 20,
-                      ),
-                      child: Row(
-                        children: [
-                          favoriteIconSolid,
-                          const SizedBox(width: 16),
-                          Text(
-                            'Tambah ke Daftar Favorit',
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                              color: onSurface,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 64)
+              ],
             ),
           ),
         );
