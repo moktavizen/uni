@@ -16,25 +16,19 @@ This App is built using Flutter with the following packages:
  - `scroll_to_index` - Scroll to Last Read Ayah
  - `fuzzywuzzy` - Fuzzy Search
  - `speech_to_text` - Voice Search Input
+ - `flutter_launcher_icons` - Change Launcher Icon
 
 ## Features Progress
 
 | Planned Features    | User Interface | Functionality |
 |:--------------------|:--------------:|:-------------:|
 | Read Quran          |        ✅       |       ✅       |
-| Voice Search        |        ✅       |       🛠️       |
-| Last Read           |        ✅       |       ✅       |
 | Translation         |        ✅       |       ✅       |
-| Share/Copy          |        ✅       |       ✅       |
-| Murottal Audio      |        ✅       |       ✅       |
 | Tafsir              |        ✅       |       ✅       |
+| Share Ayah          |        ✅       |       ✅       |
+| Murottal Audio      |        ✅       |       ✅       |
+| Last Read           |        ✅       |       ✅       |
 | Favorites           |        ✅       |       ✅       |
-| Personalization     |        ✅       |       🛠️       |
+| Voice Search        |        ✅       |       ✅       |
+| Personalization     |        ✅       |       ✅       |
 
-To do:
- - Search
-    - Open search screen
-    - filter search
-    - go to searched
-    - implement voice search
- - Personalization

@@ -1,4 +1,4 @@
-package com.example.equran
+package com.vizzen.equran
 
 import io.flutter.embedding.android.FlutterActivity
 
