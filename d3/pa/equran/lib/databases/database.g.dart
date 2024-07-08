@@ -1942,9 +1942,36 @@ class SettingTable extends Table with TableInfo<SettingTable, Setting> {
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _autoScrollSpeedMeta =
+      const VerificationMeta('autoScrollSpeed');
+  late final GeneratedColumn<int> autoScrollSpeed = GeneratedColumn<int>(
+      'auto_scroll_speed', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _isTranslateMeta =
+      const VerificationMeta('isTranslate');
+  late final GeneratedColumn<int> isTranslate = GeneratedColumn<int>(
+      'is_translate', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _isBarMeta = const VerificationMeta('isBar');
+  late final GeneratedColumn<int> isBar = GeneratedColumn<int>(
+      'is_bar', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, isDark, arabicFontSize, latinFontSize];
+  List<GeneratedColumn> get $columns => [
+        id,
+        isDark,
+        arabicFontSize,
+        latinFontSize,
+        autoScrollSpeed,
+        isTranslate,
+        isBar
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1980,6 +2007,28 @@ class SettingTable extends Table with TableInfo<SettingTable, Setting> {
     } else if (isInserting) {
       context.missing(_latinFontSizeMeta);
     }
+    if (data.containsKey('auto_scroll_speed')) {
+      context.handle(
+          _autoScrollSpeedMeta,
+          autoScrollSpeed.isAcceptableOrUnknown(
+              data['auto_scroll_speed']!, _autoScrollSpeedMeta));
+    } else if (isInserting) {
+      context.missing(_autoScrollSpeedMeta);
+    }
+    if (data.containsKey('is_translate')) {
+      context.handle(
+          _isTranslateMeta,
+          isTranslate.isAcceptableOrUnknown(
+              data['is_translate']!, _isTranslateMeta));
+    } else if (isInserting) {
+      context.missing(_isTranslateMeta);
+    }
+    if (data.containsKey('is_bar')) {
+      context.handle(
+          _isBarMeta, isBar.isAcceptableOrUnknown(data['is_bar']!, _isBarMeta));
+    } else if (isInserting) {
+      context.missing(_isBarMeta);
+    }
     return context;
   }
 
@@ -1997,6 +2046,12 @@ class SettingTable extends Table with TableInfo<SettingTable, Setting> {
           .read(DriftSqlType.int, data['${effectivePrefix}arabic_font_size'])!,
       latinFontSize: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}latin_font_size'])!,
+      autoScrollSpeed: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}auto_scroll_speed'])!,
+      isTranslate: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}is_translate'])!,
+      isBar: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}is_bar'])!,
     );
   }
 
@@ -2014,11 +2069,17 @@ class Setting extends DataClass implements Insertable<Setting> {
   final int isDark;
   final int arabicFontSize;
   final int latinFontSize;
+  final int autoScrollSpeed;
+  final int isTranslate;
+  final int isBar;
   const Setting(
       {required this.id,
       required this.isDark,
       required this.arabicFontSize,
-      required this.latinFontSize});
+      required this.latinFontSize,
+      required this.autoScrollSpeed,
+      required this.isTranslate,
+      required this.isBar});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2026,6 +2087,9 @@ class Setting extends DataClass implements Insertable<Setting> {
     map['is_dark'] = Variable<int>(isDark);
     map['arabic_font_size'] = Variable<int>(arabicFontSize);
     map['latin_font_size'] = Variable<int>(latinFontSize);
+    map['auto_scroll_speed'] = Variable<int>(autoScrollSpeed);
+    map['is_translate'] = Variable<int>(isTranslate);
+    map['is_bar'] = Variable<int>(isBar);
     return map;
   }
 
@@ -2035,6 +2099,9 @@ class Setting extends DataClass implements Insertable<Setting> {
       isDark: Value(isDark),
       arabicFontSize: Value(arabicFontSize),
       latinFontSize: Value(latinFontSize),
+      autoScrollSpeed: Value(autoScrollSpeed),
+      isTranslate: Value(isTranslate),
+      isBar: Value(isBar),
     );
   }
 
@@ -2046,6 +2113,9 @@ class Setting extends DataClass implements Insertable<Setting> {
       isDark: serializer.fromJson<int>(json['is_dark']),
       arabicFontSize: serializer.fromJson<int>(json['arabic_font_size']),
       latinFontSize: serializer.fromJson<int>(json['latin_font_size']),
+      autoScrollSpeed: serializer.fromJson<int>(json['auto_scroll_speed']),
+      isTranslate: serializer.fromJson<int>(json['is_translate']),
+      isBar: serializer.fromJson<int>(json['is_bar']),
     );
   }
   @override
@@ -2056,16 +2126,28 @@ class Setting extends DataClass implements Insertable<Setting> {
       'is_dark': serializer.toJson<int>(isDark),
       'arabic_font_size': serializer.toJson<int>(arabicFontSize),
       'latin_font_size': serializer.toJson<int>(latinFontSize),
+      'auto_scroll_speed': serializer.toJson<int>(autoScrollSpeed),
+      'is_translate': serializer.toJson<int>(isTranslate),
+      'is_bar': serializer.toJson<int>(isBar),
     };
   }
 
   Setting copyWith(
-          {int? id, int? isDark, int? arabicFontSize, int? latinFontSize}) =>
+          {int? id,
+          int? isDark,
+          int? arabicFontSize,
+          int? latinFontSize,
+          int? autoScrollSpeed,
+          int? isTranslate,
+          int? isBar}) =>
       Setting(
         id: id ?? this.id,
         isDark: isDark ?? this.isDark,
         arabicFontSize: arabicFontSize ?? this.arabicFontSize,
         latinFontSize: latinFontSize ?? this.latinFontSize,
+        autoScrollSpeed: autoScrollSpeed ?? this.autoScrollSpeed,
+        isTranslate: isTranslate ?? this.isTranslate,
+        isBar: isBar ?? this.isBar,
       );
   @override
   String toString() {
@@ -2073,13 +2155,17 @@ class Setting extends DataClass implements Insertable<Setting> {
           ..write('id: $id, ')
           ..write('isDark: $isDark, ')
           ..write('arabicFontSize: $arabicFontSize, ')
-          ..write('latinFontSize: $latinFontSize')
+          ..write('latinFontSize: $latinFontSize, ')
+          ..write('autoScrollSpeed: $autoScrollSpeed, ')
+          ..write('isTranslate: $isTranslate, ')
+          ..write('isBar: $isBar')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, isDark, arabicFontSize, latinFontSize);
+  int get hashCode => Object.hash(id, isDark, arabicFontSize, latinFontSize,
+      autoScrollSpeed, isTranslate, isBar);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2087,7 +2173,10 @@ class Setting extends DataClass implements Insertable<Setting> {
           other.id == this.id &&
           other.isDark == this.isDark &&
           other.arabicFontSize == this.arabicFontSize &&
-          other.latinFontSize == this.latinFontSize);
+          other.latinFontSize == this.latinFontSize &&
+          other.autoScrollSpeed == this.autoScrollSpeed &&
+          other.isTranslate == this.isTranslate &&
+          other.isBar == this.isBar);
 }
 
 class SettingCompanion extends UpdateCompanion<Setting> {
@@ -2095,31 +2184,49 @@ class SettingCompanion extends UpdateCompanion<Setting> {
   final Value<int> isDark;
   final Value<int> arabicFontSize;
   final Value<int> latinFontSize;
+  final Value<int> autoScrollSpeed;
+  final Value<int> isTranslate;
+  final Value<int> isBar;
   const SettingCompanion({
     this.id = const Value.absent(),
     this.isDark = const Value.absent(),
     this.arabicFontSize = const Value.absent(),
     this.latinFontSize = const Value.absent(),
+    this.autoScrollSpeed = const Value.absent(),
+    this.isTranslate = const Value.absent(),
+    this.isBar = const Value.absent(),
   });
   SettingCompanion.insert({
     this.id = const Value.absent(),
     required int isDark,
     required int arabicFontSize,
     required int latinFontSize,
+    required int autoScrollSpeed,
+    required int isTranslate,
+    required int isBar,
   })  : isDark = Value(isDark),
         arabicFontSize = Value(arabicFontSize),
-        latinFontSize = Value(latinFontSize);
+        latinFontSize = Value(latinFontSize),
+        autoScrollSpeed = Value(autoScrollSpeed),
+        isTranslate = Value(isTranslate),
+        isBar = Value(isBar);
   static Insertable<Setting> custom({
     Expression<int>? id,
     Expression<int>? isDark,
     Expression<int>? arabicFontSize,
     Expression<int>? latinFontSize,
+    Expression<int>? autoScrollSpeed,
+    Expression<int>? isTranslate,
+    Expression<int>? isBar,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (isDark != null) 'is_dark': isDark,
       if (arabicFontSize != null) 'arabic_font_size': arabicFontSize,
       if (latinFontSize != null) 'latin_font_size': latinFontSize,
+      if (autoScrollSpeed != null) 'auto_scroll_speed': autoScrollSpeed,
+      if (isTranslate != null) 'is_translate': isTranslate,
+      if (isBar != null) 'is_bar': isBar,
     });
   }
 
@@ -2127,12 +2234,18 @@ class SettingCompanion extends UpdateCompanion<Setting> {
       {Value<int>? id,
       Value<int>? isDark,
       Value<int>? arabicFontSize,
-      Value<int>? latinFontSize}) {
+      Value<int>? latinFontSize,
+      Value<int>? autoScrollSpeed,
+      Value<int>? isTranslate,
+      Value<int>? isBar}) {
     return SettingCompanion(
       id: id ?? this.id,
       isDark: isDark ?? this.isDark,
       arabicFontSize: arabicFontSize ?? this.arabicFontSize,
       latinFontSize: latinFontSize ?? this.latinFontSize,
+      autoScrollSpeed: autoScrollSpeed ?? this.autoScrollSpeed,
+      isTranslate: isTranslate ?? this.isTranslate,
+      isBar: isBar ?? this.isBar,
     );
   }
 
@@ -2151,6 +2264,15 @@ class SettingCompanion extends UpdateCompanion<Setting> {
     if (latinFontSize.present) {
       map['latin_font_size'] = Variable<int>(latinFontSize.value);
     }
+    if (autoScrollSpeed.present) {
+      map['auto_scroll_speed'] = Variable<int>(autoScrollSpeed.value);
+    }
+    if (isTranslate.present) {
+      map['is_translate'] = Variable<int>(isTranslate.value);
+    }
+    if (isBar.present) {
+      map['is_bar'] = Variable<int>(isBar.value);
+    }
     return map;
   }
 
@@ -2160,7 +2282,10 @@ class SettingCompanion extends UpdateCompanion<Setting> {
           ..write('id: $id, ')
           ..write('isDark: $isDark, ')
           ..write('arabicFontSize: $arabicFontSize, ')
-          ..write('latinFontSize: $latinFontSize')
+          ..write('latinFontSize: $latinFontSize, ')
+          ..write('autoScrollSpeed: $autoScrollSpeed, ')
+          ..write('isTranslate: $isTranslate, ')
+          ..write('isBar: $isBar')
           ..write(')'))
         .toString();
   }
@@ -2195,6 +2320,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     return customSelect('SELECT * FROM juzs', variables: [], readsFrom: {
       juzs,
     }).asyncMap(juzs.mapFromRow);
+  }
+
+  Selectable<Ayah> allAyah() {
+    return customSelect('SELECT * FROM ayahs', variables: [], readsFrom: {
+      ayahs,
+    }).asyncMap(ayahs.mapFromRow);
   }
 
   Selectable<Ayah> ayahsInSurah(int var1) {
@@ -2308,13 +2439,17 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         }).asyncMap(favorites.mapFromRow);
   }
 
-  Future<int> saveSetting(int isDark, int arabicFontSize, int latinFontSize) {
+  Future<int> saveSetting(int isDark, int arabicFontSize, int latinFontSize,
+      int autoScrollSpeed, int isTranslate, int isBar) {
     return customInsert(
-      'INSERT INTO setting (is_dark, arabic_font_size, latin_font_size) VALUES (?1, ?2, ?3)',
+      'INSERT INTO setting (is_dark, arabic_font_size, latin_font_size, auto_scroll_speed, is_translate, is_bar) VALUES (?1, ?2, ?3, ?4, ?5, ?6)',
       variables: [
         Variable<int>(isDark),
         Variable<int>(arabicFontSize),
-        Variable<int>(latinFontSize)
+        Variable<int>(latinFontSize),
+        Variable<int>(autoScrollSpeed),
+        Variable<int>(isTranslate),
+        Variable<int>(isBar)
       ],
       updates: {setting},
     );
@@ -2347,6 +2482,33 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   Future<int> setTheme(int var1) {
     return customUpdate(
       'UPDATE setting SET is_dark = ?1',
+      variables: [Variable<int>(var1)],
+      updates: {setting},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Future<int> setAutoScrollSpeed(int var1) {
+    return customUpdate(
+      'UPDATE setting SET auto_scroll_speed = ?1',
+      variables: [Variable<int>(var1)],
+      updates: {setting},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Future<int> setIsTranslate(int var1) {
+    return customUpdate(
+      'UPDATE setting SET is_translate = ?1',
+      variables: [Variable<int>(var1)],
+      updates: {setting},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Future<int> setIsBar(int var1) {
+    return customUpdate(
+      'UPDATE setting SET is_bar = ?1',
       variables: [Variable<int>(var1)],
       updates: {setting},
       updateKind: UpdateKind.update,
@@ -3242,12 +3404,18 @@ typedef $SettingTableInsertCompanionBuilder = SettingCompanion Function({
   required int isDark,
   required int arabicFontSize,
   required int latinFontSize,
+  required int autoScrollSpeed,
+  required int isTranslate,
+  required int isBar,
 });
 typedef $SettingTableUpdateCompanionBuilder = SettingCompanion Function({
   Value<int> id,
   Value<int> isDark,
   Value<int> arabicFontSize,
   Value<int> latinFontSize,
+  Value<int> autoScrollSpeed,
+  Value<int> isTranslate,
+  Value<int> isBar,
 });
 
 class $SettingTableTableManager extends RootTableManager<
@@ -3273,24 +3441,36 @@ class $SettingTableTableManager extends RootTableManager<
             Value<int> isDark = const Value.absent(),
             Value<int> arabicFontSize = const Value.absent(),
             Value<int> latinFontSize = const Value.absent(),
+            Value<int> autoScrollSpeed = const Value.absent(),
+            Value<int> isTranslate = const Value.absent(),
+            Value<int> isBar = const Value.absent(),
           }) =>
               SettingCompanion(
             id: id,
             isDark: isDark,
             arabicFontSize: arabicFontSize,
             latinFontSize: latinFontSize,
+            autoScrollSpeed: autoScrollSpeed,
+            isTranslate: isTranslate,
+            isBar: isBar,
           ),
           getInsertCompanionBuilder: ({
             Value<int> id = const Value.absent(),
             required int isDark,
             required int arabicFontSize,
             required int latinFontSize,
+            required int autoScrollSpeed,
+            required int isTranslate,
+            required int isBar,
           }) =>
               SettingCompanion.insert(
             id: id,
             isDark: isDark,
             arabicFontSize: arabicFontSize,
             latinFontSize: latinFontSize,
+            autoScrollSpeed: autoScrollSpeed,
+            isTranslate: isTranslate,
+            isBar: isBar,
           ),
         ));
 }
@@ -3329,6 +3509,21 @@ class $SettingTableFilterComposer
       column: $state.table.latinFontSize,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get autoScrollSpeed => $state.composableBuilder(
+      column: $state.table.autoScrollSpeed,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get isTranslate => $state.composableBuilder(
+      column: $state.table.isTranslate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get isBar => $state.composableBuilder(
+      column: $state.table.isBar,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $SettingTableOrderingComposer
@@ -3351,6 +3546,21 @@ class $SettingTableOrderingComposer
 
   ColumnOrderings<int> get latinFontSize => $state.composableBuilder(
       column: $state.table.latinFontSize,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get autoScrollSpeed => $state.composableBuilder(
+      column: $state.table.autoScrollSpeed,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get isTranslate => $state.composableBuilder(
+      column: $state.table.isTranslate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get isBar => $state.composableBuilder(
+      column: $state.table.isBar,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }

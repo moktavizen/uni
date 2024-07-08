@@ -38,7 +38,7 @@ CREATE TABLE last_read (
     screen_caption VARCHAR(36) NOT NULL,
     ayah_index INTEGER NOT NULL,
     ayah_num INTEGER NOT NULL,
-    surah_name VARCHAR(16) NOT NULL,
+    surah_name VARCHAR(16) NOT NULL
 ) AS LastRead;
 
 CREATE TABLE favorites(
@@ -56,7 +56,10 @@ CREATE TABLE setting (
     id INTEGER PRIMARY KEY,
     is_dark INTEGER NOT NULL,
     arabic_font_size INTEGER NOT NULL,
-    latin_font_size INTEGER NOT NULL
+    latin_font_size INTEGER NOT NULL,
+    auto_scroll_speed INTEGER NOT NULL,
+    is_translate INTEGER NOT NULL,
+    is_bar INTEGER NOT NULL
 ) AS Setting;
 
 CREATE INDEX IF NOT EXISTS idx_ayahs_surah_id ON ayahs (surah_id);
@@ -77,6 +80,9 @@ SELECT * FROM surahs;
 
 allJuz:
 SELECT * FROM juzs;
+
+allAyah:
+SELECT * FROM ayahs;
 
 ayahsInSurah:
 SELECT * FROM ayahs WHERE surah_id = ?;
@@ -149,11 +155,17 @@ saveSetting:
 INSERT INTO setting (
     is_dark,
     arabic_font_size,
-    latin_font_size
+    latin_font_size,
+    auto_scroll_speed,
+    is_translate,
+    is_bar
 ) VALUES (
     :is_dark,
     :arabic_font_size,
-    :latin_font_size
+    :latin_font_size,
+    :auto_scroll_speed,
+    :is_translate,
+    :is_bar
 );
 
 getSetting:
@@ -170,4 +182,16 @@ SET arabic_font_size = ?;
 setTheme:
 UPDATE setting
 SET is_dark = ?;
+
+setAutoScrollSpeed:
+UPDATE setting
+SET auto_scroll_speed = ?;
+
+setIsTranslate:
+UPDATE setting
+SET is_translate = ?;
+
+setIsBar:
+UPDATE setting
+SET is_bar = ?;
 

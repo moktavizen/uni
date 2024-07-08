@@ -11,12 +11,12 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
     super.key,
     required this.title,
     required this.leading,
-    this.action,
+    this.actions,
   });
 
   final Widget title;
   final Widget leading;
-  final Widget? action;
+  final List<Widget>? actions;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -28,9 +28,11 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
     final database = ref.read(databaseProvider);
     final List<Surah> allSurah = await database.allSurah().get();
     final List<Juz> allJuz = await database.allJuz().get();
+    final List<Ayah> allAyah = await database.allAyah().get();
     final List<dynamic> data = [
       ...allSurah,
       ...allJuz,
+      ...allAyah,
     ];
 
     if (context.mounted) {
@@ -52,15 +54,15 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
         leading: leading,
         title: title,
         titleSpacing: 8,
-        actions: [
-          action ??
+        actions: actions ??
+            [
               IconButton(
                 onPressed: () {
                   goSearch(ref, context);
                 },
                 icon: searchIcon,
               ),
-        ],
+            ],
       ),
     );
   }

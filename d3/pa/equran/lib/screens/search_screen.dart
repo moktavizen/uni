@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:equran/databases/database.dart';
 import 'package:equran/styles.dart';
+import 'package:equran/widgets/ayah_list_tile.dart';
 import 'package:equran/widgets/custom_app_bar.dart';
 import 'package:equran/widgets/juz_list_tile.dart';
 import 'package:equran/widgets/surah_list_tile.dart';
@@ -47,6 +48,8 @@ class _SearchScreenState extends State<SearchScreen> {
           return data.latin;
         } else if (data is Juz) {
           return 'Juz ${data.id}';
+        } else if (data is Ayah) {
+          return data.latin;
         } else {
           return '';
         }
@@ -102,19 +105,21 @@ class _SearchScreenState extends State<SearchScreen> {
           onChanged: _searchFromInput,
           textController: _textController,
         ),
-        action: IconButton.filled(
-          onPressed: () {
-            _textController.clear();
-            _searchFromInput('');
-          },
-          icon: Icon(
-            Icons.close,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+        actions: [
+          IconButton.filled(
+            onPressed: () {
+              _textController.clear();
+              _searchFromInput('');
+            },
+            icon: Icon(
+              Icons.close,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            style: IconButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            ),
           ),
-          style: IconButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          ),
-        ),
+        ],
       ),
       body: Builder(
         builder: (context) {
@@ -127,6 +132,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   return SurahListTile(surah: result);
                 } else if (result is Juz) {
                   return JuzListTile(juz: result);
+                } else if (result is Ayah) {
+                  return AyahListTile(ayah: result);
                 } else {
                   return null;
                 }
@@ -142,6 +149,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   return SurahListTile(surah: result);
                 } else if (result is Juz) {
                   return JuzListTile(juz: result);
+                } else if (result is Ayah) {
+                  return AyahListTile(ayah: result);
                 } else {
                   return null;
                 }
@@ -246,7 +255,7 @@ class _TextField extends StatelessWidget {
         ),
         filled: true,
         fillColor: Theme.of(context).colorScheme.primaryContainer,
-        hintText: 'Cari Surah atau Juz',
+        hintText: 'Cari Surah,Juz atau Ayat',
         hintStyle: GoogleFonts.inter(
           fontWeight: FontWeight.w400,
           fontSize: 14,

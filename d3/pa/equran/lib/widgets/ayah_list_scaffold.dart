@@ -40,13 +40,13 @@ class AyahListScaffold extends ConsumerStatefulWidget {
 
 class _AyahListScaffoldState extends ConsumerState<AyahListScaffold> {
   String _selectedPlayerState = '';
-  final _controller = AutoScrollController();
+  final _scrollController = AutoScrollController();
 
   @override
   void initState() {
     super.initState();
     if (widget.ayahIndex != null && widget.ayahIndex! > 0) {
-      _controller.scrollToIndex(
+      _scrollController.scrollToIndex(
         widget.ayahIndex!,
         preferPosition: AutoScrollPosition.begin,
       );
@@ -55,8 +55,20 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold> {
 
   @override
   void dispose() {
-    AutoScrollController().dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  _autoScroll(double speedFactor) {
+    double maxExtent = _scrollController.position.maxScrollExtent;
+    double distanceDifference = maxExtent - _scrollController.offset;
+    double durationDouble = distanceDifference / speedFactor;
+
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: Duration(seconds: durationDouble.toInt()),
+      curve: Curves.linear,
+    );
   }
 
   void _updateSelectedPlayer(int playerId) {
@@ -74,6 +86,20 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold> {
   @override
   Widget build(BuildContext context) {
     final player = ref.watch(murattalProvider);
+    final setting = ref.watch(settingProvider);
+    double speedFactor = setting.value!.autoScrollSpeed.toDouble();
+    bool isTranslate = setting.value?.isTranslate == 1 ? true : false;
+    bool isBar = setting.value?.isBar == 1 ? true : false;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (speedFactor > 0) {
+        _autoScroll(speedFactor);
+      } else {
+        // stop auto scroll
+        _scrollController.jumpTo(_scrollController.offset);
+      }
+    });
+
     return Scaffold(
       appBar: CustomAppBar(
         leading: PopScope(
@@ -102,102 +128,294 @@ class _AyahListScaffoldState extends ConsumerState<AyahListScaffold> {
             fontWeight: FontWeight.w700,
           ),
         ),
-      ),
-      body: CupertinoScrollbar(
-        controller: _controller,
-        child: CustomScrollView(
-          controller: _controller,
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 24,
-                ),
-                child: _BismillahCard(
-                  title: widget.headerTitle,
-                  subtitle: widget.headerSubtitle,
-                  caption: widget.headerCaption,
-                ),
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.only(
-                top: 10,
-                bottom: 64,
-                left: 24,
-                right: 24,
-              ),
-              sliver: widget.ayahList.when(
-                data: (value) {
-                  return SliverList.builder(
-                    // itemPositionsListener: itemPositionsListener,
-                    itemBuilder: (context, index) {
-                      Ayah ayah = value.elementAt(index);
-
-                      return AutoScrollTag(
-                        index: index,
-                        controller: _controller,
-                        key: ValueKey(index),
-                        child: _AyahListTile(
-                          arabicText: _ArabicText(arabic: ayah.arabic),
-                          tlText: _TlText(translation: ayah.translation),
-                          actionBar: _AyahBar(
-                            ayahNum: _AyahNum(ayahNum: ayah.ayahNum),
-                            actions: [
-                              _ShareAyahButton(
-                                arabic: ayah.arabic,
-                                translation: ayah.translation,
-                                surahId: ayah.surahId,
-                                ayahNum: ayah.ayahNum,
-                              ),
-                              _ShowTafsirButton(
-                                surahName: ayah.surahName,
-                                ayahNum: ayah.ayahNum,
-                                tafsir: ayah.tafsir,
-                                surahId: ayah.surahId,
-                              ),
-                              _MurattalPlayButton(
-                                ayahNum: ayah.ayahNum,
-                                surahId: ayah.surahId,
-                                player: player,
-                                selectedPlayerState: _selectedPlayerState,
-                                updateSelectedPlayer: _updateSelectedPlayer,
-                                // updateLastRead: _updateLastRead,
-                              ),
-                              _FavAyahButton(
-                                ayah: ayah,
-                                screenId: widget.screenId,
-                                screenTitle: widget.headerTitle,
-                                screenSubtitle: widget.headerSubtitle,
-                                screenCaption: widget.headerCaption,
-                              )
-                            ],
-                          ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                context: context,
+                builder: (BuildContext context) => Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 16,
+                          right: 20,
+                          bottom: 8,
+                          left: 24,
                         ),
-                      );
-                    },
-                    itemCount: value.length,
-                  );
-                },
-                error: (e, s) {
-                  debugPrintStack(label: e.toString(), stackTrace: s);
-                  return SliverToBoxAdapter(
-                    child: Center(
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        'Oops!\nTerdapat kesalahan\nmemproses data Ayah!',
-                        style: GoogleFonts.inter(
-                          color: Theme.of(context).colorScheme.onSurface,
+                        child: Row(
+                          children: [
+                            Text(
+                              'Preferensi Baca',
+                              style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 17,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            const Spacer(),
+                            IconButton.filledTonal(
+                              onPressed: () => Navigator.of(context).pop(),
+                              icon: closeIcon,
+                              padding: const EdgeInsets.all(0),
+                              style: IconButton.styleFrom(
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                              ),
+                              visualDensity: VisualDensity.compact,
+                            )
+                          ],
                         ),
                       ),
-                    ),
-                  );
-                },
-                loading: () => const _ListTileSkeleton(),
-              ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 20,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.view_comfy_rounded,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                            const SizedBox(width: 16),
+                            Text(
+                              'Tata Letak Ayat',
+                              style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      CheckboxListTile(
+                        contentPadding:
+                            const EdgeInsets.only(left: 36, right: 20),
+                        visualDensity: VisualDensity.compact,
+                        value: isTranslate,
+                        onChanged: (bool? value) {
+                          final database = ref.read(databaseProvider);
+                          setState(() {
+                            isTranslate = value!;
+                          });
+                          database.setIsTranslate(isTranslate == true ? 1 : 0);
+                        },
+                        title: const Text('Terjemahan'),
+                      ),
+                      CheckboxListTile(
+                        contentPadding:
+                            const EdgeInsets.only(left: 36, right: 20),
+                        visualDensity: VisualDensity.compact,
+                        value: isBar,
+                        onChanged: (bool? value) {
+                          final database = ref.read(databaseProvider);
+                          setState(() {
+                            isBar = value!;
+                          });
+                          database.setIsBar(isBar == true ? 1 : 0);
+                        },
+                        title: const Text('Bilah Aksi'),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          top: 16,
+                          right: 20,
+                          bottom: 4,
+                          left: 20,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.swipe_up,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                const SizedBox(width: 16),
+                                Text(
+                                  'Kecepatan Auto Scroll',
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16,
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Slider(
+                              activeColor:
+                                  Theme.of(context).colorScheme.secondary,
+                              inactiveColor: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer,
+                              thumbColor: Theme.of(context).colorScheme.primary,
+                              value: speedFactor,
+                              max: 100,
+                              divisions: 4,
+                              label: (speedFactor / 25).toInt().toString(),
+                              onChanged: (double value) {
+                                setState(() {
+                                  speedFactor = value;
+                                });
+                                final database = ref.read(databaseProvider);
+                                database
+                                    .setAutoScrollSpeed(speedFactor.toInt());
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 64)
+                    ],
+                  ),
+                ),
+              );
+            },
+            icon: Icon(
+              Icons.more_vert,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
-          ],
+          ),
+          IconButton(
+            onPressed: () {
+              CustomAppBar.goSearch(ref, context);
+            },
+            icon: searchIcon,
+          ),
+        ],
+      ),
+      body: Listener(
+        onPointerUp: (_) {
+          if (speedFactor > 0) {
+            _autoScroll(speedFactor);
+          }
+        },
+        child: CupertinoScrollbar(
+          controller: _scrollController,
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 24,
+                  ),
+                  child: _BismillahCard(
+                    title: widget.headerTitle,
+                    subtitle: widget.headerSubtitle,
+                    caption: widget.headerCaption,
+                  ),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.only(
+                  top: 10,
+                  bottom: 64,
+                  left: 24,
+                  right: 24,
+                ),
+                sliver: widget.ayahList.when(
+                  data: (value) {
+                    return SliverList.builder(
+                      // itemPositionsListener: itemPositionsListener,
+                      itemBuilder: (context, index) {
+                        Ayah ayah = value.elementAt(index);
+
+                        return AutoScrollTag(
+                          index: index,
+                          controller: _scrollController,
+                          key: ValueKey(index),
+                          child: _AyahListTile(
+                            arabicText: _ArabicText(
+                              arabic: ayah.arabic,
+                              fontSize:
+                                  setting.value!.arabicFontSize.toDouble(),
+                              isBar: setting.value!.isBar,
+                              ayahNum: ayah.ayahNum,
+                            ),
+                            tlText: setting.value?.isTranslate == 0
+                                ? const SizedBox.shrink()
+                                : _TlText(
+                                    translation: ayah.translation,
+                                    fontSize:
+                                        setting.value!.latinFontSize.toDouble(),
+                                  ),
+                            actionBar: setting.value?.isBar == 0
+                                ? const SizedBox.shrink()
+                                : _AyahBar(
+                                    ayahNum: _AyahNum(ayahNum: ayah.ayahNum),
+                                    actions: [
+                                      _ShareAyahButton(
+                                        arabic: ayah.arabic,
+                                        translation: ayah.translation,
+                                        surahId: ayah.surahId,
+                                        ayahNum: ayah.ayahNum,
+                                      ),
+                                      _ShowTafsirButton(
+                                        surahName: ayah.surahName,
+                                        ayahNum: ayah.ayahNum,
+                                        tafsir: ayah.tafsir,
+                                        surahId: ayah.surahId,
+                                      ),
+                                      _MurattalPlayButton(
+                                        ayahNum: ayah.ayahNum,
+                                        surahId: ayah.surahId,
+                                        player: player,
+                                        selectedPlayerState:
+                                            _selectedPlayerState,
+                                        updateSelectedPlayer:
+                                            _updateSelectedPlayer,
+                                        // updateLastRead: _updateLastRead,
+                                      ),
+                                      _FavAyahButton(
+                                        ayah: ayah,
+                                        screenId: widget.screenId,
+                                        screenTitle: widget.headerTitle,
+                                        screenSubtitle: widget.headerSubtitle,
+                                        screenCaption: widget.headerCaption,
+                                      )
+                                    ],
+                                  ),
+                          ),
+                        );
+                      },
+                      itemCount: value.length,
+                    );
+                  },
+                  error: (e, s) {
+                    debugPrintStack(label: e.toString(), stackTrace: s);
+                    return SliverToBoxAdapter(
+                      child: Center(
+                        child: Text(
+                          textAlign: TextAlign.center,
+                          'Oops!\nTerdapat kesalahan\nmemproses data Ayah!',
+                          style: GoogleFonts.inter(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  loading: () => const _ListTileSkeleton(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -346,11 +564,8 @@ class _AyahListTile extends StatelessWidget {
       children: [
         const SizedBox(height: 14),
         arabicText,
-        const SizedBox(height: 16),
         tlText,
-        const SizedBox(height: 16),
         actionBar,
-        const SizedBox(height: 14),
       ],
     );
   }
@@ -370,6 +585,7 @@ class _AyahBar extends StatelessWidget {
     return Container(
       height: 47,
       padding: const EdgeInsets.only(left: 12, right: 4),
+      margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(10),
@@ -407,24 +623,35 @@ class _AyahBar extends StatelessWidget {
 class _ArabicText extends ConsumerWidget {
   const _ArabicText({
     required this.arabic,
+    required this.fontSize,
+    required this.isBar,
+    required this.ayahNum,
   });
 
   final String arabic;
+  final double fontSize;
+  final int isBar;
+  final int ayahNum;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final setting = ref.watch(settingProvider);
-
-    return Text(
-      arabic,
-      textAlign: TextAlign.right,
-      style: TextStyle(
-        fontFamily: 'IsepMisbah',
-        fontWeight: FontWeight.w700,
-        fontSize: setting.value?.arabicFontSize.toDouble(),
-        color: Theme.of(context).colorScheme.onSurface,
-        height: 2.5,
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          isBar == 1 ? arabic : '$arabic • $ayahNum',
+          textAlign: TextAlign.right,
+          style: TextStyle(
+            fontFamily: 'IsepMisbah',
+            fontWeight: FontWeight.w700,
+            fontSize: fontSize,
+            color: Theme.of(context).colorScheme.onSurface,
+            height: 2.5,
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
     );
   }
 }
@@ -432,21 +659,28 @@ class _ArabicText extends ConsumerWidget {
 class _TlText extends ConsumerWidget {
   const _TlText({
     required this.translation,
+    required this.fontSize,
   });
 
   final String translation;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final setting = ref.watch(settingProvider);
-
-    return Text(
-      translation,
-      style: GoogleFonts.inter(
-        fontWeight: FontWeight.w400,
-        fontSize: setting.value?.latinFontSize.toDouble(),
-        color: Theme.of(context).colorScheme.onSurface,
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          translation,
+          style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: fontSize,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
     );
   }
 }
@@ -543,85 +777,82 @@ class _ShowTafsirButton extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.surface,
           isScrollControlled: true,
           context: context,
-          builder: (BuildContext context) {
-            return ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height - 160,
+          builder: (BuildContext context) => ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height - 160,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
               ),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 16,
+                      right: 20,
+                      bottom: 16,
+                      left: 24,
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Tafsir $surahName Ayat $ayahNum',
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () async {
+                            await Share.share(
+                              'Tafsir $surahName Ayat $ayahNum:\n'
+                              '\n'
+                              '$tafsir[$surahId:$ayahNum]',
+                            );
+                          },
+                          icon: shareIcon,
+                          padding: const EdgeInsets.all(0),
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        IconButton.filledTonal(
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: closeIcon,
+                          padding: const EdgeInsets.all(0),
+                          style: IconButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primaryContainer,
+                          ),
+                          visualDensity: VisualDensity.compact,
+                        )
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    child: SingleChildScrollView(
                       padding: const EdgeInsets.only(
-                        top: 16,
-                        right: 20,
-                        bottom: 16,
+                        right: 24,
+                        bottom: 64,
                         left: 24,
                       ),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Tafsir $surahName Ayat $ayahNum',
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 17,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            onPressed: () async {
-                              await Share.share(
-                                'Tafsir $surahName Ayat $ayahNum:\n'
-                                '\n'
-                                '$tafsir[$surahId:$ayahNum]',
-                              );
-                            },
-                            icon: shareIcon,
-                            padding: const EdgeInsets.all(0),
-                            visualDensity: VisualDensity.compact,
-                          ),
-                          IconButton.filledTonal(
-                            onPressed: () => Navigator.of(context).pop(),
-                            icon: closeIcon,
-                            padding: const EdgeInsets.all(0),
-                            style: IconButton.styleFrom(
-                              backgroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .primaryContainer,
-                            ),
-                            visualDensity: VisualDensity.compact,
-                          )
-                        ],
-                      ),
-                    ),
-                    Flexible(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.only(
-                          right: 24,
-                          bottom: 64,
-                          left: 24,
-                        ),
-                        child: Text(
-                          tafsir,
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
+                      child: Text(
+                        tafsir,
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            );
-          },
+            ),
+          ),
         );
       },
       icon: tafsirIcon,

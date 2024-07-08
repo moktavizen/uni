@@ -32,3 +32,15 @@ This App is built using Flutter with the following packages:
 | Voice Search        |        ✅       |       ✅       |
 | Personalization     |        ✅       |       ✅       |
 
+## Lecturer Revision
+
+- Ms. Disa
+    - Add Tech Stack Diagram
+    - Group tester by background
+- Mr. Azwar
+    - Test on a better phone, then add min spec
+    - Add autoscroll on ayah list view
+    - Add customizable ayah list tile
+- Mr. Mufid
+    - Remake google forms to add suggested features
+

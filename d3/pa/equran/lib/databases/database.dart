@@ -64,7 +64,7 @@ class AppDatabase extends _$AppDatabase {
               1,
               'Al-Fatihah',
             );
-            saveSetting(0, 20, 14);
+            saveSetting(0, 20, 14, 0, 1, 1);
           }
         },
       );

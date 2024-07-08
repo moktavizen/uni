@@ -39,127 +39,136 @@ class SettingScreen extends ConsumerWidget {
     return fontSizeLabels[fontSize] ?? '';
   }
 
+  String _getSpeedLabel(int speed) {
+    const speedLabel = {
+      0: 'Nonaktif',
+      25: 'Lambat',
+      50: 'Cepat',
+      75: 'Cepat',
+      100: 'Sangat Cepat',
+    };
+
+    return speedLabel[speed] ?? '';
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final setting = ref.watch(settingProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 24),
-      child: setting.when(
-        data: (value) => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Divider(height: 24),
-            const _SettingsGroupTitle(titleText: 'Tampilan'),
-            _SettingsListTile(
-              leadingIcon: themeIcon,
-              titleText: 'Tema Aplikasi',
-              subtitleText: _getTheme(value.isDark),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      _RadioDialogTheme(value: value),
-                );
-              },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Divider(height: 24),
+          const _SettingsGroupTitle(titleText: 'Tampilan'),
+          _SettingsListTile(
+            leadingIcon: themeIcon,
+            titleText: 'Tema Aplikasi',
+            subtitleText: _getTheme(setting.value!.isDark),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    _RadioDialogTheme(value: setting.value!),
+              );
+            },
+          ),
+          const Divider(height: 24),
+          const _SettingsGroupTitle(titleText: 'Baca'),
+          _SettingsListTile(
+            leadingIcon: arabicIcon,
+            titleText: 'Ukuran Arabic',
+            subtitleText:
+                _getArabicFontSizeLabel(setting.value!.arabicFontSize),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    _RadioDialogArabicFont(value: setting.value!),
+              );
+            },
+          ),
+          _SettingsListTile(
+            leadingIcon: latinIcon,
+            titleText: 'Ukuran Latin',
+            subtitleText: _getLatinFontSizeLabel(setting.value!.latinFontSize),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    _RadioDialogLatinFont(value: setting.value!),
+              );
+            },
+          ),
+          _SettingsListTile(
+            leadingIcon: Icon(
+              Icons.swipe_down_rounded,
+              color: Theme.of(context).colorScheme.secondary,
             ),
-            const Divider(height: 24),
-            const _SettingsGroupTitle(titleText: 'Huruf'),
-            _SettingsListTile(
-              leadingIcon: arabicIcon,
-              titleText: 'Ukuran Arabic',
-              subtitleText: _getArabicFontSizeLabel(value.arabicFontSize),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      _RadioDialogArabicFont(value: value),
-                );
-              },
-            ),
-            _SettingsListTile(
-              leadingIcon: latinIcon,
-              titleText: 'Ukuran Latin',
-              subtitleText: _getLatinFontSizeLabel(value.latinFontSize),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      _RadioDialogLatinFont(value: value),
-                );
-              },
-            ),
-            const Divider(height: 24),
-            const _SettingsGroupTitle(titleText: 'Tentang'),
-            _SettingsListTile(
-              leadingIcon: sourceIcon,
-              titleText: 'Sumber Data',
-              subtitleText: 'KEMENAG',
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    titlePadding: const EdgeInsets.all(20),
-                    contentPadding: const EdgeInsets.all(0),
-                    actionsPadding: const EdgeInsets.all(8),
-                    title: Text(
-                      'Sumber Data',
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+            titleText: 'Kecepatan Auto Scroll',
+            subtitleText: _getSpeedLabel(setting.value!.autoScrollSpeed),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    _RadioDialogLatinFont(value: setting.value!),
+              );
+            },
+          ),
+          const Divider(height: 24),
+          const _SettingsGroupTitle(titleText: 'Tentang'),
+          _SettingsListTile(
+            leadingIcon: sourceIcon,
+            titleText: 'Sumber Data',
+            subtitleText: 'KEMENAG',
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  titlePadding: const EdgeInsets.all(20),
+                  contentPadding: const EdgeInsets.all(0),
+                  actionsPadding: const EdgeInsets.all(8),
+                  title: Text(
+                    'Sumber Data',
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 17,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Divider(height: 1),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 16),
-                          child: Text(
-                            'Data Quran, Tafsir, dan Murattal pada aplikasi ini, didapatkan dari Website Quran resmi milik Kementerian Agama Republik Indonesia',
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Divider(height: 1),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 16),
+                        child: Text(
+                          'Data Quran, Tafsir, dan Murattal pada aplikasi ini, didapatkan dari Website Quran resmi milik Kementerian Agama Republik Indonesia',
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
-                        const Divider(height: 1),
-                      ],
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: Navigator.of(context).pop,
-                        child: const Text('OK'),
-                      )
+                      ),
+                      const Divider(height: 1),
                     ],
                   ),
-                );
-              },
-            ),
-            const Divider(height: 24),
-            const _AppVer()
-          ],
-        ),
-        error: (e, s) {
-          debugPrintStack(label: e.toString(), stackTrace: s);
-          return Center(
-            child: Text(
-              textAlign: TextAlign.center,
-              'Oops!\nTerdapat kesalahan\nmemproses data Surah!',
-              style: GoogleFonts.inter(
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-          );
-        },
-        loading: () => const Center(
-          child: RepaintBoundary(
-            child: CircularProgressIndicator(),
+                  actions: [
+                    TextButton(
+                      onPressed: Navigator.of(context).pop,
+                      child: const Text('OK'),
+                    )
+                  ],
+                ),
+              );
+            },
           ),
-        ),
+          const Divider(height: 24),
+          const _AppVer()
+        ],
       ),
     );
   }
