@@ -200,62 +200,75 @@ class _SearchScreenState extends State<SearchScreen> {
           }
         },
       ),
-      floatingActionButton: RepaintBoundary(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Container(
-            decoration: BoxDecoration(
+      floatingActionButton:
+          _FloatingVoiceButton(level: level, onTap: _startListening),
+    );
+  }
+}
+
+class _FloatingVoiceButton extends StatelessWidget {
+  const _FloatingVoiceButton({
+    required this.level,
+    required this.onTap,
+  });
+
+  final double level;
+  final void Function() onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            boxShadow: [
+              BoxShadow(
+                spreadRadius: level * 2,
+                color: Theme.of(context).colorScheme.primaryFixedDim,
+              )
+            ],
+          ),
+          child: FloatingActionButton(
+            backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(50),
-              boxShadow: [
-                BoxShadow(
-                  spreadRadius: level * 2,
-                  color: Theme.of(context).colorScheme.primaryFixedDim,
-                )
-              ],
             ),
-            child: FloatingActionButton(
-              backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50),
-              ),
-              onPressed: () async {
-                try {
-                  final conn = await InternetAddress.lookup('example.com');
-                  final bool isConn =
-                      conn.isNotEmpty && conn[0].rawAddress.isNotEmpty;
+            onPressed: () async {
+              try {
+                final conn = await InternetAddress.lookup('example.com');
+                final bool isConn =
+                    conn.isNotEmpty && conn[0].rawAddress.isNotEmpty;
 
-                  if (isConn == true && context.mounted) {
-                    ScaffoldMessenger.of(context).clearSnackBars();
-
-                    _startListening();
-                  }
-                } on SocketException catch (_) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).clearSnackBars();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.errorContainer,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        showCloseIcon: true,
-                        content: Text(
-                          'Fitur ini butuh internet!',
-                          style: GoogleFonts.inter(
-                            color:
-                                Theme.of(context).colorScheme.onInverseSurface,
-                          ),
+                if (isConn == true && context.mounted) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                }
+              } on SocketException catch (_) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.errorContainer,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      showCloseIcon: true,
+                      content: Text(
+                        'Fitur ini butuh internet!',
+                        style: GoogleFonts.inter(
+                          color: Theme.of(context).colorScheme.onInverseSurface,
                         ),
                       ),
-                    );
-                  }
+                    ),
+                  );
                 }
-              },
-              tooltip: 'Voice Search',
-              child: micIcon,
-            ),
+              }
+            },
+            tooltip: 'Voice Search',
+            child: micIcon,
           ),
         ),
       ),
