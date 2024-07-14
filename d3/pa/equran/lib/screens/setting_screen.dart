@@ -39,17 +39,17 @@ class SettingScreen extends ConsumerWidget {
     return fontSizeLabels[fontSize] ?? '';
   }
 
-  String _getSpeedLabel(int speed) {
-    const speedLabel = {
-      0: 'Nonaktif',
-      25: 'Lambat',
-      50: 'Cepat',
-      75: 'Cepat',
-      100: 'Sangat Cepat',
-    };
-
-    return speedLabel[speed] ?? '';
-  }
+  // String _getSpeedLabel(int speed) {
+  //   const speedLabel = {
+  //     0: 'Nonaktif',
+  //     25: 'Lambat',
+  //     50: 'Cepat',
+  //     75: 'Cepat',
+  //     100: 'Sangat Cepat',
+  //   };
+  //
+  //   return speedLabel[speed] ?? '';
+  // }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -101,21 +101,21 @@ class SettingScreen extends ConsumerWidget {
               );
             },
           ),
-          _SettingsListTile(
-            leadingIcon: Icon(
-              Icons.swipe_down_rounded,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            titleText: 'Kecepatan Auto Scroll',
-            subtitleText: _getSpeedLabel(setting.value!.autoScrollSpeed),
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) =>
-                    _RadioDialogLatinFont(value: setting.value!),
-              );
-            },
-          ),
+          // _SettingsListTile(
+          //   leadingIcon: Icon(
+          //     Icons.swipe_down_rounded,
+          //     color: Theme.of(context).colorScheme.secondary,
+          //   ),
+          //   titleText: 'Kecepatan Auto Scroll',
+          //   subtitleText: _getSpeedLabel(setting.value!.autoScrollSpeed),
+          //   onTap: () {
+          //     showDialog(
+          //       context: context,
+          //       builder: (BuildContext context) =>
+          //           _RadioDialogLatinFont(value: setting.value!),
+          //     );
+          //   },
+          // ),
           const Divider(height: 24),
           const _SettingsGroupTitle(titleText: 'Tentang'),
           _SettingsListTile(
